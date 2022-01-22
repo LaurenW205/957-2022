@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 
@@ -40,4 +41,22 @@ public class DriveTrain{
         m_leftNeoSlave.setSmartCurrentLimit(k_stallCurrentLimit, k_freeCurrentLimit);
     }
 
+    public void resetEncoders(){
+        m_rightEncoder.setPosition(0);
+        m_leftEncoder.setPosition(0);
+    }
+
+    public void setIdleMode(IdleMode mode){
+        m_rightNeoMaster.setIdleMode(mode);
+        m_rightNeoSlave.setIdleMode(mode);
+        m_leftNeoMaster.setIdleMode(mode);
+        m_leftNeoSlave.setIdleMode(mode);
+    }
+
+    public static DriveTrain getInstance(){
+        if(m_drivetrain == null)
+        m_drivetrain = new DriveTrain();
+
+        return m_drivetrain;
+    }
 }
