@@ -19,8 +19,8 @@ public class DriveTrain{
     SparkMaxPIDController m_leftController = m_leftNeoMaster.getPIDController();
 
     private static DriveTrain m_drivetrain = null;
-    private static final int k_freeCurrentLimit = 0;
-    private static final int k_stallCurrentLimit = 0;
+    private static final int k_freeCurrentLimit = 40;
+    private static final int k_stallCurrentLimit = 40;
 
     public DriveTrain(){
 

@@ -17,6 +17,12 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
+   
+   DriveTrain m_drivetrain = DriveTrain.getInstance();
+
+   int m_autoStep = 0;
+   int m_autoMode = 0;
+
   @Override
   public void robotInit() {}
 
@@ -27,8 +33,13 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {}
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
 
+ 
+    
+  }
+
+    
   @Override
   public void teleopInit() {}
 
