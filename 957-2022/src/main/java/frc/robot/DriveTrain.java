@@ -59,4 +59,19 @@ public class DriveTrain{
 
         return m_drivetrain;
     }
+
+    double outputT = 0;
+    double outputD = 0;
+    double ramp = 0.1;
+
+    public void arcadeDrive(double speed, double turn){
+    
+
+    }
+
+    public void driveStraight(double inches, double targetHeading, double speed){
+
+    }
+
+
 }
