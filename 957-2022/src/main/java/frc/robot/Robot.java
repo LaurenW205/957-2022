@@ -35,10 +35,24 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
 
- 
+    System.out.println(m_autoStep);
+
+    switch(m_autoMode){
+
+      case 0:
+
+      switch(m_autoMode){
+
+        case 0:
+
+        m_drivetrain.driveStraight(125, 0, 0.2);
+
+      }
+
+      break;
+    }
     
   }
-
     
   @Override
   public void teleopInit() {}
