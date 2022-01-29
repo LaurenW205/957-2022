@@ -157,9 +157,7 @@ public class DriveTrain{
 
         double setpoint = inches*0.333;
 
-        double output = m_auxLoop.getOutput(m_navx.getAngle(), targetAngle);
-
-        double margin = (setpoint- targetAngle)/0.8;
+        double margin = (setpoint- targetAngle)/30;
        
         if(margin < -0.5){
             speed = -0.5;
