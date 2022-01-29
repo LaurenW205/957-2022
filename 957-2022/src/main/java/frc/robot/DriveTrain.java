@@ -6,12 +6,12 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.ControlType;
+
 
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import pabeles.concurrency.IntOperatorTask.Min;
+
 
 
 public class DriveTrain{
@@ -145,7 +145,7 @@ public class DriveTrain{
         }
         m_leftNeoMaster.set(-turn-output);
         m_rightNeoMaster.set(-turn-output);
-        //System.out.println((m_rightEncoder.getPosition()/0.333));
+  
         if (Math.abs(inches+m_rightEncoder.getPosition()/0.333) < 1){
             return true;
         }else{
@@ -153,13 +153,22 @@ public class DriveTrain{
         }
     }
 
-    public void turnTo(double targetAngle){
+    public void turnTo(double inches, double targetAngle, double speed){
+
+        double setpoint = inches*0.333;
 
         double output = m_auxLoop.getOutput(m_navx.getAngle(), targetAngle);
-        m_rightNeoMaster.set(-output);
-        m_leftNeoMaster.set(-output);
-    }
 
+        double margin = (setpoint- targetAngle)/0.8;
+       
+        if(margin < -0.5){
+            speed = -0.5;
+        }
+       if(margin > 0.5){
+            speed = 0.5;
+       }
+            
+     }
     public double target(double targetLocation){
         
         double currentLocation = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
