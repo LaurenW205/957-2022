@@ -162,11 +162,13 @@ public class DriveTrain{
         if(margin < -0.5){
             speed = -0.5;
         }
-       if(margin > 0.5){
+        if(margin > 0.5){
             speed = 0.5;
-       }
-            
-     }
+        }
+
+       //return targetAngle//
+    }
+
     public double target(double targetLocation){
         
         double currentLocation = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
