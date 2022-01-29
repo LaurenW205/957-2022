@@ -17,31 +17,59 @@ public class Shooter {
     SparkMaxPIDController p = shooter.getPIDController();
     DigitalInput breakBeamSensor = new DigitalInput(0);
     int caseNumber = 0;
+    boolean oldSensor = false;
+    public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
 
     public Shooter(){
-        //set pid constants
+    //PID constants for PID shooter
+        kP = 6e-5; 
+        kI = 0;
+        kD = 0; 
+        kIz = 0; 
+        kFF = 0.000015; 
+        kMaxOutput = 1; 
+        kMinOutput = -1;
+        maxRPM = 5700;
+
+    //Sets PID constants
+        p.setP(kP);
+        p.setI(kI);
+        p.setD(kD);
+        p.setIZone(kIz);
+        p.setFF(kFF);
+        p.setOutputRange(kMinOutput, kMaxOutput);
     }
 
     public int run(int cargo, boolean button){
         switch(caseNumber){
-        case 0:
-
-           if(button) 
-           caseNumber ++;
+        case 0: //checks if button is pressed
+            if(button)
+                caseNumber ++;
         break;
 
-        case 1:
+        case 1: //checks if button is released
             if(!button)
-            caseNumber ++;
+                caseNumber ++;
         break;
 
-        case 2:
-            
+        case 2: //turns motor on until button is pressed or no cargo
+            shooter.set(5700);
+            if(button || cargo == 0)
+                caseNumber++;
         break;
 
-        case 3:
-            
-        break;
+        case 3: //checks if button is not pressed
+            if(!button)
+                caseNumber = 0;
         }
+
+        //checks if sensor beam is broken and decrease cargo amount
+        if(breakBeamSensor.get() && !oldSensor)
+            cargo = cargo - 1;
+
+        oldSensor = breakBeamSensor.get();
+
+        //updates cargo amount
+        return cargo;
     }
 }
