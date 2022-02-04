@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
 
         case 0:
 
-        m_drivetrain.driveStraight(125, 0, 0.2);
+        m_drivetrain.driveStraight(113, 0, 0.2);
 
       }
 
