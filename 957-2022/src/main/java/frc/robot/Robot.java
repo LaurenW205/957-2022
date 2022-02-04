@@ -76,9 +76,20 @@ public class Robot extends TimedRobot {
           m_state.setState(State.WAITING);
           break;
 
+        case 3:
+          m_drivetrain.driveStraight(24, 0, 0.2); //drive to avoid cargo
+          m_drivetrain.turnTo(45, 0, 0.2); // turn towards terminal
+          m_drivetrain.driveStraight(144, 0, 0.2); //drive to terminal
+          m_state.setState(State.INTAKE);
+          m_state.setState(State.PASSTHROUGH);
+          m_drivetrain.driveStraight(-108, 0, 0.2);//reverse to get in range
+          m_state.setState(State.SHOOT);
+          m_drivetrain.driveStraight(108, 0, 0.2);//get cargo from human player
+          m_state.setState(State.INTAKE);
+            break;
       }
 
-
+     
 
     }
     
