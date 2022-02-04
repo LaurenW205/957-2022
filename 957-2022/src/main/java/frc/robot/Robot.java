@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.RobotState.State;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -22,6 +23,7 @@ public class Robot extends TimedRobot {
 
    int m_autoStep = 0;
    int m_autoMode = 0;
+   RobotState m_state = RobotState.getInstance();
 
   @Override
   public void robotInit() {}
@@ -50,8 +52,59 @@ public class Robot extends TimedRobot {
       }
 
       break;
-    }
-    
+
+      case 3:
+
+      switch(m_autoMode){
+
+        case 0:
+        m_drivetrain.driveStraight(24, 0, 0.2);//drive foward to avoid cargo
+        m_drivetrain.turnTo(45, 0, 0.2); //turn towards terminal
+        m_drivetrain.driveStraight(144, 0, 0.2);//drive towards terminal
+        m_state.setState(State.INTAKE);
+        m_drivetrain.driveStraight(-108, 0, 0.2);//reverse to shooting range
+        m_state.setState(State.PASSTHROUGH);
+        m_state.setState(State.SHOOT);
+        m_state.setState(State.INTAKE);
+        m_drivetrain.driveStraight(-108, 0, 0.2); //drive forward to collect from human player
+        break;
+
+      }
+
+      break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    } 
   }
     
   @Override
