@@ -132,11 +132,13 @@ public class DriveTrain{
 
         double setpoint = inches*0.333;
 
+        double turn = 0;
+
+        double output = 0;
+
         if(Math.abs(inches+m_rightEncoder.getPosition()) > 10){
             m_driveLoop.resetI();
         }
-        double output = m_driveLoop.getOutput(-m_rightEncoder.getPosition(), setpoint);
-        double turn = 0;
         if(m_navx.getAngle() > +0.1){
             turn = 0.1;
         }
@@ -156,6 +158,7 @@ public class DriveTrain{
     public void turnTo(double inches, double targetAngle, double speed){
 
         double setpoint = inches*0.333;
+    
 
         double margin = (setpoint- targetAngle)/30;
        
@@ -165,8 +168,7 @@ public class DriveTrain{
         if(margin > 0.5){
             speed = 0.5;
         }
-
-       //return targetAngle//
+        
     }
 
     public double target(double targetLocation){

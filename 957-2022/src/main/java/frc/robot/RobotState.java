@@ -26,7 +26,7 @@ public class RobotState{
     }
     
     public enum State{
-        SHOOT, INTAKE, REVERSE_INTAKE, PASSTHROUGH, WAITING, GRAB_CARGO;
+        SHOOT, INTAKE, REVERSE_INTAKE, REVERSE_ALL, PASSTHROUGH, WAITING, GRAB_CARGO;
     }
 
 }
