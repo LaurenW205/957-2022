@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.RobotState.State;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -24,6 +25,7 @@ public class Robot extends TimedRobot {
 
    int m_autoStep = 0;
    int m_autoMode = 0;
+   RobotState m_state = RobotState.getInstance();
 
   int cargoNum = 0;
   public void updateSmartboard() {
@@ -67,10 +69,11 @@ public class Robot extends TimedRobot {
       
         case 0:
 
-          m_drivetrain.driveStraight(113.2 + 5.5, 0, 0.2);  // Push alliance and our bot off the tarmac, push alliance bot a little further to give room
+          m_drivetrain.driveStraight(113.2, 0, 0.4);
+          m_drivetrain.driveStraight(5.5, 0, 0.2);  // Push alliance and our bot off the tarmac, push alliance bot a little further to give room
           m_drivetrain.driveStraight(-5.5, 0, 0.2);         // Reverse back to give room for rotation
-          m_drivetrain.turnTo(-137.0);                       // Rotate 137 degrees (2.391rad) anticlockwise, face CARGO
-        
+          m_drivetrain.turnTo(-137.0, 0, 0.2);                       // Rotate 137 degrees (2.391rad) anticlockwise, face CARGO
+          m_state.setState(State.WAITING);
           break;
 
       }
