@@ -5,7 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+<<<<<<< HEAD
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+=======
+>>>>>>> 528f29c80cecbbba5b35f49eb72f8ff4211c2e85
 import frc.robot.RobotState.State;
 
 /**
@@ -26,12 +29,15 @@ public class Robot extends TimedRobot {
    int m_autoStep = 0;
    int m_autoMode = 0;
    RobotState m_state = RobotState.getInstance();
+<<<<<<< HEAD
 
   int cargoNum = 0;
   public void updateSmartboard() {
     SmartDashboard.putNumber("Cargo", cargoNum);
     
   }
+=======
+>>>>>>> 528f29c80cecbbba5b35f49eb72f8ff4211c2e85
 
   @Override
   public void robotInit() {}
@@ -57,12 +63,13 @@ public class Robot extends TimedRobot {
 
         case 0:
 
-        m_drivetrain.driveStraight(125, 0, 0.2);
+        m_drivetrain.driveStraight(113, 0, 0.2);
 
       }
 
       break;
 
+<<<<<<< HEAD
       case 1: 
       
       switch(m_autoStep) {
@@ -82,6 +89,60 @@ public class Robot extends TimedRobot {
 
     }
     
+=======
+      case 3:
+
+      switch(m_autoMode){
+
+        case 0:
+        m_drivetrain.driveStraight(24, 0, 0.2);//drive foward to avoid cargo
+        m_drivetrain.turnTo(45, 0, 0.2); //turn towards terminal
+        m_drivetrain.driveStraight(144, 0, 0.2);//drive towards terminal
+        m_state.setState(State.INTAKE);
+        m_drivetrain.driveStraight(-108, 0, 0.2);//reverse to shooting range
+        m_state.setState(State.PASSTHROUGH);
+        m_state.setState(State.SHOOT);
+        m_state.setState(State.INTAKE);
+        m_drivetrain.driveStraight(-108, 0, 0.2); //drive forward to collect from human player
+        break;
+
+      }
+
+      break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    } 
+>>>>>>> 528f29c80cecbbba5b35f49eb72f8ff4211c2e85
   }
     
   @Override
