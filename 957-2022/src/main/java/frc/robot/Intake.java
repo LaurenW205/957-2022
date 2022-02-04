@@ -82,33 +82,33 @@ public class Intake {
     public int cycle(int cargoNum, boolean button) {
     
         switch (var) {
-            case 0:
+            case 0:                 // Wait for button press
                 if (button)
                     var++;
             break;
 
             case 1:
-                if (!button)
+                if (!button)        // Wait for button to be unpressed
                     var = 2;
             break;
 
             case 2:
-                extendCyl();
+                extendCyl();        // Extend cylinder
                 var = 3;
             break;
 
             case 3:
-                if (button)
+                if (button)         // Wait for button press
                     var = 4;
             break;
 
             case 4:
-                if (!button)
+                if (!button)        // Wait for button unpress
                     var = 5;
             break;
 
             case 5:
-                retractCyl();
+                retractCyl();       // Retract arm and return to beginning of cycle
                 var = 0;
             break;
 
@@ -121,7 +121,7 @@ public class Intake {
                 cargoNum++;
         }
 
-        if (cargoNum > 1 && var != 0) 
+        if (cargoNum >= 2 && var != 0)      // Retract cylinder if have maximum cargo
             var = 5;
 
         lastCycle = nowCycle;
