@@ -6,12 +6,12 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.ControlType;
+
 
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import pabeles.concurrency.IntOperatorTask.Min;
+
 
 
 public class DriveTrain{
@@ -132,11 +132,13 @@ public class DriveTrain{
 
         double setpoint = inches*0.333;
 
+        double turn = 0;
+
+        double output = 0;
+
         if(Math.abs(inches+m_rightEncoder.getPosition()) > 10){
             m_driveLoop.resetI();
         }
-        double output = m_driveLoop.getOutput(-m_rightEncoder.getPosition(), setpoint);
-        double turn = 0;
         if(m_navx.getAngle() > +0.1){
             turn = 0.1;
         }
@@ -145,7 +147,7 @@ public class DriveTrain{
         }
         m_leftNeoMaster.set(-turn-output);
         m_rightNeoMaster.set(-turn-output);
-        //System.out.println((m_rightEncoder.getPosition()/0.333));
+  
         if (Math.abs(inches+m_rightEncoder.getPosition()/0.333) < 1){
             return true;
         }else{
@@ -153,11 +155,20 @@ public class DriveTrain{
         }
     }
 
-    public void turnTo(double targetAngle){
+    public void turnTo(double inches, double targetAngle, double speed){
 
-        double output = m_auxLoop.getOutput(m_navx.getAngle(), targetAngle);
-        m_rightNeoMaster.set(-output);
-        m_leftNeoMaster.set(-output);
+        double setpoint = inches*0.333;
+    
+
+        double margin = (setpoint- targetAngle)/30;
+       
+        if(margin < -0.5){
+            speed = -0.5;
+        }
+        if(margin > 0.5){
+            speed = 0.5;
+        }
+        
     }
 
     public double target(double targetLocation){
