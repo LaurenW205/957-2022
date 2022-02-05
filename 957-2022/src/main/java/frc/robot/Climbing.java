@@ -19,7 +19,6 @@ public class Climbing {
         pidController = climbingMotor.getPIDController();
 
 
-
         pidController.setP(5e-5);
         pidController.setI(1e-6);
         pidController.setD(0);

@@ -22,6 +22,7 @@ public class Robot extends TimedRobot {
    */
    
    DriveTrain m_drivetrain = DriveTrain.getInstance();
+   //Turret m_turret = new Turret();
 
    int m_autoStep = 0;
    int m_autoMode = 0;
@@ -62,6 +63,47 @@ public class Robot extends TimedRobot {
       }
 
       break;
+<<<<<<< HEAD
+      case 2:
+
+      switch(m_autoStep){
+       
+       
+        case 0:
+         m_drivetrain.driveStraight(46, 0, 0.5);
+         m_autoStep ++;
+        break;
+
+        case 1:
+         //intake cargo
+         m_autoStep ++;
+        break;
+
+        case 2:
+         m_drivetrain.driveStraight(24, 0, 0.5);
+         m_autoStep ++;
+        break;
+
+        case 3:
+         //m_turret.run(true);
+         m_autoStep ++;
+        break;
+
+        case 4:
+        //shoot
+         m_autoStep ++;
+        break;
+
+        case 5:
+         m_drivetrain.turnTo(45);
+         m_autoStep ++;
+        break;
+
+
+
+
+      }
+=======
 
       case 1: 
       
@@ -116,6 +158,7 @@ public class Robot extends TimedRobot {
       
      
 
+>>>>>>> 53f1d3cbbef84e4b41eb127a7bdbe06d3a00140e
     }
     
   }
