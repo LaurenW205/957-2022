@@ -220,22 +220,53 @@ public class Robot extends TimedRobot {
       case 4:
 
       switch(m_autoStep){
-        case 0:
-        m_state.setState(State.INTAKE);
-        m_drivetrain.driveStraight(40, 0, 0.2); //drive to first cargo
-        m_state.setState(State.SHOOT); //shoot both
-        m_drivetrain.turnTo(45, 0, 0.2);
-        m_drivetrain.driveStraight(160, 0, 0.2); //driving to terminal
-        m_drivetrain.turnTo(-45, 0, 0.2);
-        m_drivetrain.driveStraight(60, 0, 0.2); 
-        m_state.setState(State.INTAKE); //collect cargo from terminal
-        m_drivetrain.driveStraight(-108, 0, 0.2); // reverse to shooting range
-        m_state.setState(State.SHOOT);
-      }
-     
+        case 0: //drive to tarmac cargo, shoot both
+          if(m_drivetrain.driveStraight(40, 0, 0.2)){
+            m_autoStep ++;
+            m_drivetrain.arcadeDrive(0, 0);
+            m_state.setState(State.INTAKE);
+            m_state.setState(State.SHOOT);
+          }
+        break;
 
-    }
-    
+        case 1: //turn to terminal
+          m_drivetrain.turnTo(45, 0, 0.2);
+          m_autoStep ++;
+        break;
+
+        case 2: //drive to terminal
+         if(m_drivetrain.driveStraight(160, 0, 0.2)){
+           m_autoStep ++;
+           m_drivetrain.arcadeDrive(0, 0);
+         }
+        break;
+
+        case 3: //turn to terminal
+          m_drivetrain.turnTo(-45, 0, 0.2);
+            m_autoStep++;
+            m_drivetrain.arcadeDrive(0, 0);
+        break;
+
+        case 4: // drive to tarmac, collect cargo
+          if(m_drivetrain.driveStraight(60, 0, 0.2)){
+            m_autoStep++;
+            m_drivetrain.arcadeDrive(0, 0);
+            m_state.setState(State.INTAKE); //collect cargo from terminal
+          }
+        break;
+
+        case 5: //reverse to shooting range, shoot
+          if(m_drivetrain.driveStraight(-108, 0, 0.2)){
+            m_state.setState(State.SHOOT);
+            m_autoStep++;
+            m_drivetrain.arcadeDrive(0, 0);
+          }
+        break;
+        }
+       
+
+        }
+      
   }
     
   @Override
