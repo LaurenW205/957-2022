@@ -59,11 +59,15 @@ public class Robot extends TimedRobot {
 
         case 0:
 
-        m_drivetrain.driveStraight(113, 0, 0.2);
+          if(m_drivetrain.driveStraight(113, 0, 0.2)){
+            m_drivetrain.resetEncoders();
+
+          }
+        break;
 
       }
 
-      break;
+      
 
       case 1: 
       
@@ -81,12 +85,11 @@ public class Robot extends TimedRobot {
 
         case 1: 
 
-        if(m_drivetrain.driveStraight(5.5, 0, 0.2)); // Push further for room
-        {
-        m_autoStep++;
-        m_drivetrain.resetEncoders();
-        m_drivetrain.arcadeDrive(0, 0);
-        m_state.setState(State.WAITING);
+        if(m_drivetrain.driveStraight(5.5, 0, 0.2)){
+         m_autoStep++;
+         m_drivetrain.resetEncoders();
+         m_drivetrain.arcadeDrive(0, 0);
+         m_state.setState(State.WAITING);
         }
         break;
 
