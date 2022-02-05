@@ -81,18 +81,19 @@ public class Robot extends TimedRobot {
 
       case 2:
       
-      switch(m_autoStep){
+       switch(m_autoStep){
 
         case 0:
-         m_drivetrain.driveStraight(46, 0, 0.5); //drive out of tarmac
-         m_state.setState(State.INTAKE); //intake cargo
-         m_drivetrain.driveStraight(24, 0, 0.5); 
-         m_state.setState(State.SHOOT); //shoot
-         m_drivetrain.turnTo(45, 0, 0.2);
-         m_drivetrain.driveStraight(120, 0, 0.5); //drive to tarmac
-         m_state.setState(State.INTAKE); //intake
 
-           
+          m_drivetrain.driveStraight(46, 0, 0.5); //drive out of tarmac
+          m_autoStep++;
+          m_drivetrain.arcadeDrive(0, 0);
+          m_state.setState(State.INTAKE); //intake cargo
+          m_drivetrain.driveStraight(24, 0, 0.5);
+          m_state.setState(State.SHOOT); //shoot
+          m_drivetrain.turnTo(45, 0, 0.2);
+          m_drivetrain.driveStraight(120, 0, 0.5); //drive to tarmac
+          m_state.setState(State.INTAKE); //intake
       }
 
 
@@ -129,6 +130,7 @@ public class Robot extends TimedRobot {
         m_state.setState(State.INTAKE); //collect cargo from terminal
         m_drivetrain.driveStraight(-108, 0, 0.2); // reverse to shooting range
         m_state.setState(State.SHOOT);
+        
       }
      
 
