@@ -137,22 +137,49 @@ public class Robot extends TimedRobot {
        case 3:
 
        switch(m_autoStep){
-
-        case 0:
-         
-          m_drivetrain.driveStraight(24, 0, 0.2); //drive to avoid cargo
-          m_drivetrain.turnTo(45, 0, 0.2); // turn towards terminal
-          m_drivetrain.driveStraight(144, 0, 0.2); //drive to terminal
-          m_state.setState(State.INTAKE);
-          m_state.setState(State.PASSTHROUGH);
-          m_drivetrain.driveStraight(-108, 0, 0.2);//reverse to get in range
-          m_state.setState(State.SHOOT);
-          m_drivetrain.driveStraight(108, 0, 0.2);//get cargo from human player
-          m_state.setState(State.INTAKE);
-       }
-
-       break;
       
+          case 0: //drive to avoid cargo
+          if(m_drivetrain.driveStraight(24, 0, 0.2)){
+            m_autoStep++;
+            m_drivetrain.arcadeDrive(0, 0);
+          }
+        break;
+
+        case 1: //turn to terminal
+          m_drivetrain.turnTo(45, 0, 0.2);
+            m_autoStep++;
+            m_drivetrain.arcadeDrive(0, 0);
+        break;
+
+        case 2: //drive to terminal and collect cargo
+          if(m_drivetrain.driveStraight(144, 0, 0.2)){
+            m_autoStep++;
+            m_drivetrain.arcadeDrive(0, 0);
+            m_state.setState(State.INTAKE); //two state statements in one case?
+            m_state.setState(State.PASSTHROUGH);
+          }
+        break;
+
+        case 3: //reverse to shooting range
+          if(m_drivetrain.driveStraight(-108, 0, 0.2)){
+            m_autoStep++;
+            m_drivetrain.arcadeDrive(0, 0);
+            m_state.setState(State.SHOOT);
+          }
+        break;
+
+        case 4: //collect from human player
+          if(m_drivetrain.driveStraight(108, 0, 0.2)){
+            m_autoStep++;
+            m_drivetrain.arcadeDrive(0, 0);
+            m_state.setState(State.INTAKE);
+          }
+        break;
+        
+      }
+
+      break;
+
       case 4:
 
       switch(m_autoStep){
