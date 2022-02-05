@@ -27,8 +27,8 @@ public class DriveTrain{
     RelativeEncoder m_rightEncoder = m_rightNeoMaster.getEncoder();
     SparkMaxPIDController m_rightController = m_rightNeoMaster.getPIDController();
 
-    CANSparkMax m_leftNeoMaster = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless);
-    CANSparkMax m_leftNeoSlave = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
+    CANSparkMax m_leftNeoMaster = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless);
+    CANSparkMax m_leftNeoSlave = new CANSparkMax(5, CANSparkMaxLowLevel.MotorType.kBrushless);
     RelativeEncoder m_leftEncoder = m_rightNeoMaster.getEncoder();
     SparkMaxPIDController m_leftController = m_leftNeoMaster.getPIDController();
 
@@ -129,8 +129,6 @@ public class DriveTrain{
     public boolean driveStraight(double inches, double targetHeading, double speed){
 
         m_driveLoop.setOutputLimits(-speed, speed);
-
-        double setpoint = inches*0.333;
 
         double turn = 0;
 
