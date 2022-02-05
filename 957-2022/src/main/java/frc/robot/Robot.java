@@ -74,10 +74,33 @@ public class Robot extends TimedRobot {
           m_drivetrain.driveStraight(-5.5, 0, 0.2);         // Reverse back to give room for rotation
           m_drivetrain.turnTo(-137.0, 0, 0.2);                       // Rotate 137 degrees (2.391rad) anticlockwise, face CARGO
           m_state.setState(State.WAITING);
-          break;
+      }
+
+      break;
+
+      case 2:
+      
+      switch(m_autoStep){
+
+        case 0:
+         m_drivetrain.driveStraight(46, 0, 0.5); //drive out of tarmac
+         m_state.setState(State.INTAKE); //intake cargo
+         m_drivetrain.driveStraight(24, 0, 0.5); 
+         m_state.setState(State.SHOOT); //shoot
+         m_drivetrain.turnTo(45, 0, 0.2);
+         m_drivetrain.driveStraight(120, 0, 0.5); //drive to tarmac
+         m_state.setState(State.INTAKE); //intake
+
+           
+      }
 
 
-        case 3:
+       case 3:
+
+       switch(m_autoStep){
+
+        case 0:
+         
           m_drivetrain.driveStraight(24, 0, 0.2); //drive to avoid cargo
           m_drivetrain.turnTo(45, 0, 0.2); // turn towards terminal
           m_drivetrain.driveStraight(144, 0, 0.2); //drive to terminal
@@ -87,9 +110,10 @@ public class Robot extends TimedRobot {
           m_state.setState(State.SHOOT);
           m_drivetrain.driveStraight(108, 0, 0.2);//get cargo from human player
           m_state.setState(State.INTAKE);
-            break;
-      }
+       }
 
+       break;
+      
      
 
     }
