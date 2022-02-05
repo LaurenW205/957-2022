@@ -115,6 +115,21 @@ public class Robot extends TimedRobot {
 
        break;
       
+      case 4:
+
+      switch(m_autoStep){
+        case 0:
+        m_state.setState(State.INTAKE);
+        m_drivetrain.driveStraight(40, 0, 0.2); //drive to first cargo
+        m_state.setState(State.SHOOT); //shoot both
+        m_drivetrain.turnTo(45, 0, 0.2);
+        m_drivetrain.driveStraight(160, 0, 0.2); //driving to terminal
+        m_drivetrain.turnTo(-45, 0, 0.2);
+        m_drivetrain.driveStraight(60, 0, 0.2); 
+        m_state.setState(State.INTAKE); //collect cargo from terminal
+        m_drivetrain.driveStraight(-108, 0, 0.2); // reverse to shooting range
+        m_state.setState(State.SHOOT);
+      }
      
 
     }
