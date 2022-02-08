@@ -4,15 +4,18 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotState.State;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
+ *
  */
 
 public class Robot extends TimedRobot {
@@ -23,11 +26,15 @@ public class Robot extends TimedRobot {
    
    DriveTrain m_drivetrain = DriveTrain.getInstance();
    //Turret m_turret = new Turret();
+   Joystick m_joystick = new Joystick(0);
+
+   boolean m_autoState = false;
 
    int m_timer = 0;
    int m_autoStep = 0;
-   int m_autoMode = 0;
+   int automode = 0;
    RobotState m_state = RobotState.getInstance();
+
 
   int cargoNum = 0;
   public void updateSmartboard() {
@@ -49,9 +56,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
 
+ 
+  
+
     System.out.println(m_autoStep);
 
-    switch(m_autoMode){
+    switch(m_autoStep){
 
       case 0:
 
