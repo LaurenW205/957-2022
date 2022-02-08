@@ -77,40 +77,48 @@ public class Intake {
         intakeMotor.set(0);
     }
 
-    public int cycle(int cargoNum, boolean button) {
-    
-        switch (var) {
-            case 0:                 // Wait for button press
-                if (button)
-                    var++;
-            break;
-
-            case 1:
-                if (!button)        // Wait for button to be unpressed
-                    var = 2;
-            break;
-
-            case 2:
-                extendCyl();        // Extend cylinder
-                var = 3;
-            break;
-
-            case 3:
-                if (button)         // Wait for button press
-                    var = 4;
-            break;
-
-            case 4:
-                if (!button)        // Wait for button unpress
-                    var = 5;
-            break;
-
-            case 5:
-                retractCyl();       // Retract arm and return to beginning of cycle
-                var = 0;
-            break;
-
+    public int run(int cargoNum, boolean button, boolean rev) 
+    {
+        if(rev)
+        {
+            intakeMotor.set(-1);
+            cargoNum = 0;
         }
+        else
+        {
+            switch (var) {
+                case 0:                 // Wait for button press
+                    if (button)
+                        var++;
+                break;
+
+                case 1:
+                    if (!button)        // Wait for button to be unpressed
+                        var = 2;
+                break;
+
+                case 2:
+                    extendCyl();        // Extend cylinder
+                    var = 3;
+                break;
+
+                case 3:
+                    if (button)         // Wait for button press
+                        var = 4;
+                break;
+
+                case 4:
+                    if (!button)        // Wait for button unpress
+                        var = 5;
+                break;
+
+                case 5:
+                    retractCyl();       // Retract arm and return to beginning of cycle
+                    var = 0;
+                break;
+        }
+
+    }
 
         boolean nowCycle = sensor.get();
 

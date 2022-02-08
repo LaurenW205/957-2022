@@ -4,9 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.RobotState.State;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -22,17 +22,30 @@ public class Robot extends TimedRobot {
    */
    
    DriveTrain m_drivetrain = DriveTrain.getInstance();
-   //Turret m_turret = new Turret();
-
+   Joystick m_Joystick = new Joystick(0);
+   Joystick m_controller = new Joystick(1);
+   
    int m_timer = 0;
    int m_autoStep = 0;
    int m_autoMode = 0;
-   RobotState m_state = RobotState.getInstance();
+   int cargoNum = 0;
+   int oldPOV = 0;
+   
+   // Button ports
+   final int k_RevIntake = 0;   
+   final int k_Intake = 0;
+   final int k_Turret = 0;
+   final int k_Climber = 0;
+   final int k_CargoChange = 0;
+   final int k_Shooter = 0;
 
-  int cargoNum = 0;
+   Shooter m_Shooter = new Shooter();
+   Turret2 m_Turret = new Turret2();
+   Intake m_Intake = new Intake();
+
+
   public void updateSmartboard() {
     SmartDashboard.putNumber("Cargo", cargoNum);
-    
   }
 
   @Override
@@ -41,6 +54,24 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     updateSmartboard();
+
+    if (m_controller.getPOV()==180 && oldPOV != 180){
+      cargoNum--;
+    }
+
+    if (m_controller.getPOV()==0 && oldPOV !=0){
+      cargoNum++;
+    }
+
+    if(cargoNum > 2){
+      cargoNum = 2;
+    }
+    
+    if(cargoNum < 0){
+      cargoNum = 0;
+    }
+    oldPOV = m_controller.getPOV();
+    
   }
 
   @Override
@@ -75,7 +106,6 @@ public class Robot extends TimedRobot {
         m_autoStep++;
         m_drivetrain.resetEncoders();
         m_drivetrain.arcadeDrive(0, 0);
-        m_state.setState(State.WAITING);
       
         break;
 
@@ -86,7 +116,6 @@ public class Robot extends TimedRobot {
         m_autoStep++;
         m_drivetrain.resetEncoders();
         m_drivetrain.arcadeDrive(0, 0);
-        m_state.setState(State.WAITING);
         }
         break;
 
@@ -97,7 +126,6 @@ public class Robot extends TimedRobot {
           m_autoStep++;
           m_drivetrain.resetEncoders();
           m_drivetrain.arcadeDrive(0, 0);
-          m_state.setState(State.WAITING);
           }
         
         break;
@@ -126,7 +154,6 @@ public class Robot extends TimedRobot {
           if(m_drivetrain.driveStraight(46, 0, 0.5)){ //drive out of tarmac
             m_autoStep++;
             m_drivetrain.arcadeDrive(0, 0);
-            m_state.setState(State.INTAKE); //intake cargo
           } 
           
           break;
@@ -134,10 +161,8 @@ public class Robot extends TimedRobot {
         case 1:
          
           if(m_drivetrain.driveStraight(24, 0, 0.5)){
-            m_autoStep++;
+            m_autoStep++; 
             m_drivetrain.arcadeDrive(0, 0);
-            m_state.setState(State.SHOOT);
-
           }
 
           break;
@@ -158,8 +183,6 @@ public class Robot extends TimedRobot {
          if(m_drivetrain.driveStraight(120, 0, 0.5)){
            m_autoStep++;
            m_drivetrain.arcadeDrive(0, 0);
-           m_state.setState(State.SHOOT);
-
          }
 
         break;
@@ -180,7 +203,7 @@ public class Robot extends TimedRobot {
           break;
 
         case 1: //turn to terminal
-          m_drivetrain.turnTo(45, 0, 0.2);
+            m_drivetrain.turnTo(45, 0, 0.2);
             m_autoStep++;
             m_drivetrain.arcadeDrive(0, 0);
         break;
@@ -189,8 +212,6 @@ public class Robot extends TimedRobot {
           if(m_drivetrain.driveStraight(144, 0, 0.2)){
             m_autoStep++;
             m_drivetrain.arcadeDrive(0, 0);
-            m_state.setState(State.INTAKE); //two state statements in one case?
-            m_state.setState(State.PASSTHROUGH);
           }
         break;
 
@@ -198,7 +219,6 @@ public class Robot extends TimedRobot {
           if(m_drivetrain.driveStraight(-108, 0, 0.2)){
             m_autoStep++;
             m_drivetrain.arcadeDrive(0, 0);
-            m_state.setState(State.SHOOT);
           }
         break;
 
@@ -206,7 +226,6 @@ public class Robot extends TimedRobot {
           if(m_drivetrain.driveStraight(108, 0, 0.2)){
             m_autoStep++;
             m_drivetrain.arcadeDrive(0, 0);
-            m_state.setState(State.INTAKE);
           }
         break;
         
@@ -221,8 +240,7 @@ public class Robot extends TimedRobot {
           if(m_drivetrain.driveStraight(40, 0, 0.2)){
             m_autoStep ++;
             m_drivetrain.arcadeDrive(0, 0);
-            m_state.setState(State.INTAKE);
-            m_state.setState(State.SHOOT);
+
           }
         break;
 
@@ -248,13 +266,12 @@ public class Robot extends TimedRobot {
           if(m_drivetrain.driveStraight(60, 0, 0.2)){
             m_autoStep++;
             m_drivetrain.arcadeDrive(0, 0);
-            m_state.setState(State.INTAKE); //collect cargo from terminal
+             //collect cargo from terminal
           }
         break;
 
         case 5: //reverse to shooting range, shoot
           if(m_drivetrain.driveStraight(-108, 0, 0.2)){
-            m_state.setState(State.SHOOT);
             m_autoStep++;
             m_drivetrain.arcadeDrive(0, 0);
           }
@@ -270,7 +287,14 @@ public class Robot extends TimedRobot {
   public void teleopInit() {}
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    m_Turret.run(m_controller.getRawButton(k_Turret));
+    cargoNum = m_Intake.run(cargoNum, m_Joystick.getRawButton(k_Intake), m_Joystick.getRawButton(k_RevIntake));    
+    cargoNum = m_Shooter.run(cargoNum, m_controller.getRawButton(k_Shooter));
+
+    
+
+  }
 
   @Override
   public void disabledInit() {}

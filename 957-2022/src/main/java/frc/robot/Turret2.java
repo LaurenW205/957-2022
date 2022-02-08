@@ -89,7 +89,7 @@ public class Turret2 {
         }
     }
    
-    public void run(boolean button, boolean lockedOn){
+    public void run(boolean button){
         tx0 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx0").getDouble(0);  // three target points, updated data
         tx1 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx1").getDouble(0);
         tx2 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx2").getDouble(0);
