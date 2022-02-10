@@ -20,6 +20,7 @@ public class Intake {
     DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
     CANSparkMax intakeMotor = new CANSparkMax(0, MotorType.kBrushless);
     DigitalInput sensor = new DigitalInput(0);
+
     int var = 5;
     boolean lastCycle = false;
 
@@ -123,8 +124,10 @@ public class Intake {
         boolean nowCycle = sensor.get();
 
         if (nowCycle == false) {
-            if (lastCycle == true)
-                cargoNum++;
+            if (lastCycle == true){
+                cargoNum++; 
+                Passthrough.getInstance().raiseFlag();
+            }
         }
 
         if (cargoNum >= 2 && var != 0)      // Retract cylinder if have maximum cargo
