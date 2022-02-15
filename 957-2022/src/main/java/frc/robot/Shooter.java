@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
 public class Shooter {
+    double minimumSpeed;
+
     AHRS ahrs = new AHRS(SerialPort.Port.kMXP); 
     CANSparkMax shooter = new CANSparkMax(0, MotorType.kBrushless);
     RelativeEncoder encoder = shooter.getEncoder();
@@ -41,6 +43,7 @@ public class Shooter {
     }
 
     public int run(int cargo, boolean button){
+
         switch(caseNumber){
         case 0: //checks if button is pressed
             if(button)
@@ -54,6 +57,13 @@ public class Shooter {
 
         case 2: //turns motor on until button is pressed or no cargo
             shooter.set(5700);
+
+            if(shooter.getEncoder().getVelocity()> 4000){
+                Passthrough.getInstance().pusher.set(.5);
+            }else{
+                Passthrough.getInstance().pusher.set(0);
+            }
+
             if(button || cargo == 0)
                 caseNumber++;
         break;

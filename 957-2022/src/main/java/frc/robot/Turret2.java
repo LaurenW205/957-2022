@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 
 public class Turret2 {
     
-    CANSparkMax turret = new CANSparkMax(7,MotorType.kBrushless);     //making variables
+    CANSparkMax turret = new CANSparkMax(7,MotorType.kBrushless);     //variables
     SparkMaxPIDController pid;
     RelativeEncoder encoder;
     Joystick controller = new Joystick(0);
@@ -29,8 +29,7 @@ public class Turret2 {
     double ta0 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta0").getDouble(0); // target area (used to determine if target is seen)
     double ta1 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta1").getDouble(0);
     double ta2 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta2").getDouble(0);
-
-   
+    double tl  = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0);  
 
     double slot1 = 0;
     double slot2 = 0;
@@ -55,10 +54,10 @@ public class Turret2 {
             }
         }
    
-        if (slot1 > 231){   //if turret gets to 180 degrees, spin the other way
+        if (slot1 > 115.5){   //if turret gets to 90 degrees, spin the other way
             speed = -0.5;
         }
-        if(slot1 < -231){
+        if(slot1 < -115.5){
             speed = 0.5;
         }
    
@@ -71,16 +70,16 @@ public class Turret2 {
         if (Math.abs(tx) > 2)
             turn = (slot1 * 0.77922078 + tx * 1) * 1.283333333;   //moving to desired targets
 
-        if( turn > 462 ){   //shouldn't overshoot 360 degrees or 462 rotations
-            turn = 462;
-         }else if(turn < -462){
-                turn = -462;
+        if( turn > 90 ){   //shouldn't overshoot 180 degrees or 115.5 rotations
+            turn = 115.5;
+         }else if(turn < -115.5){
+                turn = -115.5;
         }
   
-        double z = oldTurn + 0.1 * (turn - oldTurn);    //smooth turning
+        double z = oldTurn + 0.4 * (turn - oldTurn);    //smooth turning
   
         if(controller.getRawButton(1)){
-            if(ta0 == 0 ||ta1 == 0 ||ta2 == 0 ){  // if target is not seen, set turret to old turn
+            if(ta0 == 0 ||ta1 == 0 ||ta2 == 0 ){    // if target is not seen, set turret to old turn
                 pid.setReference(oldTurn, CANSparkMax.ControlType.kPosition);    
             }else{
                 pid.setReference(z, CANSparkMax.ControlType.kPosition);   // if target is seen set to z value
@@ -89,14 +88,22 @@ public class Turret2 {
         }
     }
    
-    public void run(boolean button, boolean lockedOn){
+    public void run(boolean button){
         tx0 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx0").getDouble(0);  // three target points, updated data
         tx1 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx1").getDouble(0);
         tx2 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx2").getDouble(0);
         ta0 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta0").getDouble(0);
         ta1 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta1").getDouble(0);
         ta2 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta2").getDouble(0);
+        tl  = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0);
+
         time = time + 0.02;  
+
+        //checks if limelight is on
+        if(tl==-9000){
+            pid.setReference(0, CANSparkMax.ControlType.kPosition);
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1);//turns off limelight
+        }
         
         //if target seen, sets time to zero
         if(ta0 != 0 &&  ta1 != 0 && ta2 != 0 ) 
@@ -137,9 +144,13 @@ public class Turret2 {
         }   
             //turns limelight on if seeking or tracking
             if(caseNumber == 3){
-                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(3);
+                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(3);//on?
             }else{
-                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1);
+                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1);//off?
             }
+
+            //checks if limelight is on
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(-9000);
+
     }   
 }
