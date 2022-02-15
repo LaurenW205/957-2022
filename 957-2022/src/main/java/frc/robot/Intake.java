@@ -77,7 +77,7 @@ public class Intake {
         intakeMotor.set(0);
     }
 
-    public int cycle(int cargoNum, boolean button) {
+    public int run(int cargoNum, boolean button) {
     
         switch (var) {
             case 0:                 // Wait for button press
