@@ -3,8 +3,6 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-
 public class Passthrough {
     private static Passthrough m_passthrough;
     public CANSparkMax pusher = new CANSparkMax(0, MotorType.kBrushless);
