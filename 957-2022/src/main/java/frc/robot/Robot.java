@@ -35,12 +35,12 @@ public class Robot extends TimedRobot {
    int oldPOV = 0;
    
    // Button ports
-   final int k_RevIntake = 0;   
-   final int k_Intake = 0;
-   final int k_Turret = 0;
-   final int k_Climber = 0;
-   final int k_CargoChange = 0;
-   final int k_Shooter = 0;
+   final int k_RevIntake = 3;   //joystick button 3
+   final int k_Intake = 4;      //joystick button 4
+   final int k_Turret = 0;      //controller A
+   final int k_Climber = 3;     //controller Y
+   final int k_CargoChange = 0; //controller d pad
+   final int k_Shooter = 1;     //controller B
 
    Shooter m_Shooter = new Shooter();
    Turret2 m_Turret = new Turret2();

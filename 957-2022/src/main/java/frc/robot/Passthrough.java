@@ -6,7 +6,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Passthrough {
     private static Passthrough m_passthrough;
     public CANSparkMax pusher = new CANSparkMax(0, MotorType.kBrushless);
-    boolean oldSensor = false;
     int cargo = 0;
     int intakeFlag = 0;
     int time = 0;
