@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
    */
    
    DriveTrain m_drivetrain = DriveTrain.getInstance();
-   Joystick m_Joystick = new Joystick(0);
+   Joystick m_joystick = new Joystick(0);
    Joystick m_controller = new Joystick(1);
    
    int m_timer = 0;
@@ -89,8 +89,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+
+    m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(2));
     m_Turret.run(m_controller.getRawButton(k_Turret));
-    cargoNum = m_Intake.run(cargoNum, m_Joystick.getRawButton(k_Intake), m_Joystick.getRawButton(k_RevIntake));    
+    cargoNum = m_Intake.run(cargoNum, m_joystick.getRawButton(k_Intake), m_joystick.getRawButton(k_RevIntake));    
     cargoNum = m_Shooter.run(cargoNum, m_controller.getRawButton(k_Shooter)); 
   }
 
