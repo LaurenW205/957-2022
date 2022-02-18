@@ -18,7 +18,8 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 public class Intake {
     DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
-    CANSparkMax intakeMotor = new CANSparkMax(0, MotorType.kBrushless);
+    CANSparkMax intakeMotor_1 = new CANSparkMax(0, MotorType.kBrushless);
+    CANSparkMax intakeMotor_2 = new CANSparkMax(0, MotorType.kBrushless);
     DigitalInput sensor = new DigitalInput(0);
 
     int var = 5;
@@ -70,23 +71,27 @@ public class Intake {
 
     public void extendCyl() {
         doubleSolenoid.set(Value.kForward);
-        intakeMotor.set(1);
+        intakeMotor_1.set(1);
+        intakeMotor_2.set(1);
     }
 
     public void retractCyl() {
         doubleSolenoid.set(Value.kReverse);
-        intakeMotor.set(0);
+        intakeMotor_1.set(0);
+        intakeMotor_2.set(0);
     }
 
     public int run(int cargoNum, boolean button, boolean rev) 
     {
         if(rev)
         {
-            intakeMotor.set(-1);
+            intakeMotor_1.set(-1);
+            intakeMotor_2.set(-1);
             cargoNum = 0;
         }
         else
         {
+
             switch (var) {
                 case 0:                 // Wait for button press
                     if (button)
@@ -118,9 +123,15 @@ public class Intake {
                     var = 0;
                 break;
         }
-
     }
-
+    if (!Passthrough.getInstance().cargoDown)
+    {
+        if (var != 0)
+        {
+          var = 0;
+          retractCyl();
+        }
+    }
         boolean nowCycle = sensor.get();
 
         if (nowCycle == false) {

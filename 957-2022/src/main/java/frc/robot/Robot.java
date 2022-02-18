@@ -27,6 +27,7 @@ public class Robot extends TimedRobot {
    DriveTrain m_drivetrain = DriveTrain.getInstance();
    Joystick m_Joystick = new Joystick(0);
    Joystick m_controller = new Joystick(1);
+   ShuffleBoard sb = new ShuffleBoard();
    
    int m_timer = 0;
    int m_autoStep = 0;
@@ -41,22 +42,23 @@ public class Robot extends TimedRobot {
    final int k_Climber = 0;
    final int k_CargoChange = 0;
    final int k_Shooter = 0;
+   final int k_MoveCargo = 0;
 
    Shooter m_Shooter = new Shooter();
    Turret2 m_Turret = new Turret2();
    Intake m_Intake = new Intake();
-
-
-  public void updateSmartboard() {
-    SmartDashboard.putNumber("Cargo", cargoNum);
-  }
 
   @Override
   public void robotInit() {}
 
   @Override
   public void robotPeriodic() {
-    updateSmartboard();
+
+    sb.updateSmartboard(cargoNum, m_autoMode);
+    // Next three lines are for testing; can be deleted for competition
+    String ally_1 = sb.getAlly1();
+    String ally_2 = sb.getAlly2();
+    System.out.println("xoxo to: Team " + ally_1 + " & Team " + ally_2);
 
     if (m_controller.getPOV()==180 && oldPOV != 180){
       cargoNum--;
@@ -92,6 +94,7 @@ public class Robot extends TimedRobot {
     m_Turret.run(m_controller.getRawButton(k_Turret));
     cargoNum = m_Intake.run(cargoNum, m_Joystick.getRawButton(k_Intake), m_Joystick.getRawButton(k_RevIntake));    
     cargoNum = m_Shooter.run(cargoNum, m_controller.getRawButton(k_Shooter)); 
+    Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
   }
 
   @Override
