@@ -17,12 +17,11 @@ public class Turret2 {
     SparkMaxPIDController pid;
     RelativeEncoder encoder;
     Joystick controller = new Joystick(0);
+    boolean button2 = false;
     double time = 0;
     double speed = 0.25;
     int caseNumber = 0;
    
-
-
     double tx0 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx0").getDouble(0); // three target points
     double tx1 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx1").getDouble(0);
     double tx2 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx2").getDouble(0);
@@ -63,9 +62,9 @@ public class Turret2 {
    
         turret.set(speed); 
     }
+    
 
-    
-    
+
     public void tracking(){
         if (Math.abs(tx) > 2)
             turn = (slot1 * 0.77922078 + tx * 1) * 1.283333333;   //moving to desired targets
@@ -144,13 +143,30 @@ public class Turret2 {
         }   
             //turns limelight on if seeking or tracking
             if(caseNumber == 3){
-                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(3);//on?
+                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(3);//on
             }else{
-                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1);//off?
+                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1);//off
             }
 
             //checks if limelight is on
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(-9000);
 
     }   
+
+
+
+    public void manualOverride(double x_axis, double y_axis, double manualAngle){
+
+        if(x_axis > 0 && y_axis > 0){ // x pos, y neg
+            manualAngle = Math.atan(y_axis/x_axis);
+            manualAngle = manualAngle - 90;
+        }else if(x_axis < 0 && y_axis > 0){ // x neg, y pos
+            manualAngle = Math.atan(y_axis/x_axis);
+            manualAngle = manualAngle - 90;
+        }else{ //y neg
+            manualAngle = 0;
+        }
+        
+        pid.setReference(manualAngle * 0.77922078, CANSparkMax.ControlType.kPosition);
+    }
 }

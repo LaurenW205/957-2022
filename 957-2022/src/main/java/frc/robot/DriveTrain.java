@@ -20,27 +20,35 @@ public class DriveTrain{
     MiniPID m_auxLoop = new MiniPID(0.03, 0, 0.15);
     MiniPID m_driveLoop = new MiniPID(0.015, 0.0001, 0.02);
 
-    AHRS m_navx = new AHRS(Port.kMXP);
+    public AHRS m_navx = new AHRS(Port.kMXP);
 
     CANSparkMax m_rightNeoMaster = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless);
     CANSparkMax m_rightNeoSlave = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
-    RelativeEncoder m_rightEncoder = m_rightNeoMaster.getEncoder();
+    RelativeEncoder m_rightEncoder = m_rightNeoMaster.getEncoder();;
     SparkMaxPIDController m_rightController = m_rightNeoMaster.getPIDController();
 
     CANSparkMax m_leftNeoMaster = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless);
     CANSparkMax m_leftNeoSlave = new CANSparkMax(5, CANSparkMaxLowLevel.MotorType.kBrushless);
-    RelativeEncoder m_leftEncoder = m_rightNeoMaster.getEncoder();
+    RelativeEncoder m_leftEncoder = m_leftNeoMaster.getEncoder();
     SparkMaxPIDController m_leftController = m_leftNeoMaster.getPIDController();
+
+    double box1 = 0;
+    double box2 = 0;
+    double box3 = 0;
+    double box4 = 0;
 
     private static DriveTrain m_drivetrain = null;
     private static final int k_freeCurrentLimit = 40;
     private static final int k_stallCurrentLimit = 40;
+    
+    public double time = 0;
+    public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
 
     public DriveTrain(){
 
         m_navx.reset();
         m_auxLoop.setOutputLimits(-0.2, 0.2);
-
+    
         m_rightNeoMaster.restoreFactoryDefaults();
         m_leftNeoMaster.restoreFactoryDefaults();
         m_rightNeoSlave.restoreFactoryDefaults();
@@ -56,25 +64,9 @@ public class DriveTrain{
         m_rightNeoSlave.setSmartCurrentLimit(k_stallCurrentLimit, k_freeCurrentLimit);
         m_leftNeoMaster.setSmartCurrentLimit(k_stallCurrentLimit, k_freeCurrentLimit);
         m_leftNeoSlave.setSmartCurrentLimit(k_stallCurrentLimit, k_freeCurrentLimit);
-
-        m_rightController.setP(5e-5);
-        m_rightController.setI(1e-6);
-        m_rightController.setD(0);
-        m_rightController.setIZone(0);
-        m_rightController.setFF(0.000156);
-        m_rightController.setOutputRange(-1,1);
-        m_rightController.setSmartMotionMaxAccel(1500, 0);
-        m_rightController.setSmartMotionMaxVelocity(2000, 0);
-
-        m_leftController.setP(5e-5);
-        m_leftController.setI(1e-6);
-        m_leftController.setD(0);
-        m_leftController.setIZone(0);
-        m_leftController.setFF(0.000156);
-        m_leftController.setOutputRange(-1,1);
-        m_leftController.setSmartMotionMaxAccel(1500, 0);
-        m_leftController.setSmartMotionMaxVelocity(2000, 0);
+        
     }
+
 
     public void resetEncoders(){
         m_rightEncoder.setPosition(0);
@@ -100,6 +92,9 @@ public class DriveTrain{
     double ramp = 0.1;
 
     public void arcadeDrive(double speed, double turn){
+
+        m_rightNeoMaster.setInverted(true);
+        m_rightNeoSlave.setInverted(true);
     
         turn = deadband(turn/2);
         speed = deadband(speed);
@@ -125,59 +120,72 @@ public class DriveTrain{
         return 0;
     }
 
+    //Drive straight function
+    public boolean driveJank(double targetAngle, double feet){
 
-    public boolean driveStraight(double inches, double targetHeading, double speed){
+        double setpoint = (feet*5.94);
 
-        m_driveLoop.setOutputLimits(-speed, speed);
+        if(Math.abs(m_leftEncoder.getPosition()-setpoint)<2){
 
-        double turn = 0;
-
-        double output = 0;
-
-        if(Math.abs(inches+m_rightEncoder.getPosition()) > 10){
-            m_driveLoop.resetI();
-        }
-        if(m_navx.getAngle() > +0.1){
-            turn = 0.1;
-        }
-        if(m_navx.getAngle() < -0.1){
-            turn = -0.1;
-        }
-        m_leftNeoMaster.set(-turn-output);
-        m_rightNeoMaster.set(-turn-output);
-  
-        if (Math.abs(inches+m_rightEncoder.getPosition()/0.333) < 1){
+            m_leftNeoMaster.set(0);
+            m_rightNeoMaster.set(0);
             return true;
+
+        }
+
+        double speed = 0;
+
+        if(setpoint > 0){
+
+            speed = 0.25;
         }else{
+
+            speed = -0.25;
+        }
+
+        if(targetAngle-m_navx.getAngle() > 0.5){
+
+            m_rightNeoMaster.set(speed-0.05);
+            m_leftNeoMaster.set(speed+0.05);
+
+        }else if(targetAngle-m_navx.getAngle() <-0.5){
+
+            m_rightNeoMaster.set(speed+0.05);
+            m_leftNeoMaster.set(speed-0.05);
+            
+        }else{
+
+            m_leftNeoMaster.set(speed);
+            m_rightNeoMaster.set(speed);
+        }
+
+        return false;
+    }
+
+    //turning function
+    public boolean turnJank(double targetAngle){
+
+        if (m_navx.getAngle() > targetAngle){
+            
+            m_rightNeoMaster.set(0.15);
+            m_leftNeoMaster.set(-0.15);
+
+        }else{
+
+            m_rightNeoMaster.set(-0.15);
+            m_leftNeoMaster.set(0.15);
+        
+        }
+
+        if (1 > Math.abs(targetAngle-m_navx.getAngle())){
+
+           return true;
+
+        }else{
+
             return false;
         }
-    }
-
-    public void turnTo(double inches, double targetAngle, double speed){
-
-        double setpoint = inches*0.333;
     
-
-        double margin = (setpoint- targetAngle)/30;
-       
-        if(margin < -0.5){
-            speed = -0.5;
-        }
-        if(margin > 0.5){
-            speed = 0.5;
-        }
-        
-    }
-
-    public double target(double targetLocation){
-        
-        double currentLocation = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
-        SmartDashboard.putNumber("limelight", currentLocation);
-        double output = m_auxLoop.getOutput(currentLocation, targetLocation);
-        m_rightNeoMaster.set(output);
-        m_leftNeoMaster.set(-output);
-        return currentLocation;
-
     }
 
 

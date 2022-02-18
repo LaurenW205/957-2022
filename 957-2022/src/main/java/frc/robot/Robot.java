@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
    */
    
    DriveTrain m_drivetrain = DriveTrain.getInstance();
-   Joystick m_Joystick = new Joystick(0);
+   Joystick m_joystick = new Joystick(0);
    Joystick m_controller = new Joystick(1);
    ShuffleBoard sb = new ShuffleBoard();
    
@@ -36,13 +36,13 @@ public class Robot extends TimedRobot {
    int oldPOV = 0;
    
    // Button ports
-   final int k_RevIntake = 0;   
-   final int k_Intake = 0;
-   final int k_Turret = 0;
-   final int k_Climber = 0;
-   final int k_CargoChange = 0;
-   final int k_Shooter = 0;
    final int k_MoveCargo = 0;
+   final int k_RevIntake = 3;   //joystick button 3
+   final int k_Intake = 4;      //joystick button 4
+   final int k_Turret = 0;      //controller A
+   final int k_Climber = 3;     //controller Y
+   final int k_CargoChange = 0; //controller d pad
+   final int k_Shooter = 1;     //controller B
 
    Shooter m_Shooter = new Shooter();
    Turret2 m_Turret = new Turret2();
@@ -91,8 +91,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+
+    m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(2));
     m_Turret.run(m_controller.getRawButton(k_Turret));
-    cargoNum = m_Intake.run(cargoNum, m_Joystick.getRawButton(k_Intake), m_Joystick.getRawButton(k_RevIntake));    
+    cargoNum = m_Intake.run(cargoNum, m_joystick.getRawButton(k_Intake), m_joystick.getRawButton(k_RevIntake));    
     cargoNum = m_Shooter.run(cargoNum, m_controller.getRawButton(k_Shooter)); 
     Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
   }
