@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.automodes.twocargo1;
+import frc.robot.automodes.JankAuto;
 
 
 /**
@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
    //Turret2 m_Turret = new Turret2();
    //Intake m_Intake = new Intake();
 
-   twocargo1 tc1 = new twocargo1();
+   JankAuto ja1 = new JankAuto();
 
   @Override
   public void robotInit() {}
@@ -91,13 +91,13 @@ public class Robot extends TimedRobot {
     m_drivetrain.setIdleMode(IdleMode.kBrake);
     m_drivetrain.resetEncoders();
     m_drivetrain.m_navx.reset();
-    tc1.reset();
+    ja1.reset();
   }
 
   @Override
   public void autonomousPeriodic() {
 
-    tc1.run(m_drivetrain);
+    ja1.run(m_drivetrain);
   }
     
   @Override

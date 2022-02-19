@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 
 public class Turret2 {
     
-    CANSparkMax turret = new CANSparkMax(7,MotorType.kBrushless);     //variables
+    CANSparkMax turret = new CANSparkMax(10,MotorType.kBrushless);     //variables
     SparkMaxPIDController pid;
     RelativeEncoder encoder;
     Joystick controller = new Joystick(0);
@@ -157,16 +157,18 @@ public class Turret2 {
 
     public void manualOverride(double x_axis, double y_axis, double manualAngle){
 
-        if(x_axis > 0 && y_axis > 0){ // x pos, y neg
-            manualAngle = Math.atan(y_axis/x_axis);
-            manualAngle = manualAngle - 90;
+        double angle = 0;
+
+        if(x_axis > 0 && y_axis > 0){ // x pos, y pos
+            angle = Math.atan(y_axis/x_axis);
+            angle = angle - 90;
         }else if(x_axis < 0 && y_axis > 0){ // x neg, y pos
-            manualAngle = Math.atan(y_axis/x_axis);
-            manualAngle = manualAngle - 90;
+            angle = Math.atan(y_axis/x_axis);
+            angle = angle - 90;
         }else{ //y neg
-            manualAngle = 0;
+            angle = 0;
         }
         
-        pid.setReference(manualAngle * 0.77922078, CANSparkMax.ControlType.kPosition);
+        pid.setReference((manualAngle + angle) * 0.77922078, CANSparkMax.ControlType.kPosition);
     }
 }

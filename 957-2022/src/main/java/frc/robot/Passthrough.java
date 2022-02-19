@@ -8,10 +8,10 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 public class Passthrough {
     private static Passthrough m_passthrough;
-    public CANSparkMax pusher = new CANSparkMax(0, MotorType.kBrushless);
+    public CANSparkMax feeder = new CANSparkMax(9, MotorType.kBrushless);
     boolean oldSensor = false;
     public boolean cargoDown = true;
-    RelativeEncoder m_pushEncoder = pusher.getEncoder();;
+    RelativeEncoder m_pushEncoder = feeder.getEncoder();;
     int cargo = 0;
     int intakeFlag = 0;
     double target_pos = 0;
@@ -27,7 +27,7 @@ public class Passthrough {
 
     
     public void run(int cargo, boolean button){
-        pusher.setIdleMode(IdleMode.kBrake);
+       feeder.setIdleMode(IdleMode.kBrake);
         if (cargo == 1)  // If we have 1 cargo, we may allow the driver to move the cargo
         {   
             switch(state)
@@ -66,17 +66,17 @@ public class Passthrough {
           state = 0;
             
         if(intakeFlag != 0){
-            pusher.set(.5*intakeFlag);
+            feeder.set(.5*intakeFlag);
             
-            if (intakeFlag == 1 && pusher.getEncoder().getPosition() == target_pos + offset ){  
+            if (intakeFlag == 1 && feeder.getEncoder().getPosition() == target_pos + offset ){  
                 target_pos = target_pos + offset;
                 intakeFlag = 0;
-                pusher.set(0);
+                feeder.set(0);
             }
-            if (intakeFlag == -1 && pusher.getEncoder().getPosition() == target_pos - offset){
+            if (intakeFlag == -1 && feeder.getEncoder().getPosition() == target_pos - offset){
                 target_pos = target_pos - offset;
                 intakeFlag = 0;
-                pusher.set(0);
+                feeder.set(0);
             }
         }
     }

@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 
 public class Turret {
     
-   CANSparkMax turret = new CANSparkMax(7,MotorType.kBrushless);
+   CANSparkMax turret = new CANSparkMax(10,MotorType.kBrushless);
    SparkMaxPIDController pid;
    RelativeEncoder encoder;
    Joystick controller = new Joystick(0);

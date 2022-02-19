@@ -6,17 +6,20 @@ import com.revrobotics.SparkMaxPIDController;
 
 public class Climbing {
 
-    CANSparkMax climbingMotor;
+    CANSparkMax m_leftMotor;
+    CANSparkMax m_rightMotor;
     SparkMaxPIDController pidController;
     int CanID = -1;
     double MaxExtension = -1;
 
     public Climbing(int canID, double maxExtension){
-        CanID = canID;
+
         MaxExtension = maxExtension;
-        climbingMotor = new CANSparkMax(canID, MotorType.kBrushless);
-        climbingMotor.restoreFactoryDefaults();
-        pidController = climbingMotor.getPIDController();
+        m_leftMotor = new CANSparkMax(5, MotorType.kBrushless);
+        m_rightMotor = new CANSparkMax(8, MotorType.kBrushless);
+        m_leftMotor.restoreFactoryDefaults();
+        m_rightMotor.restoreFactoryDefaults();
+        pidController = m_leftMotor.getPIDController();
 
 
         pidController.setP(5e-5);
