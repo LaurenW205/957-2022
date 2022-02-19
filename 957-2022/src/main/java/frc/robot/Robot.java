@@ -4,10 +4,14 @@
 
 package frc.robot;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.automodes.twocargo1;
 
 
 /**
@@ -27,7 +31,7 @@ public class Robot extends TimedRobot {
    DriveTrain m_drivetrain = DriveTrain.getInstance();
    Joystick m_joystick = new Joystick(0);
    Joystick m_controller = new Joystick(1);
-   ShuffleBoard sb = new ShuffleBoard();
+   //ShuffleBoard sb = new ShuffleBoard();
    
    int m_timer = 0;
    int m_autoStep = 0;
@@ -44,9 +48,11 @@ public class Robot extends TimedRobot {
    final int k_CargoChange = 0; //controller d pad
    final int k_Shooter = 1;     //controller B
 
-   Shooter m_Shooter = new Shooter();
-   Turret2 m_Turret = new Turret2();
-   Intake m_Intake = new Intake();
+   //Shooter m_Shooter = new Shooter();
+   //Turret2 m_Turret = new Turret2();
+   //Intake m_Intake = new Intake();
+
+   twocargo1 tc1 = new twocargo1();
 
   @Override
   public void robotInit() {}
@@ -54,11 +60,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
 
-    sb.updateSmartboard(cargoNum, m_autoMode);
+    //sb.updateSmartboard(cargoNum, m_autoMode);
     // Next three lines are for testing; can be deleted for competition
-    String ally_1 = sb.getAlly1();
-    String ally_2 = sb.getAlly2();
-    System.out.println("xoxo to: Team " + ally_1 + " & Team " + ally_2);
+    //String ally_1 = sb.getAlly1();
+    //String ally_2 = sb.getAlly2();
+    //System.out.println("xoxo to: Team " + ally_1 + " & Team " + ally_2);
 
     if (m_controller.getPOV()==180 && oldPOV != 180){
       cargoNum--;
@@ -80,10 +86,18 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+
+    m_drivetrain.setIdleMode(IdleMode.kBrake);
+    m_drivetrain.resetEncoders();
+    m_drivetrain.m_navx.reset();
+    tc1.reset();
+  }
 
   @Override
   public void autonomousPeriodic() {
+
+    tc1.run(m_drivetrain);
   }
     
   @Override
@@ -93,10 +107,10 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(2));
-    m_Turret.run(m_controller.getRawButton(k_Turret));
-    cargoNum = m_Intake.run(cargoNum, m_joystick.getRawButton(k_Intake), m_joystick.getRawButton(k_RevIntake));    
-    cargoNum = m_Shooter.run(cargoNum, m_controller.getRawButton(k_Shooter)); 
-    Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
+    //m_Turret.run(m_controller.getRawButton(k_Turret));
+    //cargoNum = m_Intake.run(cargoNum, m_joystick.getRawButton(k_Intake), m_joystick.getRawButton(k_RevIntake));    
+    //cargoNum = m_Shooter.run(cargoNum, m_controller.getRawButton(k_Shooter)); 
+    //Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
   }
 
   @Override
