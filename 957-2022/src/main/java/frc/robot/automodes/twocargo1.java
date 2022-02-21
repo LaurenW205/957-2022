@@ -8,73 +8,96 @@ import frc.robot.Turret;
 public class twocargo1 {
 
     int autoStep = 0;
-    public int shooter_case1 = 0;
 
     public void reset(){
 
-        autoStep = 0;
+        autoStep = -1;
     }
     
     public void run(DriveTrain d, Shooter s, Intake i, Turret t, int cargoNum){
 
         switch(autoStep){
+
+          case -1:
+
+            i.var = 2;
+            autoStep++;
+          break;
  
             // Drive out of tarmac and intake cargo
             case 0:
-                if(d.driveJank(0, 3.8)){
+                if(d.driveJank(0, -3.8)){
                     d.resetEncoders();
                     autoStep++;
-                    i.var = 2;
                 }
             break;
 
             // Drive to shooting range
             case 1:
 
-                if(d.driveJank(0, 3)) // Distance subject to change
+                if(d.driveJank(0, -3)){ // Distance subject to change
                     d.resetEncoders();
                     autoStep++;
+                    s.caseNumber = 2;
+                }
     
             break;
 
             // Shooter goes brrr
             case 2:    
 
-                if(shooter_case1 == 2){
+                if(s.caseNumber != 2){
                     
-                    autoStep++;
+                    autoStep = 4;
                     d.resetEncoders();
                 }
 
-            break;
-
-            // Wait until all cargo is shot before next case
-            case 3:
-
-                if (cargoNum == 0)
-                 autoStep++;
-                 
             break;
             
             // Turn to terminal
             case 4: 
             
-                if(d.turnJank(40)) // Angle subject to change
+                if(d.turnJank(35)){// Angle subject to change
                     d.resetEncoders();
                     autoStep++; 
+                }
             
             break;     
             
-            // Drive to terminal and intake second cargo 
+            // Drive to in direction of terminal
             case 5:
             
-                if(d.driveJank(45, 8)) // Distance subject to change
+                if(d.driveJank(40, 19)){// Distance subject to change
                     d.resetEncoders();
                     autoStep++;
-                    i.var = 2;
+                }
 
             break;
 
+            //turn to terminal and prepare to intake
+            case 6:
+
+                if(d.turnJank(85)){
+                  d.resetEncoders();
+                  autoStep++;
+                  i.var = 2;
+                }
+            break;
+
+            //drive to terminal
+            case 7:
+
+                if(d.driveJank(90, -12)){
+                  d.resetEncoders();
+                  autoStep++;
+                }
+            break;
+
+            case 8:
+
+              d.arcadeDrive(0, 0);
+
+            break;
             }
 
 
