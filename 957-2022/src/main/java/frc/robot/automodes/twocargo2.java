@@ -32,7 +32,7 @@ public class twocargo2 {
             // Turn to terminal
             case 1:
             
-                if(d.turnJank(40)){ //angle value subject to change
+                if(d.turnJank(5)){ //angle value subject to change
                     d.resetEncoders();
                     autoStep++;
                     i.var = 2;
@@ -43,7 +43,7 @@ public class twocargo2 {
             // Drive towards terminal
             case 2:
                 
-                if(d.driveJank(45, -12)){ // Distance subject to change
+                if(d.driveJank(10, -12)){ // Distance subject to change
                     d.resetEncoders();
                     autoStep++;
                 }
@@ -63,7 +63,7 @@ public class twocargo2 {
             // Wait until all cargo is shot before next case
             case 4:    
 
-                if (cargoNum == 0){  
+                if (cargoNum != 0){  
                     autoStep++;
                     d.resetEncoders();
                 }
@@ -80,6 +80,10 @@ public class twocargo2 {
                 }
 
             break;
+
+            case 6:
+
+                d.arcadeDrive(0, 0);
 
             
         }
