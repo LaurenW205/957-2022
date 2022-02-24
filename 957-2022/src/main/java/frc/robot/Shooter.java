@@ -62,9 +62,9 @@ public class Shooter {
             shooter.set(5700);
 
             if(shooter.getEncoder().getVelocity()> 4000){
-                Passthrough.getInstance().feeder.set(.25);
+                Passthrough.getInstance().pusher.set(.5);
             }else{
-                Passthrough.getInstance().feeder.set(0);
+                Passthrough.getInstance().pusher.set(0);
             }
 
             if(cargo == 0 && timer> 0.5){
