@@ -14,13 +14,14 @@ public class Shooter {
     double minimumSpeed;
 
     AHRS ahrs = new AHRS(SerialPort.Port.kMXP); 
-    CANSparkMax shooter = new CANSparkMax(6, MotorType.kBrushless);
+    public CANSparkMax shooter = new CANSparkMax(6, MotorType.kBrushless);
     RelativeEncoder encoder = shooter.getEncoder();
     SparkMaxPIDController p = shooter.getPIDController();
     DigitalInput breakBeamSensor = new DigitalInput(0);
     public int caseNumber = 0;
     boolean oldSensor = false;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
+    double timer = 0;
 
     public Shooter(){
     //PID constants for PID shooter
@@ -44,6 +45,8 @@ public class Shooter {
 
     public int run(int cargo, boolean button){
 
+        timer = timer + 0.2;
+
         switch(caseNumber){
         case 0: //checks if button is pressed
             if(button)
@@ -59,12 +62,18 @@ public class Shooter {
             shooter.set(5700);
 
             if(shooter.getEncoder().getVelocity()> 4000){
-                Passthrough.getInstance().feeder.set(.5);
+                Passthrough.getInstance().feeder.set(.25);
             }else{
                 Passthrough.getInstance().feeder.set(0);
             }
 
-            if(button || cargo == 0)
+            if(cargo == 0 && timer> 0.5){
+                caseNumber++;
+            }else if (cargo != 0){
+                timer = 0;
+            }
+
+            if(button)
                 caseNumber++;
         break;
 

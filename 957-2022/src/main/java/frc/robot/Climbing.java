@@ -4,6 +4,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.wpilibj.Joystick;
+
 public class Climbing {
 
     CANSparkMax m_leftMotor;
@@ -12,9 +14,9 @@ public class Climbing {
     int CanID = -1;
     double MaxExtension = -1;
 
-    public Climbing(int canID, double maxExtension){
+    public Climbing(double maxExtension){
 
-        MaxExtension = maxExtension;
+        MaxExtension = maxExtension; 
         m_leftMotor = new CANSparkMax(5, MotorType.kBrushless);
         m_rightMotor = new CANSparkMax(8, MotorType.kBrushless);
         m_leftMotor.restoreFactoryDefaults();
@@ -32,15 +34,24 @@ public class Climbing {
         pidController.setSmartMotionMaxAccel(1500, 0);
         pidController.setReference(maxExtension, CANSparkMax.ControlType.kSmartMotion);
 
+        m_leftMotor.follow(m_rightMotor, true);
     }
 
     public void RetractArm() {
-        pidController.setReference(0, CANSparkMax.ControlType.kVelocity);
+        pidController.setReference(0, CANSparkMax.ControlType.kSmartMotion);
     }
 
     public void ExtendArm() {
-        pidController.setReference(MaxExtension, CANSparkMax.ControlType.kVelocity);
+        pidController.setReference(MaxExtension, CANSparkMax.ControlType.kSmartMotion);
     }
 
+    public void manualControls(double buttonUp, double buttonDown){
+        if(buttonUp > 0.5){
+            m_rightMotor.set(0.5);
+        }
+        if(buttonDown > 0.5){
+            m_rightMotor.set(-0.5);
+        }
+    }
 }
 

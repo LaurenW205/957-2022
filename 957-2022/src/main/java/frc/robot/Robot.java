@@ -4,13 +4,13 @@
 
 package frc.robot;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.automodes.JankAuto;
 
 
@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
    int m_autoMode = 0;
    int cargoNum = 0;
    int oldPOV = 0;
+   int manualStep = 0;
    
    // Button ports
    final int k_MoveCargo = 0;
@@ -47,10 +48,13 @@ public class Robot extends TimedRobot {
    final int k_Climber = 3;     //controller Y
    final int k_CargoChange = 0; //controller d pad
    final int k_Shooter = 1;     //controller B
+   final int k_ManualSwitch = 3; //controller X
 
-   //Shooter m_Shooter = new Shooter();
-   //Turret2 m_Turret = new Turret2();
-   //Intake m_Intake = new Intake();
+
+   Shooter m_Shooter = new Shooter();
+   Turret2 m_Turret = new Turret2();
+   Intake m_Intake = new Intake();
+   Climbing m_Climbing = new Climbing(5);
 
    JankAuto ja1 = new JankAuto();
 
@@ -106,11 +110,53 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
+    double buttonUp = m_controller.getRawAxis(2);
+    double buttonDown = m_controller.getRawAxis(3);
+    
     m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(2));
-    //m_Turret.run(m_controller.getRawButton(k_Turret));
-    //cargoNum = m_Intake.run(cargoNum, m_joystick.getRawButton(k_Intake), m_joystick.getRawButton(k_RevIntake));    
-    //cargoNum = m_Shooter.run(cargoNum, m_controller.getRawButton(k_Shooter)); 
-    //Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
+    
+    cargoNum = m_Intake.run(cargoNum, m_joystick.getRawButton(k_Intake), m_joystick.getRawButton(k_RevIntake));    
+    cargoNum = m_Shooter.run(cargoNum, m_controller.getRawButton(k_Shooter)); 
+    Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
+
+    if(buttonUp> .75){
+       m_Climbing.ExtendArm();
+    }
+
+    if(buttonDown> .75){
+      m_Climbing.RetractArm();
+    }
+
+    switch(manualStep){
+      case 0:
+        m_Turret.run(m_controller.getRawButton(k_Turret));
+        if(m_controller.getRawButton(k_Turret))
+          manualStep++;
+      break;
+
+      case 1:
+        m_Turret.run(m_controller.getRawButton(k_Turret));
+        if(!m_controller.getRawButton(k_Turret)){
+          manualStep++;
+        }
+      break;
+
+      case 2:
+        m_Turret.manualOverride(m_controller.getRawAxis(0), m_controller.getRawAxis(1), 0);
+        if(m_controller.getRawButton(k_Turret)){
+          manualStep++;
+        }
+      break;
+
+      case 3:
+        m_Turret.manualOverride(m_controller.getRawAxis(0), m_controller.getRawAxis(1), 0);
+        if(!m_controller.getRawButton(k_Turret)){
+          manualStep = 0;
+        }
+      break;
+    }
+
+
   }
 
   @Override
@@ -123,5 +169,62 @@ public class Robot extends TimedRobot {
   public void testInit() {}
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+
+    double buttonUp = m_controller.getRawAxis(2); //left trigger
+    double buttonDown = m_controller.getRawAxis(3); //right trigger
+
+    boolean intakeForward = m_controller.getRawButton(4); //left button
+    boolean intakeBackward = m_controller.getRawButton(5); //right button
+
+    boolean intakeCylExtend = m_controller.getRawButton(6);
+    boolean intakeCylRetract = m_controller.getRawButton(7);
+    
+    boolean ptForward = m_controller.getRawButton(2); //x
+    boolean ptBackward = m_controller.getRawButton(3); //y
+    
+    boolean shooterForward = m_controller.getRawButton(0); //a
+    boolean shooterBackward =  m_controller.getRawButton(1); //b
+
+    double x_axis = m_controller.getRawAxis(0); //left stick
+    double y_axis = m_controller.getRawAxis(1);
+    
+
+    if(intakeForward){
+       m_Intake.intakeMotor_1.set(0.5);
+      }
+    if(intakeBackward){
+        m_Intake.intakeMotor_1.set(-0.5);
+      }
+
+
+    if(intakeCylExtend){
+      m_Intake.extendCyl();
+    }
+    if(intakeCylRetract){
+      m_Intake.retractCyl();
+    }
+
+
+    if(ptForward){
+       Passthrough.getInstance().feeder.set(0.5);
+      }
+    if(ptBackward){
+        Passthrough.getInstance().feeder.set(-0.5);
+      }   
+    
+
+    if(shooterForward){
+        m_Shooter.shooter.set(0.5);
+      }
+    if(shooterBackward){
+        m_Shooter.shooter.set(-0.5);
+      }
+
+
+    m_Climbing.manualControls(buttonUp, buttonDown);
+
+
+    m_Turret.manualOverride(x_axis, y_axis, 0);
+  }
 }

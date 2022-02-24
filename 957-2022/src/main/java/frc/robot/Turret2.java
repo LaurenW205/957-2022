@@ -16,7 +16,6 @@ public class Turret2 {
     CANSparkMax turret = new CANSparkMax(10,MotorType.kBrushless);     //variables
     SparkMaxPIDController pid;
     RelativeEncoder encoder;
-    Joystick controller = new Joystick(0);
     boolean button2 = false;
     double time = 0;
     double speed = 0.25;
@@ -69,7 +68,7 @@ public class Turret2 {
         if (Math.abs(tx) > 2)
             turn = (slot1 * 0.77922078 + tx * 1) * 1.283333333;   //moving to desired targets
 
-        if( turn > 90 ){   //shouldn't overshoot 180 degrees or 115.5 rotations
+        if( turn > 115.5 ){   //shouldn't overshoot 180 degrees or 115.5 rotations
             turn = 115.5;
          }else if(turn < -115.5){
                 turn = -115.5;
@@ -77,14 +76,14 @@ public class Turret2 {
   
         double z = oldTurn + 0.4 * (turn - oldTurn);    //smooth turning
   
-        if(controller.getRawButton(1)){
-            if(ta0 == 0 ||ta1 == 0 ||ta2 == 0 ){    // if target is not seen, set turret to old turn
-                pid.setReference(oldTurn, CANSparkMax.ControlType.kPosition);    
-            }else{
-                pid.setReference(z, CANSparkMax.ControlType.kPosition);   // if target is seen set to z value
-                oldTurn = z;    //changes old turn value to z 
-            }
+        
+        if(ta0 == 0 ||ta1 == 0 ||ta2 == 0 ){    // if target is not seen, set turret to old turn
+            pid.setReference(oldTurn, CANSparkMax.ControlType.kPosition);    
+        }else{
+            pid.setReference(z, CANSparkMax.ControlType.kPosition);   // if target is seen set to z value
+            oldTurn = z;    //changes old turn value to z 
         }
+    
     }
    
     public void run(boolean button){
@@ -95,6 +94,7 @@ public class Turret2 {
         ta1 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta1").getDouble(0);
         ta2 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta2").getDouble(0);
         tl  = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0);
+        tx = (tx0 + tx1 + tx2)/3.00001 * 27.5;    // finding average of three points
 
         time = time + 0.02;  
 
@@ -159,14 +159,17 @@ public class Turret2 {
 
         double angle = 0;
 
-        if(x_axis > 0 && y_axis > 0){ // x pos, y pos
+        if(x_axis >= 0 && y_axis >= 0){ // x pos, y pos
             angle = Math.atan(y_axis/x_axis);
             angle = angle - 90;
-        }else if(x_axis < 0 && y_axis > 0){ // x neg, y pos
+        }else if(x_axis < 0 && y_axis >= 0){ // x neg, y pos
             angle = Math.atan(y_axis/x_axis);
             angle = angle - 90;
-        }else{ //y neg
-            angle = 0;
+        }else if (x_axis >= 0 && y_axis < 0 ) { //y neg, x pos
+            angle = -90;
+         
+        } else if(x_axis < 0 && y_axis < 0){
+            angle = 90;
         }
         
         pid.setReference((manualAngle + angle) * 0.77922078, CANSparkMax.ControlType.kPosition);

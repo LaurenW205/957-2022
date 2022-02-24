@@ -17,8 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveTrain{
 
     //values for MiniPID subject to change
-    MiniPID m_auxLoop = new MiniPID(0.03, 0, 0.15);
-    MiniPID m_driveLoop = new MiniPID(0.015, 0.0001, 0.02);
+   
 
     public AHRS m_navx = new AHRS(Port.kMXP);
 
@@ -47,7 +46,6 @@ public class DriveTrain{
     public DriveTrain(){
 
         m_navx.reset();
-        m_auxLoop.setOutputLimits(-0.2, 0.2);
     
         m_rightNeoMaster.restoreFactoryDefaults();
         m_leftNeoMaster.restoreFactoryDefaults();
