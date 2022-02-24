@@ -207,10 +207,10 @@ public class Robot extends TimedRobot {
 
 
     if(ptForward){
-       Passthrough.getInstance().feeder.set(0.5);
+       Passthrough.getInstance().pusher.set(0.5);
       }
     if(ptBackward){
-        Passthrough.getInstance().feeder.set(-0.5);
+        Passthrough.getInstance().pusher.set(-0.5);
       }   
     
 

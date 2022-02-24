@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -11,7 +10,6 @@ public class ShuffleBoard {
       {
         SmartDashboard.putNumber("Cargo", cargo);
         SmartDashboard.putNumber("Auto", auto);
-        Shuffleboard.getTab("Smart Dashboard").add(d.m_navx);
       }
 
     public String getAlly1()

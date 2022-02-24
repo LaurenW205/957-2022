@@ -3,14 +3,6 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import org.opencv.core.Mat;
-import org.opencv.core.Rect;
-import org.opencv.imgproc.Imgproc;
-
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.CvSink;
-import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -23,50 +15,6 @@ public class Intake {
 
     public int var = 5;
     boolean lastCycle = false;
-
-    Rect r;
-    RedVision g = new RedVision();
-    
-    int centerX = 0;
-    int centerY = 0;
-
-    public int getX(int target) {
-        r = Imgproc.boundingRect(g.filterContoursOutput().get(target));
-        centerX = r.x + (r.width / 2);
-        return centerX;
-    }
-
-    public int getY(int target) {
-        r = Imgproc.boundingRect(g.filterContoursOutput().get(target));
-        centerY = r.y + (r.height / 2);
-        return centerY;
-    }
-
-
-    public Intake(){
-
-        new Thread(() -> {
-            CameraServer.startAutomaticCapture();
-            CvSink sink;
-            CvSource outputStream = CameraServer.putVideo("Blur", 320, 240); // Remove this for competitions
-            
-            Mat mat = new Mat();
-            sink = CameraServer.getVideo();
-      
-      
-            while(!Thread.interrupted()) {
-      
-              if (sink.grabFrame(mat) == 0) {
-                continue;
-              }
-              
-              g.process(mat);
-              outputStream.putFrame(g.hsvThresholdOutput);  // Remove this for competition (expensive operation)
-      
-            }
-          }).start();
-
-    }
 
     public void extendCyl() {
         doubleSolenoid.set(Value.kForward);

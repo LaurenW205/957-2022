@@ -17,7 +17,7 @@ public class Shooter {
     public CANSparkMax shooter = new CANSparkMax(6, MotorType.kBrushless);
     RelativeEncoder encoder = shooter.getEncoder();
     SparkMaxPIDController p = shooter.getPIDController();
-    DigitalInput breakBeamSensor = new DigitalInput(0);
+    DigitalInput breakBeamSensor = new DigitalInput(1);
     public int caseNumber = 0;
     boolean oldSensor = false;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
