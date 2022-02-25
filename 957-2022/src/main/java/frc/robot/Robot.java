@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
    DriveTrain m_drivetrain = DriveTrain.getInstance();
    Joystick m_joystick = new Joystick(0);
    Joystick m_controller = new Joystick(1);
-   //ShuffleBoard sb = new ShuffleBoard();
+   ShuffleBoard sb = new ShuffleBoard();
    
    int m_timer = 0;
    int m_autoStep = 0;
@@ -55,19 +55,22 @@ public class Robot extends TimedRobot {
    Turret2 m_Turret = new Turret2();
    Intake m_Intake = new Intake();
    Climbing m_Climbing = new Climbing(5);
+   Bling m_Bling = new Bling();
 
    JankAuto ja1 = new JankAuto();
 
   @Override
-  public void robotInit() {}
+  public void robotInit() {
+    m_Bling.connect();
+  }
 
   @Override
   public void robotPeriodic() {
 
     //sb.updateSmartboard(cargoNum, m_autoMode);
     // Next three lines are for testing; can be deleted for competition
-    //String ally_1 = sb.getAlly1();
-    //String ally_2 = sb.getAlly2();
+    String ally_1 = sb.getAlly1();
+    String ally_2 = sb.getAlly2();
     //System.out.println("xoxo to: Team " + ally_1 + " & Team " + ally_2);
 
     if (m_controller.getPOV()==180 && oldPOV != 180){
@@ -86,6 +89,8 @@ public class Robot extends TimedRobot {
       cargoNum = 0;
     }
     oldPOV = m_controller.getPOV();
+
+    m_Bling.tick(ally_1, ally_2);
     
   }
 

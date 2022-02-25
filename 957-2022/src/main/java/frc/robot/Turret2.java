@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 public class Turret2 {
     
     CANSparkMax turret = new CANSparkMax(10,MotorType.kBrushless);     //variables
-    SparkMaxPIDController pid;
+    SparkMaxPIDController pid = turret.getPIDController();
     RelativeEncoder encoder;
     boolean button2 = false;
     double time = 0;
@@ -39,6 +39,28 @@ public class Turret2 {
     double oldTurn = 0;
 
     double tx = (tx0 + tx1 + tx2)/3.00001 * 27.5;    // finding average of three points
+
+    public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
+
+    public Turret2(){
+            //PID constants for PID shooter
+            kP = 0.001; 
+            kI = 0;
+            kD = 0; 
+            kIz = 0; 
+            kFF = 0.000015; 
+            kMaxOutput = 1; 
+            kMinOutput = -1;
+            maxRPM = 5700;
+    
+        //Sets PID constants
+            pid.setP(kP);
+            pid.setI(kI);
+            pid.setD(kD);
+            pid.setIZone(kIz);
+            pid.setFF(kFF);
+            pid.setOutputRange(kMinOutput, kMaxOutput);
+    }
     
 
 

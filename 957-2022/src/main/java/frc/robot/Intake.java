@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 public class Intake {
-    DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
+    DoubleSolenoid doubleSolenoid = new DoubleSolenoid(12,PneumaticsModuleType.CTREPCM, 1, 0);
     CANSparkMax intakeMotor_1 = new CANSparkMax(7, MotorType.kBrushless);
     DigitalInput sensor = new DigitalInput(0);
 
