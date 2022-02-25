@@ -192,9 +192,10 @@ public class Robot extends TimedRobot {
 
     if(intakeForward){
        m_Intake.intakeMotor_1.set(0.5);
-      }
-    if(intakeBackward){
+      }else if(intakeBackward){
         m_Intake.intakeMotor_1.set(-0.5);
+      }else{
+        m_Intake.intakeMotor_1.set(0);
       }
 
 
@@ -208,23 +209,27 @@ public class Robot extends TimedRobot {
 
     if(ptForward){
        Passthrough.getInstance().pusher.set(0.5);
-      }
-    if(ptBackward){
+      }else if(ptBackward){
         Passthrough.getInstance().pusher.set(-0.5);
-      }   
+      }else{
+        Passthrough.getInstance().pusher.set(0);
+      }
     
 
     if(shooterForward){
         m_Shooter.shooter.set(0.5);
-      }
-    if(shooterBackward){
+      }else if(shooterBackward){
         m_Shooter.shooter.set(-0.5);
+      }else{
+        m_Shooter.shooter.set(0);
       }
 
+
+
+    m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(2));
 
     m_Climbing.manualControls(buttonUp, buttonDown);
-
-
+    
     m_Turret.manualOverride(x_axis, y_axis, 0);
   }
 }

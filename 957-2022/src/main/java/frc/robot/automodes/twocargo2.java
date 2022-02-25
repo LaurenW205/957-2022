@@ -63,7 +63,7 @@ public class twocargo2 {
             // Wait until all cargo is shot before next case
             case 4:    
 
-                if (cargoNum != 0){  
+                if (cargoNum == 0){  
                     autoStep++;
                     d.resetEncoders();
                 }

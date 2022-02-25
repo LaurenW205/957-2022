@@ -48,9 +48,10 @@ public class Climbing {
     public void manualControls(double buttonUp, double buttonDown){
         if(buttonUp > 0.5){
             m_rightMotor.set(0.5);
-        }
-        if(buttonDown > 0.5){
+        }else if(buttonDown > 0.5){
             m_rightMotor.set(-0.5);
+        }else{
+            m_rightMotor.set(0);
         }
     }
 }
