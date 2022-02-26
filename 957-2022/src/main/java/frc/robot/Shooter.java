@@ -2,7 +2,7 @@ package frc.robot;
 
 import javax.lang.model.util.ElementScanner6;
 
-import com.kauailabs.navx.frc.AHRS;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 public class Shooter {
     double minimumSpeed;
 
-    AHRS ahrs = new AHRS(SerialPort.Port.kMXP); 
+   
     public CANSparkMax shooter = new CANSparkMax(6, MotorType.kBrushless);
     RelativeEncoder encoder = shooter.getEncoder();
     SparkMaxPIDController p = shooter.getPIDController();
