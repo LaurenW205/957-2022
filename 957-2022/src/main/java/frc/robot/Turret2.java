@@ -15,7 +15,7 @@ public class Turret2 {
     
     CANSparkMax turret = new CANSparkMax(10,MotorType.kBrushless);     //variables
     SparkMaxPIDController pid = turret.getPIDController();
-    RelativeEncoder encoder;
+    RelativeEncoder encoder = turret.getEncoder();
     boolean button2 = false;
     double time = 0;
     double speed = 0.25;
@@ -44,7 +44,7 @@ public class Turret2 {
 
     public Turret2(){
             //PID constants for PID shooter
-            kP = 0.001; 
+            kP = 0.1; 
             kI = 0;
             kD = 0; 
             kIz = 0; 
@@ -172,6 +172,9 @@ public class Turret2 {
 
             //checks if limelight is on
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(-9000);
+            slot3 = slot2;
+            slot2 = slot1;
+            slot1 = turret.getEncoder().getPosition();
 
     }   
 
@@ -181,19 +184,26 @@ public class Turret2 {
 
         double angle = 0;
 
+        if( x_axis == 0)
+            x_axis = 0.01;
+
         if(x_axis >= 0 && y_axis >= 0){ // x pos, y pos
-            angle = Math.atan(y_axis/x_axis);
+            angle = Math.toDegrees(Math.atan(y_axis/x_axis));
             angle = angle - 90;
+
         }else if(x_axis < 0 && y_axis >= 0){ // x neg, y pos
-            angle = Math.atan(y_axis/x_axis);
-            angle = angle - 90;
+            angle = 90 + (Math.toDegrees(Math.atan(y_axis/x_axis)));
+
         }else if (x_axis >= 0 && y_axis < 0 ) { //y neg, x pos
             angle = -90;
          
         } else if(x_axis < 0 && y_axis < 0){
             angle = 90;
         }
-        
-        pid.setReference((manualAngle + angle) * 0.77922078, CANSparkMax.ControlType.kPosition);
+
+        if(Math.pow(x_axis, 2) + (Math.pow(y_axis, 2)) < 0.25)
+            angle = 0;
+        System.out.println(angle);
+        pid.setReference((manualAngle + angle) *(1/0.77922078), CANSparkMax.ControlType.kPosition);
     }
 }

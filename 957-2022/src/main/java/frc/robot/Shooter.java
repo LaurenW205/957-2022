@@ -20,7 +20,7 @@ public class Shooter {
     public CANSparkMax shooter = new CANSparkMax(6, MotorType.kBrushless);
     RelativeEncoder encoder = shooter.getEncoder();
     SparkMaxPIDController p = shooter.getPIDController();
-    DigitalInput breakBeamSensor = new DigitalInput(1);
+    DigitalInput breakBeamSensor = new DigitalInput(2);
     public int caseNumber = 0;
     boolean oldSensor = false;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
@@ -29,7 +29,7 @@ public class Shooter {
 
     public Shooter(){
     //PID constants for PID shooter
-        kP = 6e-5; 
+        kP = 3e-3; 
         kI = 0;
         kD = 0; 
         kIz = 0; 
@@ -58,6 +58,7 @@ public class Shooter {
         break;
 
         case 1: //checks if button is released
+            oldSensor = breakBeamSensor.get();
             if(!button)
                 caseNumber ++;
                 timer2 = 0;
@@ -71,10 +72,10 @@ public class Shooter {
     
             oldSensor = breakBeamSensor.get();
 
-            p.setReference(3000, ControlType.kVelocity);
+            p.setReference(-2650, ControlType.kVelocity);
 
-            if(shooter.getEncoder().getVelocity()> 2500){
-                Passthrough.getInstance().pusher.set(.5);
+            if(shooter.getEncoder().getVelocity()< -2400){
+                Passthrough.getInstance().pusher.set(.2);
             }else{
                 Passthrough.getInstance().pusher.set(0);
             }
@@ -84,9 +85,10 @@ public class Shooter {
             else
                 timer2 = timer2 + 0.02;
 
-            if (timer2 > 3)
+            if (timer2 > 3){
                 caseNumber++;
                 cargo = 0;
+            }
 
             if(cargo == 0 && timer > 0.5){
                 caseNumber++;
@@ -99,13 +101,21 @@ public class Shooter {
         break;
 
         case 3: //checks if button is not pressed
+        p.setReference(0, ControlType.kVelocity);
+        Passthrough.getInstance().target_pos = Passthrough.getInstance().pusher.getEncoder().getPosition();
+
             Passthrough.getInstance().pusher.set(0);
             if(!button)
                 caseNumber = 0;
+        break;
         }
+
+        
 
 
         //updates cargo amount
         return cargo;
+
+        
     }
 }

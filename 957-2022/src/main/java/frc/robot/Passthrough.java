@@ -8,19 +8,33 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 public class Passthrough {
     private static Passthrough m_passthrough;
-    public CANSparkMax pusher = new CANSparkMax(0, MotorType.kBrushless);
+    public CANSparkMax pusher = new CANSparkMax(9, MotorType.kBrushless);
     boolean oldSensor = false;
     public boolean cargoDown = true;
     RelativeEncoder m_pushEncoder = pusher.getEncoder();
     int cargo = 0;
     int intakeFlag = 0;
-    double target_pos = 0;
-    double offset = 0;
+    public double target_pos = 0;
+    double offset = 17;
     int maxTime = 30;
     int state = 0;
 
+    public Passthrough(){
+        pusher.restoreFactoryDefaults();
+        m_pushEncoder.setPosition(0);
+
+    }
+
 
     public void raiseFlag(){
+        if( intakeFlag == 1){
+          offset = 15;
+        
+            if(cargo == 0){
+                offset = 19;
+            } 
+        }
+
         intakeFlag = 1;
         
     }
@@ -38,6 +52,7 @@ public class Passthrough {
             break;
 
             case 1:         // Check for button to be unpressed, if so raise flag to move cargo    
+                target_pos = pusher.getEncoder().getPosition();
                 if (!button)
                 {
                    
@@ -65,15 +80,16 @@ public class Passthrough {
         else            // If we have 2 cargo, we reset any process that was ongoing in the case statements
           state = 0;
             
+        System.out.println(intakeFlag);
         if(intakeFlag != 0){
-            pusher.set(.5*intakeFlag);
+            pusher.set(.3*intakeFlag);
             
-            if (intakeFlag == 1 && pusher.getEncoder().getPosition() == target_pos + offset ){  
+            if (intakeFlag == 1 && pusher.getEncoder().getPosition() > target_pos + offset ){  
                 target_pos = target_pos + offset;
                 intakeFlag = 0;
                 pusher.set(0);
             }
-            if (intakeFlag == -1 && pusher.getEncoder().getPosition() == target_pos - offset){
+            if (intakeFlag == -1 && pusher.getEncoder().getPosition() < target_pos - offset){
                 target_pos = target_pos - offset;
                 intakeFlag = 0;
                 pusher.set(0);

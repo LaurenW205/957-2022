@@ -3,6 +3,7 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -34,6 +35,11 @@ public class Climbing {
         pidController.setSmartMotionMaxAccel(1500, 0);
         pidController.setReference(maxExtension, CANSparkMax.ControlType.kSmartMotion);
 
+        m_leftMotor.setIdleMode(IdleMode.kBrake);
+        m_rightMotor.setIdleMode(IdleMode.kBrake);
+
+
+
         m_leftMotor.follow(m_rightMotor, true);
     }
 
@@ -47,9 +53,9 @@ public class Climbing {
 
     public void manualControls(double buttonUp, double buttonDown){
         if(buttonUp > 0.5){
-            m_rightMotor.set(0.5);
+            m_rightMotor.set(0.2);
         }else if(buttonDown > 0.5){
-            m_rightMotor.set(-0.5);
+            m_rightMotor.set(-0.2);
         }else{
             m_rightMotor.set(0);
         }

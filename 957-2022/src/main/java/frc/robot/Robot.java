@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
    int manualStep = 0;
    
    // Button ports
-   final int k_MoveCargo = 0;
+   final int k_MoveCargo = 5;
    final int k_RevIntake = 3;   //joystick button 3
    final int k_Intake = 4;      //joystick button 4
    final int k_Turret = 0;      //controller A
@@ -52,16 +52,16 @@ public class Robot extends TimedRobot {
 
 
    Shooter m_Shooter = new Shooter();
-   Turret2 m_Turret = new Turret2();
+   // Turret2 m_Turret = new Turret2();
    Intake m_Intake = new Intake();
-   Climbing m_Climbing = new Climbing(5);
-   Bling m_Bling = new Bling();
+  //  Climbing m_Climbing = new Climbing(5);
+   //Bling m_Bling = new Bling();
 
    JankAuto ja1 = new JankAuto();
 
   @Override
   public void robotInit() {
-    m_Bling.connect();
+    //m_Bling.connect();
   }
 
   @Override
@@ -90,7 +90,7 @@ public class Robot extends TimedRobot {
     }
     oldPOV = m_controller.getPOV();
 
-    m_Bling.tick(ally_1, ally_2);
+    //m_Bling.tick(ally_1, ally_2);
     
   }
 
@@ -120,41 +120,41 @@ public class Robot extends TimedRobot {
     
     m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(2));
     
-    cargoNum = m_Intake.run(cargoNum, m_joystick.getRawButton(k_Intake), m_joystick.getRawButton(k_RevIntake));    
+    cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake), m_controller.getRawButton(k_RevIntake));    
     cargoNum = m_Shooter.run(cargoNum, m_controller.getRawButton(k_Shooter)); 
     Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
 
     if(buttonUp> .75){
-       m_Climbing.ExtendArm();
+      //  m_Climbing.ExtendArm();
     }
 
     if(buttonDown> .75){
-      m_Climbing.RetractArm();
+      // m_Climbing.RetractArm();
     }
 
     switch(manualStep){
       case 0:
-        m_Turret.run(m_controller.getRawButton(k_Turret));
+       //  m_Turret.run(m_controller.getRawButton(k_Turret));
         if(m_controller.getRawButton(k_Turret))
           manualStep++;
       break;
 
       case 1:
-        m_Turret.run(m_controller.getRawButton(k_Turret));
+       //  m_Turret.run(m_controller.getRawButton(k_Turret));
         if(!m_controller.getRawButton(k_Turret)){
           manualStep++;
         }
       break;
 
       case 2:
-        m_Turret.manualOverride(m_controller.getRawAxis(0), m_controller.getRawAxis(1), 0);
+       //  m_Turret.manualOverride(m_controller.getRawAxis(0), m_controller.getRawAxis(1), 0);
         if(m_controller.getRawButton(k_Turret)){
           manualStep++;
         }
       break;
 
       case 3:
-        m_Turret.manualOverride(m_controller.getRawAxis(0), m_controller.getRawAxis(1), 0);
+        // m_Turret.manualOverride(m_controller.getRawAxis(0), m_controller.getRawAxis(1), 0);
         if(!m_controller.getRawButton(k_Turret)){
           manualStep = 0;
         }
@@ -179,26 +179,26 @@ public class Robot extends TimedRobot {
     double buttonUp = m_controller.getRawAxis(2); //left trigger
     double buttonDown = m_controller.getRawAxis(3); //right trigger
 
-    boolean intakeForward = m_controller.getRawButton(4); //left button
-    boolean intakeBackward = m_controller.getRawButton(5); //right button
+    boolean intakeForward = m_controller.getRawButton(5); //left button
+    boolean intakeBackward = m_controller.getRawButton(6); //right button
 
-    boolean intakeCylExtend = m_controller.getRawButton(6);
-    boolean intakeCylRetract = m_controller.getRawButton(7);
+    boolean intakeCylExtend = m_controller.getRawButton(7); // face buttons left
+    boolean intakeCylRetract = m_controller.getRawButton(8); // right
     
-    boolean ptForward = m_controller.getRawButton(2); //x
-    boolean ptBackward = m_controller.getRawButton(3); //y
+    boolean ptForward = m_controller.getRawButton(3); //x
+    boolean ptBackward = m_controller.getRawButton(4); //y
     
-    boolean shooterForward = m_controller.getRawButton(0); //a
-    boolean shooterBackward =  m_controller.getRawButton(1); //b
+    boolean shooterForward = m_controller.getRawButton(1); //a
+    boolean shooterBackward =  m_controller.getRawButton(2); //b
 
     double x_axis = m_controller.getRawAxis(0); //left stick
-    double y_axis = m_controller.getRawAxis(1);
+    double y_axis = -m_controller.getRawAxis(1);
     
 
     if(intakeForward){
-       m_Intake.intakeMotor_1.set(0.5);
+       m_Intake.intakeMotor_1.set(0.1);
       }else if(intakeBackward){
-        m_Intake.intakeMotor_1.set(-0.5);
+        m_Intake.intakeMotor_1.set(-0.1);
       }else{
         m_Intake.intakeMotor_1.set(0);
       }
@@ -213,28 +213,28 @@ public class Robot extends TimedRobot {
 
 
     if(ptForward){
-       Passthrough.getInstance().pusher.set(0.5);
+       Passthrough.getInstance().pusher.set(0.1);
       }else if(ptBackward){
-        Passthrough.getInstance().pusher.set(-0.5);
+        Passthrough.getInstance().pusher.set(-0.1);
       }else{
         Passthrough.getInstance().pusher.set(0);
       }
     
 
     if(shooterForward){
-        m_Shooter.shooter.set(0.5);
+        // m_Shooter.shooter.set(0.1);
       }else if(shooterBackward){
-        m_Shooter.shooter.set(-0.5);
+        // m_Shooter.shooter.set(-0.1);
       }else{
-        m_Shooter.shooter.set(0);
+        // m_Shooter.shooter.set(0);
       }
 
 
 
     m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(2));
 
-    m_Climbing.manualControls(buttonUp, buttonDown);
+   //  m_Climbing.manualControls(buttonUp, buttonDown);
     
-    m_Turret.manualOverride(x_axis, y_axis, 0);
+   //  m_Turret.manualOverride(-x_axis, y_axis, 0);
   }
 }
