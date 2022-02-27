@@ -21,12 +21,12 @@ public class Turret2 {
     double speed = 0.25;
     int caseNumber = 0;
    
-    double tx0 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx0").getDouble(0); // three target points
-    double tx1 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx1").getDouble(0);
-    double tx2 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx2").getDouble(0);
-    double ta0 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta0").getDouble(0); // target area (used to determine if target is seen)
-    double ta1 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta1").getDouble(0);
-    double ta2 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta2").getDouble(0);
+    double tx0 = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx0").getDouble(0); // three target points
+    double tx1 = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx1").getDouble(0);
+    double tx2 = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx2").getDouble(0);
+    double ta0 = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta0").getDouble(0); // target area (used to determine if target is seen)
+    double ta1 = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta1").getDouble(0);
+    double ta2 = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta2").getDouble(0);
     double tl  = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0);  
 
     double slot1 = 0;
@@ -96,7 +96,13 @@ public class Turret2 {
                 turn = -115.5;
         }
   
-        double z = oldTurn + 0.4 * (turn - oldTurn);    //smooth turning
+        double z = oldTurn + 0.2 * (turn - oldTurn);    //smooth turning
+
+        if( z > 115.5 ){   //shouldn't overshoot 180 degrees or 115.5 rotations
+        z = 115.5;
+     }else if(z < -115.5){
+            z = -115.5;
+    }
   
         
         if(ta0 == 0 ||ta1 == 0 ||ta2 == 0 ){    // if target is not seen, set turret to old turn
@@ -109,12 +115,12 @@ public class Turret2 {
     }
    
     public void run(boolean button){
-        tx0 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx0").getDouble(0);  // three target points, updated data
-        tx1 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx1").getDouble(0);
-        tx2 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx2").getDouble(0);
-        ta0 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta0").getDouble(0);
-        ta1 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta1").getDouble(0);
-        ta2 = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta2").getDouble(0);
+        tx0 = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx0").getDouble(0);  // three target points, updated data
+        tx1 = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx1").getDouble(0);
+        tx2 = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx2").getDouble(0);
+        ta0 = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta0").getDouble(0);
+        ta1 = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta1").getDouble(0);
+        ta2 = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta2").getDouble(0);
         tl  = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0);
         tx = (tx0 + tx1 + tx2)/3.00001 * 27.5;    // finding average of three points
 
@@ -122,13 +128,15 @@ public class Turret2 {
 
         //checks if limelight is on
         if(tl==-9000){
-            pid.setReference(0, CANSparkMax.ControlType.kPosition);
-            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1);//turns off limelight
+            //pid.setReference(0, CANSparkMax.ControlType.kPosition);
+            //NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1);//turns off limelight
         }
         
         //if target seen, sets time to zero
         if(ta0 != 0 &&  ta1 != 0 && ta2 != 0 ) 
         time = 0;
+
+        System.out.println(caseNumber);
 
         switch(caseNumber){
             case 0: //sets turret to zero
@@ -165,11 +173,11 @@ public class Turret2 {
         }   
             //turns limelight on if seeking or tracking
             if(caseNumber == 3){
-                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(3);//on
+                //NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(3);//on
             }else{
-                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1);//off
+                //NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1);//off
             }
-
+            //NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(3);//on
             //checks if limelight is on
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(-9000);
             slot3 = slot2;

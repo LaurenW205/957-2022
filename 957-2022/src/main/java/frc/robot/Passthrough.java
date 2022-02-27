@@ -80,7 +80,6 @@ public class Passthrough {
         else            // If we have 2 cargo, we reset any process that was ongoing in the case statements
           state = 0;
             
-        System.out.println(intakeFlag);
         if(intakeFlag != 0){
             pusher.set(.3*intakeFlag);
             
