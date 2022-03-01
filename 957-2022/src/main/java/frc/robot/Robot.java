@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
    Shooter m_Shooter = new Shooter();
     Turret2 m_Turret = new Turret2();
    Intake m_Intake = new Intake();
-  //  Climbing m_Climbing = new Climbing(5);
+  Climbing m_Climbing = new Climbing(5);
    //Bling m_Bling = new Bling();
 
    JankAuto ja1 = new JankAuto();
@@ -114,53 +114,18 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-
-    double buttonUp = m_controller.getRawAxis(2);
-    double buttonDown = m_controller.getRawAxis(3);
     
-    m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(2));
+    m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(2));
     
     cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake), m_controller.getRawButton(k_RevIntake));    
     cargoNum = m_Shooter.run(cargoNum, m_controller.getRawButton(k_Shooter)); 
     Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
 
-    if(buttonUp> .75){
-      //  m_Climbing.ExtendArm();
-    }
+    double buttonUp = m_controller.getRawAxis(2); //left trigger
+    double buttonDown = m_controller.getRawAxis(3); //right trigger
+    m_Climbing.manualControls(buttonUp, buttonDown);
 
-    if(buttonDown> .75){
-      // m_Climbing.RetractArm();
-    }
-
-    switch(0){
-      case 0:
-        m_Turret.run(m_controller.getRawButton(k_Turret));
-        //if(m_controller.getRawButton(k_Turret))
-         // manualStep++;
-      break;
-
-      case 1:
-        m_Turret.run(m_controller.getRawButton(k_Turret));
-        if(!m_controller.getRawButton(k_Turret)){
-          manualStep++;
-        }
-      break;
-
-      case 2:
-        m_Turret.manualOverride(m_controller.getRawAxis(0), m_controller.getRawAxis(1), 0);
-        if(m_controller.getRawButton(k_Turret)){
-          manualStep++;
-        }
-      break;
-
-      case 3:
-       m_Turret.manualOverride(m_controller.getRawAxis(0), m_controller.getRawAxis(1), 0);
-        if(!m_controller.getRawButton(k_Turret)){
-          manualStep = 0;
-        }
-      break;
-    }
-
+    m_Turret.manualOverride(-m_controller.getRawAxis(0), -m_controller.getRawAxis(1), 0, m_drivetrain.m_navx.getAngle());
 
   }
 
@@ -178,7 +143,7 @@ public class Robot extends TimedRobot {
 
     double buttonUp = m_controller.getRawAxis(2); //left trigger
     double buttonDown = m_controller.getRawAxis(3); //right trigger
-
+ 
     boolean intakeForward = m_controller.getRawButton(5); //left button
     boolean intakeBackward = m_controller.getRawButton(6); //right button
 
@@ -233,7 +198,8 @@ public class Robot extends TimedRobot {
 
     m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(2));
 
-   //  m_Climbing.manualControls(buttonUp, buttonDown);
+    m_Climbing.manualControls(buttonUp, buttonDown);
+    System.out.println(m_Climbing.m_rightMotor.getEncoder().getPosition());
     
    //  m_Turret.manualOverride(-x_axis, y_axis, 0);
   }

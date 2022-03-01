@@ -67,15 +67,16 @@ public class Shooter {
         case 2: //turns motor on until button is pressed or no cargo
         
             //checks if sensor beam is broken and decrease cargo amount
+
             if(breakBeamSensor.get() && !oldSensor)
                 cargo = cargo - 1;
     
             oldSensor = breakBeamSensor.get();
 
-            p.setReference(-2650, ControlType.kVelocity);
+            p.setReference(-2675, ControlType.kVelocity);
 
-            if(shooter.getEncoder().getVelocity()< -2400){
-                Passthrough.getInstance().pusher.set(.2);
+            if(shooter.getEncoder().getVelocity()< -2200){
+                Passthrough.getInstance().pusher.set(.35);
             }else{
                 Passthrough.getInstance().pusher.set(0);
             }

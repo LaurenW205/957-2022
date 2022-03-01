@@ -18,7 +18,7 @@ public class Intake {
 
     public void extendCyl() {
         doubleSolenoid.set(Value.kForward);
-        intakeMotor_1.set(-.4);
+        intakeMotor_1.set(-.6);
     }
 
     public void retractCyl() {
@@ -28,6 +28,8 @@ public class Intake {
 
     public int run(int cargoNum, boolean button, boolean rev) 
     {
+        System.out.println(sensor.get());
+
         if(rev)
         {
             intakeMotor_1.set(.25);
@@ -81,8 +83,8 @@ public class Intake {
 
         if (nowCycle == false) {
             if (lastCycle == true){
+                Passthrough.getInstance().raiseFlag(cargoNum);
                 cargoNum++; 
-                Passthrough.getInstance().raiseFlag();
             }
         }
 

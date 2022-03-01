@@ -188,7 +188,7 @@ public class Turret2 {
 
 
 
-    public void manualOverride(double x_axis, double y_axis, double manualAngle){
+    public void manualOverride(double x_axis, double y_axis, double manualAngle, double gyroAngle){
 
         double angle = 0;
 
@@ -203,12 +203,24 @@ public class Turret2 {
             angle = 90 + (Math.toDegrees(Math.atan(y_axis/x_axis)));
 
         }else if (x_axis >= 0 && y_axis < 0 ) { //y neg, x pos
-            angle = -90;
+            angle = Math.toDegrees(Math.atan(y_axis/x_axis));
+            angle = angle + 90;
          
         } else if(x_axis < 0 && y_axis < 0){
+            angle =  Math.toDegrees(Math.atan(y_axis/x_axis));
+            angle = 270 - angle;
+
+        }
+        angle = (angle - gyroAngle) % 360;
+
+        if(angle > 90){
             angle = 90;
         }
 
+        if(angle < -90){
+            angle = -90;
+        }
+        
         if(Math.pow(x_axis, 2) + (Math.pow(y_axis, 2)) < 0.25)
             angle = 0;
         System.out.println(angle);

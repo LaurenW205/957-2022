@@ -12,33 +12,27 @@ public class Passthrough {
     boolean oldSensor = false;
     public boolean cargoDown = true;
     RelativeEncoder m_pushEncoder = pusher.getEncoder();
-    int cargo = 0;
     int intakeFlag = 0;
     public double target_pos = 0;
-    double offset = 17;
+    double offset = 16;
     int maxTime = 30;
     int state = 0;
 
     public Passthrough(){
         pusher.restoreFactoryDefaults();
         m_pushEncoder.setPosition(0);
-
+        pusher.setIdleMode(IdleMode.kBrake);
     }
 
 
-    public void raiseFlag(){
-        if( intakeFlag == 1){
-          offset = 15;
+    public void raiseFlag(int cargo){
+        if (cargo != 2){
         
-            if(cargo == 0){
-                offset = 19;
-            } 
+
+            intakeFlag = 1;
         }
-
-        intakeFlag = 1;
         
     }
-
     
     public void run(int cargo, boolean button){
         pusher.setIdleMode(IdleMode.kBrake);
