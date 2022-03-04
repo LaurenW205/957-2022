@@ -3,7 +3,7 @@ package frc.robot.automodes;
 import frc.robot.DriveTrain;
 import frc.robot.Intake;
 import frc.robot.Shooter;
-import frc.robot.Turret;
+import frc.robot.Turret2;
 
 public class twocargo2 {
 
@@ -15,7 +15,7 @@ public class twocargo2 {
         autoStep = 0;
     }
     
-    public void run(DriveTrain d, Shooter s, Intake i, Turret t, int cargoNum){
+    public void run(DriveTrain d, Shooter s, Intake i, Turret2 t, int cargoNum){
         
         switch(autoStep){
 
@@ -63,7 +63,7 @@ public class twocargo2 {
             // Wait until all cargo is shot before next case
             case 4:    
 
-                if (cargoNum != 0){  
+                if (cargoNum == 0){  
                     autoStep++;
                     d.resetEncoders();
                 }

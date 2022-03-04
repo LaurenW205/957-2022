@@ -3,7 +3,7 @@ package frc.robot.automodes;
 import frc.robot.DriveTrain;
 import frc.robot.Intake;
 import frc.robot.Shooter;
-import frc.robot.Turret;
+import frc.robot.Turret2;
 
 public class twocargo1 {
 
@@ -13,8 +13,8 @@ public class twocargo1 {
 
         autoStep = -1;
     }
-
-    public void run(DriveTrain d, Shooter s, Intake i, Turret t, int cargoNum){
+    
+    public void run(DriveTrain d, Shooter s, Intake i, Turret2 t, int cargoNum){
 
         switch(autoStep){
 
