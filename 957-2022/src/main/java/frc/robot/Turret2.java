@@ -20,6 +20,7 @@ public class Turret2 {
     double time = 0;
     double speed = 0.25;
     int caseNumber = 0;
+
    
     double tx0 = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx0").getDouble(0); // three target points
     double tx1 = -NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx1").getDouble(0);
@@ -204,26 +205,21 @@ public class Turret2 {
 
         }else if (x_axis >= 0 && y_axis < 0 ) { //y neg, x pos
             angle = Math.toDegrees(Math.atan(y_axis/x_axis));
-            angle = angle + 90;
+            angle = angle - 90;
          
         } else if(x_axis < 0 && y_axis < 0){
             angle =  Math.toDegrees(Math.atan(y_axis/x_axis));
-            angle = 270 - angle;
-
-        }
-        angle = (angle - gyroAngle) % 360;
-
-        if(angle > 90){
-            angle = 90;
-        }
-
-        if(angle < -90){
-            angle = -90;
+            angle = 90 + angle;
         }
         
+        if(angle > 90){
+            angle = 90;
+        }else if(angle < -90){
+            angle = -90;
+        }
+        System.out.println(angle);
         if(Math.pow(x_axis, 2) + (Math.pow(y_axis, 2)) < 0.25)
             angle = 0;
-        System.out.println(angle);
         pid.setReference((manualAngle + angle) *(1/0.77922078), CANSparkMax.ControlType.kPosition);
     }
 }

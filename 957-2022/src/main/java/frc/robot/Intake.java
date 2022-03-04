@@ -18,7 +18,7 @@ public class Intake {
 
     public void extendCyl() {
         doubleSolenoid.set(Value.kForward);
-        intakeMotor_1.set(-.6);
+        intakeMotor_1.set(-.8);
     }
 
     public void retractCyl() {
