@@ -13,7 +13,7 @@ public class twocargo1 {
 
         autoStep = -1;
     }
-    
+
     public void run(DriveTrain d, Shooter s, Intake i, Turret t, int cargoNum){
 
         switch(autoStep){
@@ -35,7 +35,7 @@ public class twocargo1 {
             // Drive to shooting range
             case 1:
 
-                if(d.driveJank(0, -3)){ // Distance subject to change
+                if(d.driveJank(0, 6)){ // Distance subject to change
                     d.resetEncoders();
                     autoStep++;
                     s.caseNumber = 2;
@@ -54,7 +54,7 @@ public class twocargo1 {
 
             break;
             
-            // Turn to terminal
+            /* Turn to terminal 
             case 4: 
             
                 if(d.turnJank(35)){// Angle subject to change
@@ -98,9 +98,14 @@ public class twocargo1 {
               d.arcadeDrive(0, 0);
 
             break;
-            }
-
+            } */
+        
 
         
-    }
+    } 
+} 
+
 }
+
+
+
