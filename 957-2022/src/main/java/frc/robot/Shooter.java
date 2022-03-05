@@ -1,17 +1,13 @@
 package frc.robot;
 
-import javax.lang.model.util.ElementScanner6;
-
-
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter {
     double minimumSpeed;
@@ -20,17 +16,20 @@ public class Shooter {
     public CANSparkMax shooter = new CANSparkMax(6, MotorType.kBrushless);
     RelativeEncoder encoder = shooter.getEncoder();
     SparkMaxPIDController p = shooter.getPIDController();
-    DigitalInput breakBeamSensor = new DigitalInput(1);
+    DigitalInput breakBeamSensor = new DigitalInput(2);
     public int caseNumber = 0;
+    int caseNumber2 = 0;
     boolean oldSensor = false;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
     double timer = 0;
     double timer2 = 0;
+    double speed = 0;
+    double cutoffSpeed = 0;
 
     public Shooter(){
     //PID constants for PID shooter
-        kP = 6e-5; 
-        kI = 0;
+        kP = 1.75e-3; //1.3
+        kI = 0.00000025;
         kD = 0; 
         kIz = 0; 
         kFF = 0.000015; 
@@ -47,9 +46,36 @@ public class Shooter {
         p.setOutputRange(kMinOutput, kMaxOutput);
     }
 
-    public int run(int cargo, boolean button){
-
+    public int run(int cargo, boolean button, boolean speedToggle){
+        SmartDashboard.putNumber("Process",encoder.getVelocity());
         timer = timer + 0.02;
+
+        switch (caseNumber2) {
+            case 0:
+            speed = -2675;
+            cutoffSpeed = -2200;
+                if(speedToggle){
+                   caseNumber2++;
+                }
+            break;
+
+            case 1:
+                if(!speedToggle)
+                    caseNumber2++;
+            break;
+
+            case 2:
+            speed = -1000;
+            cutoffSpeed = -500;
+                if(speedToggle)
+                    caseNumber2++;
+            break;
+
+            case 3:
+                if(!speedToggle)
+                    caseNumber2++;
+            break;
+        }
 
         switch(caseNumber){
         case 0: //checks if button is pressed
@@ -58,6 +84,7 @@ public class Shooter {
         break;
 
         case 1: //checks if button is released
+            oldSensor = breakBeamSensor.get();
             if(!button)
                 caseNumber ++;
                 timer2 = 0;
@@ -66,15 +93,16 @@ public class Shooter {
         case 2: //turns motor on until button is pressed or no cargo
         
             //checks if sensor beam is broken and decrease cargo amount
+
             if(breakBeamSensor.get() && !oldSensor)
                 cargo = cargo - 1;
     
             oldSensor = breakBeamSensor.get();
 
-            p.setReference(3000, ControlType.kVelocity);
+            p.setReference(-2650, ControlType.kVelocity);
 
-            if(shooter.getEncoder().getVelocity()> 2500){
-                Passthrough.getInstance().pusher.set(.5);
+            if(Math.abs(shooter.getEncoder().getVelocity()+ 2650)< 125){
+                Passthrough.getInstance().pusher.set(.25);
             }else{
                 Passthrough.getInstance().pusher.set(0);
             }
@@ -84,11 +112,12 @@ public class Shooter {
             else
                 timer2 = timer2 + 0.02;
 
-            if (timer2 > 3)
+            if (timer2 > 10){
                 caseNumber++;
                 cargo = 0;
+            }
 
-            if(cargo == 0 && timer > 0.5){
+            if(cargo == 0 && timer > 3){
                 caseNumber++;
             }else if (cargo != 0){
                 timer = 0;
@@ -99,13 +128,18 @@ public class Shooter {
         break;
 
         case 3: //checks if button is not pressed
+        p.setReference(0, ControlType.kVelocity);
+        Passthrough.getInstance().target_pos = Passthrough.getInstance().pusher.getEncoder().getPosition();
+
             Passthrough.getInstance().pusher.set(0);
             if(!button)
                 caseNumber = 0;
+        break;
         }
-
 
         //updates cargo amount
         return cargo;
+
+        
     }
 }

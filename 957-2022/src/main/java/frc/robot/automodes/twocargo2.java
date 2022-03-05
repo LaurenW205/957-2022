@@ -22,7 +22,7 @@ public class twocargo2 {
             // Drive out of tarmac
             case 0:
 
-                if(d.driveJank(0, -3.8)){
+                if(d.driveJank(0, -3.8, -0.15)){
                     d.resetEncoders();
                     autoStep++;
                 }
@@ -43,7 +43,7 @@ public class twocargo2 {
             // Drive towards terminal
             case 2:
                 
-                if(d.driveJank(10, -12)){ // Distance subject to change
+                if(d.driveJank(10, -12, 0.15)){ // Distance subject to change
                     d.resetEncoders();
                     autoStep++;
                 }
@@ -53,7 +53,7 @@ public class twocargo2 {
             // Drive to shooting position, and shooter go brrr
             case 3:
 
-                if(d.driveJank(0, 10.5)){
+                if(d.driveJank(0, 10.5, 0.15)){
                     d.resetEncoders();
                     s.caseNumber = 2;
                     autoStep++;
@@ -73,7 +73,7 @@ public class twocargo2 {
             // Drive back to terminal and intake second cargo 
             case 5:
 
-                if(d.driveJank(0, -10.5)){
+                if(d.driveJank(0, -10.5, -0.15)){
                     d.resetEncoders();
                     autoStep++;
                     i.var = 2;

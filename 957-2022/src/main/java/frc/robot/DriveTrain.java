@@ -119,7 +119,7 @@ public class DriveTrain{
     }
 
     //Drive straight function
-    public boolean driveJank(double targetAngle, double feet){
+    public boolean driveJank(double targetAngle, double feet, double targetSpeed){
 
         double setpoint = (feet*5.94);
 
@@ -135,21 +135,21 @@ public class DriveTrain{
 
         if(setpoint > 0){
 
-            speed = 0.25;
+            speed = targetSpeed;
         }else{
 
-            speed = -0.25;
+            speed = -targetSpeed;
         }
 
         if(targetAngle-m_navx.getAngle() > 0.5){
 
-            m_rightNeoMaster.set(speed-0.05);
-            m_leftNeoMaster.set(speed+0.05);
+            m_rightNeoMaster.set(speed-0.0125);
+            m_leftNeoMaster.set(speed+0.0125);
 
         }else if(targetAngle-m_navx.getAngle() <-0.5){
 
-            m_rightNeoMaster.set(speed+0.05);
-            m_leftNeoMaster.set(speed-0.05);
+            m_rightNeoMaster.set(speed+0.0125);
+            m_leftNeoMaster.set(speed-0.0125);
             
         }else{
 
@@ -165,13 +165,13 @@ public class DriveTrain{
 
         if (m_navx.getAngle() > targetAngle){
             
-            m_rightNeoMaster.set(0.15);
-            m_leftNeoMaster.set(-0.15);
+            m_rightNeoMaster.set(0.1);
+            m_leftNeoMaster.set(-0.1);
 
         }else{
 
-            m_rightNeoMaster.set(-0.15);
-            m_leftNeoMaster.set(0.15);
+            m_rightNeoMaster.set(-0.1);
+            m_leftNeoMaster.set(0.1);
         
         }
 

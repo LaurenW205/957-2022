@@ -2,8 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
 
 public class ShuffleBoard {
   boolean autoModeSet = false;
@@ -20,31 +18,31 @@ public class ShuffleBoard {
 
     // Put chooser on dashboard
     SmartDashboard.putData(m_chooser);
+
+    SmartDashboard.putString("Ally 1", "0");
+    SmartDashboard.putString("Ally 2", "0");
   }
 
-    public void updateSmartboard(int cargo, DriveTrain d, Turret2 t) 
-      {
-        SmartDashboard.putNumber("Cargo", cargo);
-        SmartDashboard.putString("Auto", m_chooser.getSelected());
-        SmartDashboard.putNumber("Bot Angle", d.m_navx.getAngle());
-        SmartDashboard.putData("Gyro Angle", d.m_navx);
-      }
-
-    public String updateAuto(){
-      System.out.println(m_chooser.getSelected()); // Testing
-      return m_chooser.getSelected();
+  public void updateSmartboard(int cargo, int auto, DriveTrain d, Turret2 t) 
+    {
+      SmartDashboard.putNumber("Cargo", cargo);
+      SmartDashboard.putString("Auto", m_chooser.getSelected());
+      SmartDashboard.putNumber("Bot Angle", d.m_navx.getAngle());
+      SmartDashboard.putData("Gyro Angle", d.m_navx);
     }
-      
-    public String getAlly1()
-      {
-        return SmartDashboard.getString("Ally 1", "???");
-      }
-    
-    public String getAlly2()
-      {
-        return SmartDashboard.getString("Ally 2", "???");
-      }
 
+  public String updateAuto(){
+    System.out.println(m_chooser.getSelected()); // Testing
+    return m_chooser.getSelected();
+  }
     
+  public String getAlly1()
+    {
+      return SmartDashboard.getString("Ally 1", "???");
+    }
   
+  public String getAlly2()
+    {
+      return SmartDashboard.getString("Ally 2", "???");
+    }
 }

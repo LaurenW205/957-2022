@@ -28,7 +28,7 @@ public class twocargo3 {
             //Drive out of tarmac and intake 
             case 1:
 
-                if(d.driveJank(0, -4.5)){
+                if(d.driveJank(0, -4.5, -0.15)){
                     d.resetEncoders();
                     autoStep++;
                 }
@@ -37,7 +37,7 @@ public class twocargo3 {
             //drive to shooting position
             case 2:
 
-                if(d.driveJank(0, -12)){
+                if(d.driveJank(0, -12, -0.15)){
                     d.resetEncoders();
                     autoStep++;
                     s.caseNumber = 2;
@@ -67,7 +67,7 @@ public class twocargo3 {
             //drive to terminal and prepare intake 
             case 5:
 
-                if(d.driveJank(-10, -7)){
+                if(d.driveJank(-10, -7, -0.15)){
                     d.resetEncoders();
                     autoStep++;
 
