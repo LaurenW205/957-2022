@@ -23,7 +23,7 @@ public class Shooter {
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
     double timer = 0;
     double timer2 = 0;
-    double speed = 2650;
+    public double speed = 2650;
     double cutoffSpeed = 0;
 
     public Shooter(){
@@ -55,7 +55,7 @@ public class Shooter {
        }
 
        if(slowButton){
-           speed = 2350;
+           speed = 2250;
        }
 
         switch(caseNumber){
@@ -82,7 +82,7 @@ public class Shooter {
 
             p.setReference(-speed, ControlType.kVelocity);
 
-            if(Math.abs(shooter.getEncoder().getVelocity()- speed)< 125){
+            if(Math.abs(shooter.getEncoder().getVelocity()+ speed)< 125){
                 Passthrough.getInstance().pusher.set(.25);
             }else{
                 Passthrough.getInstance().pusher.set(0);

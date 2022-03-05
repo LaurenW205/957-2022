@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
     Turret2 m_Turret = new Turret2();
     Intake m_Intake = new Intake();
     Climbing m_Climbing = new Climbing(5);
-    Bling m_Bling = new Bling();
+    //Bling m_Bling = new Bling();
 
    // JankAuto ja1 = new JankAuto();
    // twocargo1 ja2 = new twocargo1();
@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    m_Bling.connect();
+    //m_Bling.connect();
 
   }
 
@@ -104,13 +104,14 @@ public class Robot extends TimedRobot {
     oldPOV = m_controller.getPOV();
 
     //m_Bling.tick("955", "997");
-    m_Bling.tick(ally_1, ally_2);
+    //m_Bling.tick(ally_1, ally_2);
     
   }
 
   @Override
   public void autonomousInit() {
 
+    m_Shooter.speed = 2650;
     m_autoMode = sb.updateAuto();
     if (m_autoMode == "No Auto"){
 
@@ -136,7 +137,7 @@ public class Robot extends TimedRobot {
 
     thc1.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake), m_controller.getRawButton(k_RevIntake));    
-    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_controller.getRawButton(k_FarShooter),m_controller.getRawButton(k_CloseShooter)); 
+    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_joystick.getRawButton(k_FarShooter),m_joystick.getRawButton(k_CloseShooter)); 
     Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
 
     
@@ -155,7 +156,7 @@ public class Robot extends TimedRobot {
     }
     
     cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake), m_controller.getRawButton(k_RevIntake));    
-    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_controller.getRawButton(k_FarShooter), m_controller.getRawButton(k_CloseShooter)); 
+    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_joystick.getRawButton(k_FarShooter), m_joystick.getRawButton(k_CloseShooter)); 
     Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
 
     double buttonUp = m_controller.getRawAxis(2); //left trigger
