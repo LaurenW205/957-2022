@@ -17,7 +17,7 @@ public class JankAuto {
 
             case 0:
     
-              if(d.driveJank(0, 5)){
+              if(d.driveJank(0, 5, 0.15)){
                 autoStep++;
                 d.resetEncoders();
               }
@@ -33,7 +33,7 @@ public class JankAuto {
     
             case 2:
     
-              if(d.driveJank(-90, 4)){
+              if(d.driveJank(-90, 4, 0.15)){
                 autoStep++;
                d.resetEncoders();
               }

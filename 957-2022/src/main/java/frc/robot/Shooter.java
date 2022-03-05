@@ -73,10 +73,10 @@ public class Shooter {
     
             oldSensor = breakBeamSensor.get();
 
-            p.setReference(-2675, ControlType.kVelocity);
+            p.setReference(-2900, ControlType.kVelocity); //-2800 for auto
 
-            if(shooter.getEncoder().getVelocity()< -2200){
-                Passthrough.getInstance().pusher.set(.35);
+            if(shooter.getEncoder().getVelocity()< -2600){  //-2550 for auto
+                Passthrough.getInstance().pusher.set(.25);
             }else{
                 Passthrough.getInstance().pusher.set(0);
             }

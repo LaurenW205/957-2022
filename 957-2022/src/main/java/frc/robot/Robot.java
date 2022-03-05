@@ -12,6 +12,10 @@ import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.automodes.JankAuto;
+import frc.robot.automodes.lefttwocargonear;
+import frc.robot.automodes.midthreecargo;
+import frc.robot.automodes.midtwocargofar;
+import frc.robot.automodes.righttwocargonear;
 
 
 /**
@@ -32,6 +36,11 @@ public class Robot extends TimedRobot {
    Joystick m_joystick = new Joystick(0);
    Joystick m_controller = new Joystick(1);
    ShuffleBoard sb = new ShuffleBoard();
+   JankAuto ja1 = new JankAuto();
+   midtwocargofar tc1 = new midtwocargofar();
+   righttwocargonear tc2 = new righttwocargonear();
+   lefttwocargonear tc3 = new lefttwocargonear();
+   midthreecargo thc1 = new midthreecargo();
    
    int m_timer = 0;
    int m_autoStep = 0;
@@ -54,10 +63,8 @@ public class Robot extends TimedRobot {
    Shooter m_Shooter = new Shooter();
     Turret2 m_Turret = new Turret2();
    Intake m_Intake = new Intake();
-  Climbing m_Climbing = new Climbing(5);
+   Climbing m_Climbing = new Climbing(5);
    //Bling m_Bling = new Bling();
-
-   JankAuto ja1 = new JankAuto();
 
   @Override
   public void robotInit() {
@@ -97,16 +104,22 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
 
+    cargoNum = 1;
     m_drivetrain.setIdleMode(IdleMode.kBrake);
     m_drivetrain.resetEncoders();
     m_drivetrain.m_navx.reset();
-    ja1.reset();
+    
   }
 
   @Override
   public void autonomousPeriodic() {
 
-    ja1.run(m_drivetrain);
+    thc1.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake), m_controller.getRawButton(k_RevIntake));    
+    cargoNum = m_Shooter.run(cargoNum, m_controller.getRawButton(k_Shooter)); 
+    Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
+
+    
   }
     
   @Override

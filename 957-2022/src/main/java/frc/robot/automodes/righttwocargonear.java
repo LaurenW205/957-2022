@@ -5,9 +5,9 @@ import frc.robot.Intake;
 import frc.robot.Shooter;
 import frc.robot.Turret2;
 
-public class twocargo1 {
+public class righttwocargonear {
 
-    int autoStep = 0;
+    int autoStep = -1;
 
     public void reset(){
 
@@ -16,6 +16,7 @@ public class twocargo1 {
     
     public void run(DriveTrain d, Shooter s, Intake i, Turret2 t, int cargoNum){
 
+        t.manualOverride(0, 0, 30, 0);
         switch(autoStep){
 
           case -1:
@@ -26,7 +27,7 @@ public class twocargo1 {
  
             // Drive out of tarmac and intake cargo
             case 0:
-                if(d.driveJank(0, -3.8)){
+                if(d.driveJank(0, -3.3, 0.15)){
                     d.resetEncoders();
                     autoStep++;
                 }
@@ -35,10 +36,11 @@ public class twocargo1 {
             // Drive to shooting range
             case 1:
 
-                if(d.driveJank(0, 6)){ // Distance subject to change
+                if(d.driveJank(0, 2.2, 0.15)){ // Distance subject to change
                     d.resetEncoders();
+                   // i.var = 5;
                     autoStep++;
-                    s.caseNumber = 2;
+                    s.caseNumber = 1;
                 }
     
             break;
