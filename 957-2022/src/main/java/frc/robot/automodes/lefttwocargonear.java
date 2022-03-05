@@ -16,7 +16,7 @@ public class lefttwocargonear {
     
     public void run(DriveTrain d, Shooter s, Intake i, Turret2 t, int cargoNum){
 
-        t.manualOverride(0, 0, 10, 0);
+        t.manualOverride(0, 0, 0, 0);
         switch(autoStep){
 
           case -1:
@@ -36,7 +36,7 @@ public class lefttwocargonear {
             // Drive to shooting range
             case 1:
 
-                if(d.driveJank(0, 2.5, 0.15)){ // Distance subject to change
+                if(d.driveJank(0, 1.5, 0.15)){ // Distance subject to change
                     d.resetEncoders();
                    // i.var = 5;
                     autoStep++;

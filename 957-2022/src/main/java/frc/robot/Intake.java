@@ -32,7 +32,7 @@ public class Intake {
 
         if(rev)
         {
-            intakeMotor_1.set(.25);
+            //intakeMotor_1.set(.25);
             Passthrough.getInstance().pusher.set(-0.25);
             cargoNum = 0;
         }

@@ -36,7 +36,7 @@ public class midthreecargo {
             // Drive to shooting range
             case 1:
 
-                if(d.driveJank(0, 2.2, 0.15)){ // Distance subject to change
+                if(d.driveJank(0, 1, 0.15)){ // Distance subject to change
                     d.resetEncoders();
                    // i.var = 5;
                     autoStep++;
@@ -69,7 +69,7 @@ public class midthreecargo {
             //drive towards terminal
             case 5:
 
-            if(d.driveJank(10, -7, 0.30)){
+            if(d.driveJank(10, -6, 0.30)){
                 d.resetEncoders();
                 autoStep++;
             }

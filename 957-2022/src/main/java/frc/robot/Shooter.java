@@ -25,6 +25,7 @@ public class Shooter {
     double timer2 = 0;
     public double speed = 2650;
     double cutoffSpeed = 0;
+    public boolean oldPuke = false;
 
     public Shooter(){
     //PID constants for PID shooter
@@ -46,7 +47,7 @@ public class Shooter {
         p.setOutputRange(kMinOutput, kMaxOutput);
     }
 
-    public int run(int cargo, boolean button, boolean fastButton, boolean slowButton){
+    public int run(int cargo, boolean button, boolean fastButton, boolean slowButton, boolean puke){
         SmartDashboard.putNumber("Process",encoder.getVelocity());
         timer = timer + 0.02;
 
@@ -60,6 +61,16 @@ public class Shooter {
 
         switch(caseNumber){
         case 0: //checks if button is pressed
+            if(puke){
+                shooter.set(-.4);
+                Passthrough.getInstance().pusher.set(.25);
+            }else{
+                if(oldPuke != puke){
+                    shooter.set(0);
+                    Passthrough.getInstance().pusher.set(0);
+                }
+            }
+            oldPuke = puke;
             if(button)
                 caseNumber ++;
         break;
