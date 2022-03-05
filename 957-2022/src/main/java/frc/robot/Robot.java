@@ -4,13 +4,14 @@
 
 package frc.robot;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.automodes.JankAuto;
 import frc.robot.automodes.lefttwocargonear;
 import frc.robot.automodes.midthreecargo;
@@ -44,43 +45,45 @@ public class Robot extends TimedRobot {
    
    int m_timer = 0;
    int m_autoStep = 0;
-   int m_autoMode = 0;
+   String m_autoMode;
    int cargoNum = 0;
    int oldPOV = 0;
    int manualStep = 0;
    
-   // Button ports
+    //controller
+    final int k_RevIntake = 1;     // A,1
+    final int k_Intake = 2;       // B,2
+    final int k_MoveCargo = 4;    // Y,4
+    final int k_CargoChange = 0;       //d pad, up and down
+ 
+    //joystick
+    final int k_Shooter = 1;      // TRIGGER
+    final int k_SpeedChange = 2; // side button
+    final int k_ManualSwitch = 3;      // flip switch, axis 3
+ 
+    Shooter m_Shooter = new Shooter();
+    Turret2 m_Turret = new Turret2();
+    Intake m_Intake = new Intake();
+    Climbing m_Climbing = new Climbing(5);
+    Bling m_Bling = new Bling();
 
-   //controller
-   final int k_RevIntake = 1;     // A,1
-   final int k_Intake = 2;       // B,2
-   final int k_MoveCargo = 4;    // Y,4
-   final int k_CargoChange = 0;       //d pad, up and down
-
-   //joystick
-   final int k_Shooter = 1;      // TRIGGER
-   final int k_SpeedChange = 2; // side button
-   final int k_ManualSwitch = 3;      // flip switch, axis 3
-
-   Shooter m_Shooter = new Shooter();
-   Turret2 m_Turret = new Turret2();
-   Intake m_Intake = new Intake();
-   Climbing m_Climbing = new Climbing(5);
-   //Bling m_Bling = new Bling();
+   // JankAuto ja1 = new JankAuto();
+   // twocargo1 ja2 = new twocargo1();
+   // twocargo2 ja3 = new twocargo2();
+   // twocargo3 ja4 = new twocargo3();
 
   @Override
   public void robotInit() {
-    //m_Bling.connect();
+    m_Bling.connect();
+
   }
 
   @Override
   public void robotPeriodic() {
-
-    //sb.updateSmartboard(cargoNum, m_autoMode);
-    // Next three lines are for testing; can be deleted for competition
+    sb.updateSmartboard(cargoNum, m_drivetrain);
+    sb.updateAuto();
     String ally_1 = sb.getAlly1();
     String ally_2 = sb.getAlly2();
-    //System.out.println("xoxo to: Team " + ally_1 + " & Team " + ally_2);
 
     if (m_controller.getPOV()==180 && oldPOV != 180){
       cargoNum--;
@@ -99,18 +102,32 @@ public class Robot extends TimedRobot {
     }
     oldPOV = m_controller.getPOV();
 
-    //m_Bling.tick(ally_1, ally_2);
+    //m_Bling.tick("955", "997");
+    m_Bling.tick(ally_1, ally_2);
     
   }
 
   @Override
   public void autonomousInit() {
 
-    cargoNum = 1;
+    m_autoMode = sb.updateAuto();
+    if (m_autoMode == "No Auto"){
+
+    }else if (m_autoMode == "Auto 1"){
+
+    }else if (m_autoMode == "Auto 2"){
+
+    }else if (m_autoMode == "Auto 3"){
+      
+    }
+    
+    // set the auto to 1
+
     m_drivetrain.setIdleMode(IdleMode.kBrake);
     m_drivetrain.resetEncoders();
     m_drivetrain.m_navx.reset();
-    
+    // ja1.reset();
+    cargoNum = 1; 
   }
 
   @Override
