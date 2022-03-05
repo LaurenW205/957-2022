@@ -51,15 +51,16 @@ public class Robot extends TimedRobot {
    int manualStep = 0;
    
     //controller
-    final int k_RevIntake = 1;     // A,1
-    final int k_Intake = 2;       // B,2
-    final int k_MoveCargo = 4;    // Y,4
-    final int k_CargoChange = 0;       //d pad, up and down
+    final int k_RevIntake = 1;      // A,1
+    final int k_Intake = 2;         // B,2
+    final int k_MoveCargo = 4;      // Y,4
+    final int k_CargoChange = 0;    //d pad, up and down
  
     //joystick
-    final int k_Shooter = 1;      // TRIGGER
-    final int k_SpeedChange = 2; // side button
-    final int k_ManualSwitch = 3;      // flip switch, axis 3
+    final int k_Shooter = 1;        // TRIGGER
+    final int k_FarShooter = 12;    // button 12
+    final int k_CloseShooter = 11;  //button 11
+    final int k_DriveDirection = 3; // flip switch, axis 3
  
     Shooter m_Shooter = new Shooter();
     Turret2 m_Turret = new Turret2();
@@ -135,7 +136,7 @@ public class Robot extends TimedRobot {
 
     thc1.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake), m_controller.getRawButton(k_RevIntake));    
-    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_controller.getRawButton(k_SpeedChange)); 
+    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_controller.getRawButton(k_FarShooter),m_controller.getRawButton(k_CloseShooter)); 
     Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
 
     
@@ -147,14 +148,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     
-    if(m_joystick.getRawAxis(k_ManualSwitch) > 0){
+    if(m_joystick.getRawAxis(k_DriveDirection) > 0){
       m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(2));
     }else{
       m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(2));
     }
     
     cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake), m_controller.getRawButton(k_RevIntake));    
-    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_controller.getRawButton(k_SpeedChange)); 
+    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_controller.getRawButton(k_FarShooter), m_controller.getRawButton(k_CloseShooter)); 
     Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
 
     double buttonUp = m_controller.getRawAxis(2); //left trigger
