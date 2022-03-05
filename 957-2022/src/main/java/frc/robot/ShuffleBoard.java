@@ -6,6 +6,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class ShuffleBoard {
   boolean autoModeSet = false;
 
+    public ShuffleBoard(){
+      SmartDashboard.putString("Ally 1", "0");
+      SmartDashboard.putString("Ally 2", "0");
+    }
+
     public void updateSmartboard(int cargo, int auto, DriveTrain d, Turret2 t) 
       {
         SmartDashboard.putNumber("Cargo", cargo);

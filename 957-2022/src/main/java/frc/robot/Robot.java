@@ -66,11 +66,11 @@ public class Robot extends TimedRobot {
    Turret2 m_Turret = new Turret2();
    Intake m_Intake = new Intake();
    Climbing m_Climbing = new Climbing(5);
-   //Bling m_Bling = new Bling();
+   Bling m_Bling = new Bling();
 
   @Override
   public void robotInit() {
-    //m_Bling.connect();
+    m_Bling.connect();
   }
 
   @Override
@@ -99,7 +99,8 @@ public class Robot extends TimedRobot {
     }
     oldPOV = m_controller.getPOV();
 
-    //m_Bling.tick(ally_1, ally_2);
+    //m_Bling.tick("955", "997");
+    m_Bling.tick(ally_1, ally_2);
     
   }
 
