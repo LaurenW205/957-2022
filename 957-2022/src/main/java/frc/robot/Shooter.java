@@ -32,8 +32,8 @@ public class Shooter {
 
     public Shooter(){
     //PID constants for PID shooter
-        kP = 3e-3; 
-        kI = 0;
+        kP = 3e-4; 
+        kI = 0.00000135;
         kD = 0; 
         kIz = 0; 
         kFF = 0.000015; 
