@@ -1,17 +1,40 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 
 public class ShuffleBoard {
   boolean autoModeSet = false;
+  SendableChooser<String> m_chooser = new SendableChooser<>();
 
-    public void updateSmartboard(int cargo, int auto, DriveTrain d, Turret2 t) 
+  // Run when shuffleboard is first initialized
+  public ShuffleBoard(){
+
+    // Add options
+    m_chooser.setDefaultOption("Nothing", "No Auto");
+    m_chooser.addOption("Set Auto 1", "Auto 1");
+    m_chooser.addOption("Set Auto 2", "Auto 2");
+    m_chooser.addOption("Set Auto 3", "Auto 3");
+
+    // Put chooser on dashboard
+    SmartDashboard.putData(m_chooser);
+  }
+
+    public void updateSmartboard(int cargo, DriveTrain d, Turret2 t) 
       {
         SmartDashboard.putNumber("Cargo", cargo);
-        SmartDashboard.putNumber("Auto", auto);
+        SmartDashboard.putString("Auto", m_chooser.getSelected());
+        SmartDashboard.putNumber("Bot Angle", d.m_navx.getAngle());
+        SmartDashboard.putData("Gyro Angle", d.m_navx);
       }
 
+    public String updateAuto(){
+      System.out.println(m_chooser.getSelected()); // Testing
+      return m_chooser.getSelected();
+    }
+      
     public String getAlly1()
       {
         return SmartDashboard.getString("Ally 1", "???");
@@ -22,16 +45,6 @@ public class ShuffleBoard {
         return SmartDashboard.getString("Ally 2", "???");
       }
 
-    public int setAuto()
-    {
-      if(SmartDashboard.getString("Auto", "no") != "no" && !autoModeSet) // If there is value to use and autoMode has not already been set,
-      {  
-        autoModeSet = true;                                               // Then prevent auto from being set again
-        return Integer.parseInt(SmartDashboard.getString("Auto", "no"));  // And return the value entered
-      }
-      else
-        return 0;                                                         // Otherwise, return 0 (0 should not be assigned an auto)
-    }
-
     
+  
 }
