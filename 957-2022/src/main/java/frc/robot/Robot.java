@@ -50,18 +50,20 @@ public class Robot extends TimedRobot {
    int manualStep = 0;
    
    // Button ports
-   final int k_MoveCargo = 5;
-   final int k_RevIntake = 3;   //joystick button 3
-   final int k_Intake = 4;      //joystick button 4
-   final int k_Turret = 2;      //controller A
-   final int k_Climber = 3;     //controller Y
-   final int k_CargoChange = 0; //controller d pad
-   final int k_Shooter = 1;     //controller B
-   final int k_ManualSwitch = 3; //controller X
 
+   //controller
+   final int k_RevIntake = 1;     // A,1
+   final int k_Intake = 2;       // B,2
+   final int k_MoveCargo = 4;    // Y,4
+   final int k_CargoChange = 0;       //d pad, up and down
+
+   //joystick
+   final int k_Shooter = 1;      // TRIGGER
+   final int k_SpeedChange = 2; // side button
+   final int k_ManualSwitch = 3;      // flip switch, axis 3
 
    Shooter m_Shooter = new Shooter();
-    Turret2 m_Turret = new Turret2();
+   Turret2 m_Turret = new Turret2();
    Intake m_Intake = new Intake();
    Climbing m_Climbing = new Climbing(5);
    //Bling m_Bling = new Bling();
@@ -128,10 +130,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     
-    m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(2));
+    if(m_joystick.getRawAxis(k_ManualSwitch) > 0){
+      m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(2));
+    }else{
+      m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(2));
+    }
     
     cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake), m_controller.getRawButton(k_RevIntake));    
-    cargoNum = m_Shooter.run(cargoNum, m_controller.getRawButton(k_Shooter)); 
+    cargoNum = m_Shooter.run(cargoNum, m_controller.getRawButton(k_Shooter), m_controller.getRawButton(k_SpeedChange)); 
     Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
 
     double buttonUp = m_controller.getRawAxis(2); //left trigger
@@ -139,7 +145,6 @@ public class Robot extends TimedRobot {
     m_Climbing.manualControls(buttonUp, buttonDown);
 
     m_Turret.manualOverride(-m_controller.getRawAxis(0), -m_controller.getRawAxis(1), 0, m_drivetrain.m_navx.getAngle());
-
   }
 
   @Override
@@ -206,10 +211,8 @@ public class Robot extends TimedRobot {
       }else{
         // m_Shooter.shooter.set(0);
       }
-
-
-
-    m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(2));
+    
+      m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(2));
 
     m_Climbing.manualControls(buttonUp, buttonDown);
     System.out.println(m_Climbing.m_rightMotor.getEncoder().getPosition());
