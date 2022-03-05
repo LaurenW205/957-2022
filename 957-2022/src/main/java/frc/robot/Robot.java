@@ -44,8 +44,8 @@ public class Robot extends TimedRobot {
 
    //controller
    final int k_MoveCargo = 4;    // Y,4
-   final int k_Shooter = 1;      // A,1
-   final int k_SpeedChange = 3;  // X,3
+   final int k_Shooter = 2;      // B,2
+   final int k_SpeedChange = 1;  // A,1
    final int k_CargoChange = 0;  //d pad, up and down
 
    //joystick
