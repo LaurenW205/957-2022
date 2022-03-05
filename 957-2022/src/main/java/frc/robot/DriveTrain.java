@@ -107,12 +107,12 @@ public class DriveTrain{
 
     double deadband(double value) {
         /* Upper deadband */
-        if (value >= +0.20 ) 
-            return value-0.2;
+        if (value >= +0.10 ) 
+            return value-0.1;
         
         /* Lower deadband */
-        if (value <= -0.20)
-            return value+0.2;
+        if (value <= -0.10)
+            return value+0.1;
         
         /* Outside deadband */
         return 0;

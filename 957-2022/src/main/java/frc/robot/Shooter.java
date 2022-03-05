@@ -23,7 +23,7 @@ public class Shooter {
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
     double timer = 0;
     double timer2 = 0;
-    double speed = 0;
+    double speed = 2650;
     double cutoffSpeed = 0;
 
     public Shooter(){
@@ -46,36 +46,17 @@ public class Shooter {
         p.setOutputRange(kMinOutput, kMaxOutput);
     }
 
-    public int run(int cargo, boolean button, boolean speedToggle){
+    public int run(int cargo, boolean button, boolean fastButton, boolean slowButton){
         SmartDashboard.putNumber("Process",encoder.getVelocity());
         timer = timer + 0.02;
 
-        switch (caseNumber2) {
-            case 0:
-            speed = -2675;
-            cutoffSpeed = -2200;
-                if(speedToggle){
-                   caseNumber2++;
-                }
-            break;
+       if(fastButton){
+           speed = 2650;
+       }
 
-            case 1:
-                if(!speedToggle)
-                    caseNumber2++;
-            break;
-
-            case 2:
-            speed = -1000;
-            cutoffSpeed = -500;
-                if(speedToggle)
-                    caseNumber2++;
-            break;
-
-            case 3:
-                if(!speedToggle)
-                    caseNumber2++;
-            break;
-        }
+       if(slowButton){
+           speed = 2350;
+       }
 
         switch(caseNumber){
         case 0: //checks if button is pressed
@@ -99,9 +80,9 @@ public class Shooter {
     
             oldSensor = breakBeamSensor.get();
 
-            p.setReference(-2650, ControlType.kVelocity);
+            p.setReference(-speed, ControlType.kVelocity);
 
-            if(Math.abs(shooter.getEncoder().getVelocity()+ 2650)< 125){
+            if(Math.abs(shooter.getEncoder().getVelocity()- speed)< 125){
                 Passthrough.getInstance().pusher.set(.25);
             }else{
                 Passthrough.getInstance().pusher.set(0);
