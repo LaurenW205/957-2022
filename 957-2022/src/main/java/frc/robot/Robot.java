@@ -37,11 +37,10 @@ public class Robot extends TimedRobot {
    Joystick m_joystick = new Joystick(0);
    Joystick m_controller = new Joystick(1);
    ShuffleBoard sb = new ShuffleBoard();
-   JankAuto ja1 = new JankAuto();
-   midtwocargofar tc1 = new midtwocargofar();
-   righttwocargonear tc2 = new righttwocargonear();
-   lefttwocargonear tc3 = new lefttwocargonear();
-   midthreecargo thc1 = new midthreecargo();
+   midtwocargofar m2cf = new midtwocargofar();
+   righttwocargonear r2cn = new righttwocargonear();
+   lefttwocargonear l2cn = new lefttwocargonear();
+   midthreecargo m3c = new midthreecargo();
    
    int m_timer = 0;
    int m_autoStep = 0;
@@ -67,11 +66,6 @@ public class Robot extends TimedRobot {
     Intake m_Intake = new Intake();
     Climbing m_Climbing = new Climbing(5);
     //Bling m_Bling = new Bling();
-
-   // JankAuto ja1 = new JankAuto();
-   // twocargo1 ja2 = new twocargo1();
-   // twocargo2 ja3 = new twocargo2();
-   // twocargo3 ja4 = new twocargo3();
 
   @Override
   public void robotInit() {
@@ -113,15 +107,12 @@ public class Robot extends TimedRobot {
 
     m_Shooter.speed = 2650;
     m_autoMode = sb.updateAuto();
-    if (m_autoMode == "No Auto"){
 
-    }else if (m_autoMode == "Auto 1"){
+    l2cn.reset();
+    m2cf.reset();
+    r2cn.reset();
+    m3c.reset();
 
-    }else if (m_autoMode == "Auto 2"){
-
-    }else if (m_autoMode == "Auto 3"){
-      
-    }
     
     // set the auto to 1
 
@@ -135,7 +126,19 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
 
-    thc1.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    if (m_autoMode == "No Auto"){
+
+    }else if (m_autoMode == "Auto 1"){
+      l2cn.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if (m_autoMode == "Auto 2"){
+      m2cf.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if (m_autoMode == "Auto 3"){
+      r2cn.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if (m_autoMode == "Auto 4"){
+      m3c.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }
+
+    //thc1.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake), m_controller.getRawButton(k_RevIntake));    
     cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_joystick.getRawButton(k_FarShooter),m_joystick.getRawButton(k_CloseShooter)); 
     Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));

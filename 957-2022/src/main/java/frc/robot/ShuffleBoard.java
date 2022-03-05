@@ -1,20 +1,25 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShuffleBoard {
   boolean autoModeSet = false;
   SendableChooser<String> m_chooser = new SendableChooser<>();
+  
 
   // Run when shuffleboard is first initialized
   public ShuffleBoard(){
 
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1);//off
+
     // Add options
     m_chooser.setDefaultOption("Nothing", "No Auto");
-    m_chooser.addOption("Set Auto 1", "Auto 1");
-    m_chooser.addOption("Set Auto 2", "Auto 2");
-    m_chooser.addOption("Set Auto 3", "Auto 3");
+    m_chooser.addOption("Left 2 Cargo Near", "Auto 1");
+    m_chooser.addOption("Mid 2 Cargo Far", "Auto 2");
+    m_chooser.addOption("Right 2 Cargo Near", "Auto 3");
+    m_chooser.addOption("Mid 3 Cargo", "Auto 4");
 
     // Put chooser on dashboard
     SmartDashboard.putData(m_chooser);
