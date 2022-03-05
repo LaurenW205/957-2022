@@ -1,7 +1,7 @@
 package frc.robot;
 
 import javax.lang.model.util.ElementScanner6;
-
+import javax.swing.text.DefaultEditorKit.CutAction;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -22,10 +22,13 @@ public class Shooter {
     SparkMaxPIDController p = shooter.getPIDController();
     DigitalInput breakBeamSensor = new DigitalInput(2);
     public int caseNumber = 0;
+    int caseNumber2 = 0;
     boolean oldSensor = false;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
     double timer = 0;
     double timer2 = 0;
+    double speed = 0;
+    double cutoffSpeed = 0;
 
     public Shooter(){
     //PID constants for PID shooter
@@ -47,9 +50,36 @@ public class Shooter {
         p.setOutputRange(kMinOutput, kMaxOutput);
     }
 
-    public int run(int cargo, boolean button){
+    public int run(int cargo, boolean button, boolean speedToggle){
 
         timer = timer + 0.02;
+
+        switch (caseNumber2) {
+            case 0:
+            speed = -2675;
+            cutoffSpeed = -2200;
+                if(speedToggle){
+                   caseNumber2++;
+                }
+            break;
+
+            case 1:
+                if(!speedToggle)
+                    caseNumber2++;
+            break;
+
+            case 2:
+            speed = -1000;
+            cutoffSpeed = -500;
+                if(speedToggle)
+                    caseNumber2++;
+            break;
+
+            case 3:
+                if(!speedToggle)
+                    caseNumber2++;
+            break;
+        }
 
         switch(caseNumber){
         case 0: //checks if button is pressed
@@ -73,9 +103,9 @@ public class Shooter {
     
             oldSensor = breakBeamSensor.get();
 
-            p.setReference(-2675, ControlType.kVelocity);
+            p.setReference(speed, ControlType.kVelocity);
 
-            if(shooter.getEncoder().getVelocity()< -2200){
+            if(shooter.getEncoder().getVelocity()< cutoffSpeed){
                 Passthrough.getInstance().pusher.set(.35);
             }else{
                 Passthrough.getInstance().pusher.set(0);
@@ -110,9 +140,6 @@ public class Shooter {
                 caseNumber = 0;
         break;
         }
-
-        
-
 
         //updates cargo amount
         return cargo;
