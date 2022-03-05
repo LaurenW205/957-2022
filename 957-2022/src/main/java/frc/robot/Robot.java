@@ -74,15 +74,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    //m_Bling.connect();
+    m_Bling.connect();
 
   }
 
   @Override
   public void robotPeriodic() {
-    // System.out.println(m_chooser.getSelected()); (moved to shuffleboard)
-    // CommandScheduler.getInstance().run();        (moved to shuffleboard)
-    sb.updateSmartboard(cargoNum, m_drivetrain, m_Turret);
+    sb.updateSmartboard(cargoNum, m_drivetrain);
     sb.updateAuto();
     String ally_1 = sb.getAlly1();
     String ally_2 = sb.getAlly2();
