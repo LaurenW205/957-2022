@@ -1,17 +1,13 @@
 package frc.robot;
 
-import javax.lang.model.util.ElementScanner6;
-import javax.swing.text.DefaultEditorKit.CutAction;
-
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter {
     double minimumSpeed;
@@ -32,8 +28,8 @@ public class Shooter {
 
     public Shooter(){
     //PID constants for PID shooter
-        kP = 3e-4; 
-        kI = 0.00000135;
+        kP = 1.75e-3; //1.3
+        kI = 0.00000025;
         kD = 0; 
         kIz = 0; 
         kFF = 0.000015; 
@@ -51,7 +47,7 @@ public class Shooter {
     }
 
     public int run(int cargo, boolean button, boolean speedToggle){
-
+        SmartDashboard.putNumber("Process",encoder.getVelocity());
         timer = timer + 0.02;
 
         switch (caseNumber2) {
@@ -103,10 +99,10 @@ public class Shooter {
     
             oldSensor = breakBeamSensor.get();
 
-            p.setReference(speed, ControlType.kVelocity);
+            p.setReference(-2650, ControlType.kVelocity);
 
-            if(shooter.getEncoder().getVelocity()< cutoffSpeed){
-                Passthrough.getInstance().pusher.set(.35);
+            if(Math.abs(shooter.getEncoder().getVelocity()+ 2650)< 125){
+                Passthrough.getInstance().pusher.set(.25);
             }else{
                 Passthrough.getInstance().pusher.set(0);
             }
@@ -116,12 +112,12 @@ public class Shooter {
             else
                 timer2 = timer2 + 0.02;
 
-            if (timer2 > 3){
+            if (timer2 > 10){
                 caseNumber++;
                 cargo = 0;
             }
 
-            if(cargo == 0 && timer > 0.5){
+            if(cargo == 0 && timer > 3){
                 caseNumber++;
             }else if (cargo != 0){
                 timer = 0;

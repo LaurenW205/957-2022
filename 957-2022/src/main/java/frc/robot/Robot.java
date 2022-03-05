@@ -137,7 +137,7 @@ public class Robot extends TimedRobot {
     }
     
     cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake), m_controller.getRawButton(k_RevIntake));    
-    cargoNum = m_Shooter.run(cargoNum, m_controller.getRawButton(k_Shooter), m_controller.getRawButton(k_SpeedChange)); 
+    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_controller.getRawButton(k_SpeedChange)); 
     Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
 
     double buttonUp = m_controller.getRawAxis(2); //left trigger
