@@ -20,6 +20,7 @@ public class ShuffleBoard {
     m_chooser.addOption("Mid 2 Cargo Far", "Auto 2");
     m_chooser.addOption("Right 2 Cargo Near", "Auto 3");
     m_chooser.addOption("Mid 3 Cargo", "Auto 4");
+    m_chooser.addOption("Left 2 Cargo Super Near", "Auto 5");
 
     // Put chooser on dashboard
     SmartDashboard.putData(m_chooser);

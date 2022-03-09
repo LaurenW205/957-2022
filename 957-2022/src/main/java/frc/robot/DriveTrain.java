@@ -21,13 +21,13 @@ public class DriveTrain{
 
     public AHRS m_navx = new AHRS(Port.kMXP);
 
-    CANSparkMax m_rightNeoMaster = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless);
-    CANSparkMax m_rightNeoSlave = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless);
+    CANSparkMax m_rightNeoMaster = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless); //1
+    CANSparkMax m_rightNeoSlave = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless); //2
     RelativeEncoder m_rightEncoder = m_rightNeoMaster.getEncoder();;
     SparkMaxPIDController m_rightController = m_rightNeoMaster.getPIDController();
 
-    CANSparkMax m_leftNeoMaster = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
-    CANSparkMax m_leftNeoSlave = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless);
+    CANSparkMax m_leftNeoMaster = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless); //3
+    CANSparkMax m_leftNeoSlave = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless); //4
     RelativeEncoder m_leftEncoder = m_leftNeoMaster.getEncoder();
     SparkMaxPIDController m_leftController = m_leftNeoMaster.getPIDController();
 
@@ -185,6 +185,5 @@ public class DriveTrain{
         }
     
     }
-
 
 }

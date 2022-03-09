@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.automodes.JankAuto;
+import frc.robot.automodes.leftcargosupernear;
 import frc.robot.automodes.lefttwocargonear;
 import frc.robot.automodes.midthreecargo;
 import frc.robot.automodes.midtwocargofar;
@@ -42,6 +43,7 @@ public class Robot extends TimedRobot {
    righttwocargonear r2cn = new righttwocargonear();
    lefttwocargonear l2cn = new lefttwocargonear();
    midthreecargo m3c = new midthreecargo();
+   leftcargosupernear leftsup = new leftcargosupernear();
    
    int m_timer = 0;
    int m_autoStep = 0;
@@ -49,19 +51,23 @@ public class Robot extends TimedRobot {
    int cargoNum = 0;
    int oldPOV = 0;
    int manualStep = 0;
+   int caseNumber = 0;
+   double speedMod = 0;
+
    
     //controller
     final int k_RevIntake = 3;      // X?
     final int k_Intake = 2;         // B,2
     final int k_MoveCargo = 4;      // Y,4
     final int k_CargoChange = 0;    //d pad, up and down
-    final int k_Puke = 1; //Button a, 1
  
     //joystick
     final int k_Shooter = 1;        // TRIGGER
     final int k_FarShooter = 12;    // button 12
     final int k_CloseShooter = 11;  //button 11
-    final int k_DriveDirection = 3; // flip switch, axis 3
+    final int k_Puke2 = 9;
+    final int k_DriveDirection = 7; //button 7
+    final int k_SpeedDial = 3;// flip switch, axis 3
  
     Shooter m_Shooter = new Shooter();
     Turret2 m_Turret = new Turret2();
@@ -117,6 +123,7 @@ public class Robot extends TimedRobot {
     m2cf.reset();
     r2cn.reset();
     m3c.reset();
+    leftsup.reset();
 
     
     // set the auto to 1
@@ -141,12 +148,14 @@ public class Robot extends TimedRobot {
       r2cn.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if (m_autoMode == "Auto 4"){
       m3c.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if(m_autoMode == "Auto 5"){
+      leftsup.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }
 
     //thc1.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake), m_controller.getRawButton(k_RevIntake));    
-    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_joystick.getRawButton(k_FarShooter),m_joystick.getRawButton(k_CloseShooter), m_controller.getRawButton(k_Puke)); 
-    Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
+    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_joystick.getRawButton(k_FarShooter),m_joystick.getRawButton(k_CloseShooter), m_joystick.getRawButton(k_Puke2)); 
+    Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo), m_controller.getRawButton(k_RevIntake));
 
     
   }
@@ -156,16 +165,47 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    
-    if(m_joystick.getRawAxis(k_DriveDirection) > 0){
-      m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), -m_joystick.getRawAxis(2));
+
+    if(m_joystick.getRawAxis(k_SpeedDial) < 0.5){
+      speedMod = 0.5;
     }else{
-      m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(2));
+      speedMod = m_joystick.getRawAxis(3);
     }
-    
+
+    //switches bot orientation
+    switch(caseNumber){
+      case 0:
+        m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1)*speedMod, -m_joystick.getRawAxis(2));
+        if(m_joystick.getRawButton(k_DriveDirection)){
+          caseNumber ++;
+        }
+      break;
+
+      case 1:
+        m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1)*speedMod, -m_joystick.getRawAxis(2));
+        if(!m_joystick.getRawButton(k_DriveDirection)){
+          caseNumber ++;
+        }
+      break;
+
+      case 2:
+      m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1)*speedMod, -m_joystick.getRawAxis(2));
+      if(m_joystick.getRawButton(k_DriveDirection)){
+        caseNumber ++;
+      }
+      break;
+
+      case 3:
+      m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1)*speedMod, -m_joystick.getRawAxis(2));
+      if(!m_joystick.getRawButton(k_DriveDirection)){
+        caseNumber = 0;
+      }
+      break;
+    }
+
     cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake), m_controller.getRawButton(k_RevIntake));    
-    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_joystick.getRawButton(k_FarShooter), m_joystick.getRawButton(k_CloseShooter), m_controller.getRawButton(k_Puke)); 
-    Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo));
+    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_joystick.getRawButton(k_FarShooter), m_joystick.getRawButton(k_CloseShooter), m_joystick.getRawButton(k_Puke2)); 
+    Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo), m_controller.getRawButton(k_RevIntake));
 
     double buttonUp = m_controller.getRawAxis(2); //left trigger
     double buttonDown = m_controller.getRawAxis(3); //right trigger

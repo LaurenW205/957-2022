@@ -12,6 +12,7 @@ public class Intake {
     DoubleSolenoid doubleSolenoid = new DoubleSolenoid(15, PneumaticsModuleType.CTREPCM, 0, 1);
     CANSparkMax intakeMotor_1 = new CANSparkMax(7, MotorType.kBrushless);
     DigitalInput sensor = new DigitalInput(0);
+    public boolean oldRev = false;
 
     public int var = 5;
     boolean lastCycle = false;
@@ -35,10 +36,13 @@ public class Intake {
             //intakeMotor_1.set(.25);
             Passthrough.getInstance().pusher.set(-0.25);
             cargoNum = 0;
+        
         }
         else
         {
-
+            if(oldRev != rev)
+                Passthrough.getInstance().pusher.set(0);
+            
             switch (var) {
                 case 0:                 // Wait for button press
                     if (button)
@@ -93,6 +97,8 @@ public class Intake {
 
         lastCycle = nowCycle;
 
+
+        oldRev = rev;
         return cargoNum;
     }
 }

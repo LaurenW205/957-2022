@@ -34,7 +34,11 @@ public class Passthrough {
         
     }
     
-    public void run(int cargo, boolean button){
+    public void run(int cargo, boolean button, boolean reverse){
+        if(reverse){
+            intakeFlag = 0;
+            return;
+        }
         pusher.setIdleMode(IdleMode.kBrake);
         if (cargo == 1)  // If we have 1 cargo, we may allow the driver to move the cargo
         {   
