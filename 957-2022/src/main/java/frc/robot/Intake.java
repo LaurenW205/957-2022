@@ -13,6 +13,7 @@ public class Intake {
     CANSparkMax intakeMotor_1 = new CANSparkMax(7, MotorType.kBrushless);
     DigitalInput sensor = new DigitalInput(0);
     public boolean oldRev = false;
+    double timer = 0;
 
     public int var = 5;
     boolean lastCycle = false;
@@ -86,12 +87,13 @@ public class Intake {
         boolean nowCycle = sensor.get();
 
         if (nowCycle == false) {
-            if (lastCycle == true){
+            if (lastCycle == true && timer > 0.1){
                 Passthrough.getInstance().raiseFlag(cargoNum);
+                timer = 0;
                 cargoNum++; 
             }
         }
-
+        timer = timer + .02;
         if (cargoNum >= 2 && var != 0)      // Retract cylinder if have maximum cargo
             var = 5;
 
