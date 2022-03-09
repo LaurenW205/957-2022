@@ -166,12 +166,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    if(m_joystick.getRawAxis(k_SpeedDial) < 0.5){
-      speedMod = 0.5;
-    }else{
-      speedMod = m_joystick.getRawAxis(3);
-    }
-
+    
+      speedMod = 0.75 + m_joystick.getRawAxis(3) / 4;
+   
     //switches bot orientation
     switch(caseNumber){
       case 0:
