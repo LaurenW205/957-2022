@@ -46,14 +46,13 @@ public class Shooter {
         p.setOutputRange(kMinOutput, kMaxOutput);
     }
 
-    public int run(int cargo, boolean button, boolean fastButton, boolean slowButton, boolean puke2, boolean puke){
+    public int run(int cargo, boolean button, boolean controllerPuke, boolean fastButton, boolean slowButton, boolean puke2, boolean puke){
         SmartDashboard.putNumber("Process",encoder.getVelocity());
         timer = timer + 0.02;
 
        if(fastButton){
            speed = 2650;
        }
-
        if(slowButton){
            speed = 2250;
        }
@@ -63,7 +62,7 @@ public class Shooter {
 
         switch(caseNumber){
         case 0: //checks if button is pressed
-            if(button)
+            if(button || controllerPuke)
                 caseNumber ++;
         break;
 
