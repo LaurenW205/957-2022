@@ -46,7 +46,7 @@ public class Shooter {
         p.setOutputRange(kMinOutput, kMaxOutput);
     }
 
-    public int run(int cargo, boolean button, boolean fastButton, boolean slowButton, boolean puke2, boolean puke){
+    public int run(int cargo, boolean button, boolean fastButton, boolean slowButton, boolean puke2, boolean puke, boolean inAutonomous){
         SmartDashboard.putNumber("Process",encoder.getVelocity());
         timer = timer + 0.02;
 
@@ -86,6 +86,15 @@ public class Shooter {
             p.setReference(-speed, ControlType.kVelocity);
 
             if(Math.abs(shooter.getEncoder().getVelocity()+ speed)< 125){
+
+                if(inAutonomous){
+                    Passthrough.getInstance().pusher.set(.15);
+                }else{
+                    Passthrough.getInstance().pusher.set(.25);
+
+                }
+                
+                
                 Passthrough.getInstance().pusher.set(.25);
             }else{
                 Passthrough.getInstance().pusher.set(0);
