@@ -16,6 +16,7 @@ public class lefttwocargonear {
     
     public void run(DriveTrain d, Shooter s, Intake i, Turret2 t, int cargoNum){
 
+        s.speed = 2850; //change to shoot less
         t.manualOverride(0, 0, -10, 0);
         switch(autoStep){
 

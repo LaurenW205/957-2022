@@ -16,7 +16,7 @@ public class midtwocargofar {
     
     public void run(DriveTrain d, Shooter s, Intake i, Turret2 t, int cargoNum){
 
-        t.manualOverride(0, 0, -16, 0);
+        t.manualOverride(0, 0, 0, 0);
         switch(autoStep){
 
           case -1:
