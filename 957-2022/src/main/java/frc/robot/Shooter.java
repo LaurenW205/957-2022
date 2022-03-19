@@ -11,14 +11,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter {
     double minimumSpeed;
-
-   
     public CANSparkMax shooter = new CANSparkMax(6, MotorType.kBrushless);
     RelativeEncoder encoder = shooter.getEncoder();
-    SparkMaxPIDController p = shooter.getPIDController();
+    public SparkMaxPIDController p = shooter.getPIDController();
     DigitalInput breakBeamSensor = new DigitalInput(2);
     public int caseNumber = 0;
     int caseNumber2 = 0;
+    int forceShoot = 0;
     boolean oldSensor = false;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
     double timer = 0;
@@ -46,19 +45,24 @@ public class Shooter {
         p.setOutputRange(kMinOutput, kMaxOutput);
     }
 
-    public int run(int cargo, boolean button, boolean controllerPuke, boolean fastButton, boolean slowButton, boolean puke2, boolean puke){
+    //shooter modes
+    public void modeSetting(boolean fastButton, boolean slowButton, boolean puke, boolean puke2){
+        
+         if(fastButton){
+                speed = 2650;
+            }
+        if(slowButton){
+                speed = 2250;
+            }
+        if(puke2 || puke){
+                speed = 1500;
+            }
+    }
+           
+    //automatic 
+    public int run(int cargo, boolean button, boolean inAutonomous, boolean controllerPuke){
         SmartDashboard.putNumber("Process",encoder.getVelocity());
         timer = timer + 0.02;
-
-       if(fastButton){
-           speed = 2650;
-       }
-       if(slowButton){
-           speed = 2250;
-       }
-       if(puke2 || puke){
-           speed = 1500;
-       }
 
         switch(caseNumber){
         case 0: //checks if button is pressed
@@ -85,6 +89,15 @@ public class Shooter {
             p.setReference(-speed, ControlType.kVelocity);
 
             if(Math.abs(shooter.getEncoder().getVelocity()+ speed)< 125){
+
+                if(inAutonomous){
+                    Passthrough.getInstance().pusher.set(.15);
+                }else{
+                    Passthrough.getInstance().pusher.set(.25);
+
+                }
+                
+                
                 Passthrough.getInstance().pusher.set(.25);
             }else{
                 Passthrough.getInstance().pusher.set(0);
@@ -125,4 +138,18 @@ public class Shooter {
 
         
     }
+
+    //priority, shoots out cargo ignoring the automated system 
+    public void forceShoot(){
+        p.setReference(-speed, ControlType.kVelocity);
+
+        if(Math.abs(shooter.getEncoder().getVelocity()+ speed)< 125){
+            Passthrough.getInstance().pusher.set(.25);
+        }else{
+            Passthrough.getInstance().pusher.set(0);
+        }
+    }   
+    
+    
+
 }

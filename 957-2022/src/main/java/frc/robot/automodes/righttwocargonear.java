@@ -8,15 +8,17 @@ import frc.robot.Turret2;
 public class righttwocargonear {
 
     int autoStep = -1;
+    double timer = 0;
 
     public void reset(){
-
+        timer = 0;
         autoStep = -1;
     }
     
     public void run(DriveTrain d, Shooter s, Intake i, Turret2 t, int cargoNum){
 
-        t.manualOverride(0, 0, 20, 0);
+        timer = timer + 0.02;
+            s.speed = 2250;
         switch(autoStep){
 
           case -1:
@@ -27,7 +29,7 @@ public class righttwocargonear {
  
             // Drive out of tarmac and intake cargo
             case 0:
-                if(d.driveJank(0, -3.3, 0.15)){
+                if(d.driveJank(0, -2, 0.15)){
                     d.resetEncoders();
                     autoStep++;
                 }
@@ -36,17 +38,34 @@ public class righttwocargonear {
             // Drive to shooting range
             case 1:
 
-                if(d.driveJank(0, 2.2, 0.15)){ // Distance subject to change
+                if(d.driveJank(0, 1.8, 0.15)){ // Distance subject to change
                     d.resetEncoders();
                    // i.var = 5;
                     autoStep++;
-                    s.caseNumber = 1;
+                    //s.caseNumber = 1;
                 }
     
             break;
 
+            case 2:
+                if(d.turnJank(12)){ //actual angle 20
+                    autoStep++;
+                    d.resetEncoders();
+                    timer = 0;
+                }
+            break;
+
+            case 3:
+               if((d.driveJank(15, 1, 0.15)) || timer > 2){
+                s.caseNumber = 1;
+                d.resetEncoders();
+                autoStep++;
+                d.arcadeDrive(0, 0);
+               } 
+            break;
+
             // Shooter goes brrr
-            case 2:    
+            case 4:    
 
                 if(s.caseNumber != 2){
                     
@@ -57,6 +76,7 @@ public class righttwocargonear {
             break;
             
             /* Turn to terminal 
+
             case 4: 
             
                 if(d.turnJank(35)){// Angle subject to change

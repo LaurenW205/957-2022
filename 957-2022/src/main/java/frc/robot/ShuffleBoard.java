@@ -21,6 +21,8 @@ public class ShuffleBoard {
     m_chooser.addOption("Right 2 Cargo Near", "Auto 3");
     m_chooser.addOption("Mid 3 Cargo", "Auto 4");
     m_chooser.addOption("Left 2 Cargo Super Near", "Auto 5");
+    m_chooser.addOption("1 Cargo Auto", "Auto 6");
+    m_chooser.addOption("Buddy Right", "Auto 7");
 
     // Put chooser on dashboard
     SmartDashboard.putData(m_chooser);
@@ -32,9 +34,9 @@ public class ShuffleBoard {
   public void updateSmartboard(int cargo, DriveTrain d) 
     {
       SmartDashboard.putNumber("Cargo", cargo);
-      SmartDashboard.putString("Auto", m_chooser.getSelected());
+     // SmartDashboard.putString("Auto", m_chooser.getSelected());
       SmartDashboard.putNumber("Bot Angle", d.m_navx.getAngle());
-      SmartDashboard.putData("Gyro Angle", d.m_navx);
+     // SmartDashboard.putData("Gyro Angle", d.m_navx);
     }
 
   public String updateAuto(){

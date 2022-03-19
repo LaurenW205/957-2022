@@ -4,16 +4,13 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.automodes.JankAuto;
+import frc.robot.automodes.NothingAuto;
+import frc.robot.automodes.buddyright;
 import frc.robot.automodes.leftcargosupernear;
 import frc.robot.automodes.lefttwocargonear;
 import frc.robot.automodes.midthreecargo;
@@ -44,6 +41,8 @@ public class Robot extends TimedRobot {
    lefttwocargonear l2cn = new lefttwocargonear();
    midthreecargo m3c = new midthreecargo();
    leftcargosupernear leftsup = new leftcargosupernear();
+   NothingAuto na = new NothingAuto();
+   buddyright br = new buddyright();
    
    int m_timer = 0;
    int m_autoStep = 0;
@@ -53,6 +52,9 @@ public class Robot extends TimedRobot {
    int manualStep = 0;
    int caseNumber = 0;
    double speedMod = 0;
+   int lastPriority = 0;
+   int turretSwitch = 0;
+
 
    
     //controller
@@ -60,15 +62,20 @@ public class Robot extends TimedRobot {
     final int k_MoveCargo = 4;      // Y,4
     final int k_CargoChange = 0;    //d pad, up and down
     final int k_PukeController = 1; //button a, 1
+    final int k_TurretMode = 9999; //PRESS DOWN ON STICK
+    final int k_RightBumper = 9999999; //RIGHT BUMPER
+    final int k_LeftBumper = 99999; //LEFT BUMPER
  
     //joystick
     final int k_Shooter = 1;        // TRIGGER
     final int k_FarShooter = 12;    // button 12
-    final int k_CloseShooter = 11;  //button 11
-    final int k_DriveDirection = 7; //button 7
+    final int k_CloseShooter = 11;  // button 11
+    final int k_DriveDirection = 7; // button 7
     final int k_SpeedDial = 3;      // flip switch, axis 3
     final int k_PukeJoystick = 9;   // button 9
     final int k_Intake = 2;         // button 2
+    final int k_ForceShoot = 5;     // button 5
+    final int k_ReverseIntake = 99999; 
 
  
     Shooter m_Shooter = new Shooter();
@@ -126,6 +133,8 @@ public class Robot extends TimedRobot {
     r2cn.reset();
     m3c.reset();
     leftsup.reset();
+    na.reset();
+    br.reset();
 
     
     // set the auto to 1
@@ -152,12 +161,16 @@ public class Robot extends TimedRobot {
       m3c.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if(m_autoMode == "Auto 5"){
       leftsup.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if(m_autoMode == "Auto 6"){
+      na.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if(m_autoMode == "Auto 7"){
+      br.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }
 
     //thc1.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
-    cargoNum = m_Intake.run(cargoNum, m_joystick.getRawButton(k_Intake), m_controller.getRawButton(k_RevIntake));    
-    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_controller.getRawButton(k_PukeController), m_joystick.getRawButton(k_FarShooter),m_joystick.getRawButton(k_CloseShooter), m_controller.getRawButton(k_PukeController),m_joystick.getRawButton(k_PukeJoystick)); 
-    Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo), m_controller.getRawButton(k_RevIntake));
+    cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake));    
+    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), true, m_controller.getRawButton(k_PukeController)); 
+    Passthrough.getInstance().run(cargoNum);
 
     
   }
@@ -168,8 +181,75 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
+    int priority = 0;
+   // setting priority for different functions
+    if(m_controller.getRawButton(k_RevIntake)){
+      priority = 1;
+    }
+    if(m_joystick.getRawButton(k_ForceShoot)){
+      priority = 2;
+    }
+
+    //sets mode of shooter to puke, near, far and controller puke
+    m_Shooter.modeSetting(m_joystick.getRawButton(k_FarShooter),
+      m_joystick.getRawButton(k_CloseShooter), 
+      m_joystick.getRawButton(k_PukeJoystick), 
+      m_controller.getRawButton(k_PukeController));
+      
+
+    //case statement for priority and choosing which systems to run
+    switch(priority){
+
+      case 0: //automatic functions
+       cargoNum = m_Intake.run(cargoNum, m_joystick.getRawButton(k_Intake));
+       cargoNum =  m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter),
+        false, m_controller.getRawButton(k_PukeController));
+        Passthrough.getInstance().run(cargoNum);
+
+      break;
+
+      case 1: //reverses intake
+        m_Intake.reverse(cargoNum);
+      break;  
+      
+      case 2: //force shoots
+        m_Shooter.forceShoot();
+      break;
+    }
+    // PRIORITY CLEAN UP
+
+    //resets automatic functions when switching to priority function
+    if(priority == 1 && lastPriority == 0){
+      m_Shooter.p.setReference(0, ControlType.kVelocity);
+      m_Intake.retractCyl();
+      m_Intake.var = 0;
+      m_Shooter.caseNumber = 0;
+      Passthrough.getInstance().intakeFlag = 0;
+    }
+
+    //resets automatic functions when switching to priority function
+    if(priority == 2 && lastPriority == 0){
+      m_Intake.retractCyl();
+      m_Intake.var = 0;
+      m_Shooter.caseNumber = 0;
+      Passthrough.getInstance().intakeFlag = 0;
+    }
+
+    //stops passthrough motor when switching to automatic functions
+    if(priority != 1 && lastPriority == 1){
+      Passthrough.getInstance().pusher.set(0);
+    }
+
+    //stops shooter and passthrough motor when switching to automatic functions
+    if(priority !=2 && lastPriority ==2){
+      Passthrough.getInstance().pusher.set(0);
+      m_Shooter.p.setReference(0, ControlType.kVelocity);
+    }
     
-      speedMod = 0.75 + m_joystick.getRawAxis(3) / 4;
+    //checks when priotity is switched
+    lastPriority = priority;   
+      
+    speedMod = 0.75 + m_joystick.getRawAxis(3) / 4;
    
     //switches bot orientation
     switch(caseNumber){
@@ -202,15 +282,35 @@ public class Robot extends TimedRobot {
       break;
     }
 
-    cargoNum = m_Intake.run(cargoNum, m_joystick.getRawButton(k_Intake), m_controller.getRawButton(k_RevIntake));    
-    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), m_controller.getRawButton(k_PukeController), m_joystick.getRawButton(k_FarShooter), m_joystick.getRawButton(k_CloseShooter), m_controller.getRawButton(k_PukeController),m_joystick.getRawButton(k_PukeJoystick)); 
-    Passthrough.getInstance().run(cargoNum, m_controller.getRawButton(k_MoveCargo), m_controller.getRawButton(k_RevIntake));
-
     double buttonUp = m_controller.getRawAxis(2); //left trigger
     double buttonDown = m_controller.getRawAxis(3); //right trigger
     m_Climbing.manualControls(buttonUp, buttonDown);
+     
+    switch(turretSwitch){ //switches from manual turret mode to automatic turret mode
+      case 0: //automatic
+        m_Turret.run(m_controller.getRawButton(k_RightBumper),m_controller.getRawButton(k_LeftBumper));
+        if(m_controller.getRawButton(k_TurretMode))
+          turretSwitch++;
+      break;
 
-    m_Turret.manualOverride(-m_controller.getRawAxis(0), -m_controller.getRawAxis(1), 0, m_drivetrain.m_navx.getAngle());
+      case 1: //automatic
+        m_Turret.run(m_controller.getRawButton(k_RightBumper),m_controller.getRawButton(k_LeftBumper));
+        if(!m_controller.getRawButton(k_TurretMode))
+          turretSwitch++;
+      break;
+
+      case 2: //manual
+        m_Turret.manualOverride(-m_controller.getRawAxis(0), -m_controller.getRawAxis(1), 0, m_drivetrain.m_navx.getAngle());
+        if(m_controller.getRawButton(k_TurretMode))
+          turretSwitch ++;
+      break;
+
+      case 3: //manual
+        m_Turret.manualOverride(-m_controller.getRawAxis(0), -m_controller.getRawAxis(1), 0, m_drivetrain.m_navx.getAngle());
+        if(!m_controller.getRawButton(k_TurretMode))
+          turretSwitch = 0;
+      break;
+    }
   }
 
   @Override

@@ -87,7 +87,7 @@ public class DriveTrain{
 
     double outputT = 0;
     double outputD = 0;
-    double ramp = 0.1;
+    double ramp = 0.2;
 
     public void arcadeDrive(double speed, double turn){
 
@@ -175,8 +175,12 @@ public class DriveTrain{
         
         }
 
+        System.out.println(m_navx.getAngle());
+        
         if (1 > Math.abs(targetAngle-m_navx.getAngle())){
 
+            m_rightNeoMaster.set(0);
+            m_leftNeoMaster.set(0);
            return true;
 
         }else{

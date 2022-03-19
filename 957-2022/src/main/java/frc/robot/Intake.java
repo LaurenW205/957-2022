@@ -12,7 +12,6 @@ public class Intake {
     DoubleSolenoid doubleSolenoid = new DoubleSolenoid(15, PneumaticsModuleType.CTREPCM, 0, 1);
     CANSparkMax intakeMotor_1 = new CANSparkMax(7, MotorType.kBrushless);
     DigitalInput sensor = new DigitalInput(0);
-    public boolean oldRev = false;
     double timer = 0;
 
     public int var = 5;
@@ -28,22 +27,10 @@ public class Intake {
         intakeMotor_1.set(0);
     }
 
-    public int run(int cargoNum, boolean button, boolean rev) 
-    {
-        System.out.println(sensor.get());
+    public int run(int cargoNum, boolean button){
 
-        if(rev)
-        {
-            //intakeMotor_1.set(.25);
-            Passthrough.getInstance().pusher.set(-0.25);
-            cargoNum = 0;
-        
-        }
-        else
-        {
-            if(oldRev != rev)
-                Passthrough.getInstance().pusher.set(0);
-            
+        Passthrough.getInstance().intakeSensor = sensor.get();
+
             switch (var) {
                 case 0:                 // Wait for button press
                     if (button)
@@ -75,17 +62,9 @@ public class Intake {
                     var = 0;
                 break;
         }
-    }
-    if (!Passthrough.getInstance().cargoDown)
-    {
-        if (var != 0)
-        {
-          var = 0;
-          retractCyl();
-        }
-    }
+    
         boolean nowCycle = sensor.get();
-
+        System.out.println(cargoNum);
         if (nowCycle == false) {
             if (lastCycle == true && timer > 0.1){
                 Passthrough.getInstance().raiseFlag(cargoNum);
@@ -93,14 +72,25 @@ public class Intake {
                 cargoNum++; 
             }
         }
+
+
         timer = timer + .02;
         if (cargoNum >= 2 && var != 0)      // Retract cylinder if have maximum cargo
             var = 5;
 
         lastCycle = nowCycle;
 
-
-        oldRev = rev;
         return cargoNum;
     }
+
+    public void reverse(int cargoNum){
+        if(var !=0){ //resets arm to reverse cargo
+            retractCyl();
+            var = 0;
+        }
+        Passthrough.getInstance().pusher.set(-0.25);
+        cargoNum = 0;
+    }
+
+
 }
