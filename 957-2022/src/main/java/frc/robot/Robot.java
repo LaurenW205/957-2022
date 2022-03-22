@@ -10,12 +10,14 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.automodes.NothingAuto;
+import frc.robot.automodes.buddyleft;
 import frc.robot.automodes.buddyright;
 import frc.robot.automodes.leftcargosupernear;
 import frc.robot.automodes.lefttwocargonear;
 import frc.robot.automodes.midthreecargo;
 import frc.robot.automodes.midtwocargofar;
 import frc.robot.automodes.righttwocargonear;
+import frc.robot.automodes.singlecargo;
 
 
 /**
@@ -43,6 +45,8 @@ public class Robot extends TimedRobot {
    leftcargosupernear leftsup = new leftcargosupernear();
    NothingAuto na = new NothingAuto();
    buddyright br = new buddyright();
+   buddyleft bl =  new buddyleft();
+   singlecargo sc = new singlecargo();
    
    int m_timer = 0;
    int m_autoStep = 0;
@@ -135,6 +139,8 @@ public class Robot extends TimedRobot {
     leftsup.reset();
     na.reset();
     br.reset();
+    bl.reset();
+    sc.reset();
 
     
     // set the auto to 1
@@ -144,6 +150,8 @@ public class Robot extends TimedRobot {
     m_drivetrain.m_navx.reset();
     // ja1.reset();
     cargoNum = 1; 
+    Passthrough.getInstance().raiseFlag(1);
+    Passthrough.getInstance().intakeSensor = false;
   }
 
   @Override
@@ -165,6 +173,10 @@ public class Robot extends TimedRobot {
       na.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if(m_autoMode == "Auto 7"){
       br.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if(m_autoMode == "Auto 8"){
+      bl.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if(m_autoMode ==  "Auto 9"){
+      sc.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }
 
     //thc1.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);

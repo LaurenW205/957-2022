@@ -17,6 +17,7 @@ public class Passthrough {
     int maxTime = 30;
     int state = 0;
     public boolean intakeSensor = true;
+    double timer = 0;
 
     public Passthrough(){
         pusher.restoreFactoryDefaults();
@@ -34,10 +35,14 @@ public class Passthrough {
 
         pusher.setIdleMode(IdleMode.kBrake);
 
+        if(!intakeSensor){
+            timer = 0;
+        }
+
         if(intakeFlag != 0){
             pusher.set(.3*intakeFlag);
             
-            if (intakeFlag == 1 && (pusher.getEncoder().getPosition() > target_pos + offset || intakeSensor)){  
+            if (intakeFlag == 1 && (pusher.getEncoder().getPosition() > target_pos + offset || timer >0.04)){  
                 target_pos = target_pos + offset;
                 intakeFlag = 0;
                 pusher.set(0);
@@ -48,6 +53,7 @@ public class Passthrough {
                 pusher.set(0);
             }
         }
+        timer = timer + 0.02;
     }
 
   

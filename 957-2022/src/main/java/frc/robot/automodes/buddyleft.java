@@ -5,7 +5,7 @@ import frc.robot.Intake;
 import frc.robot.Shooter;
 import frc.robot.Turret2;
 
-public class buddyright {
+public class buddyleft {
     int autoStep = 1;
     public void reset(){
         autoStep = 1;
@@ -15,7 +15,7 @@ public class buddyright {
         s.speed = 2250;
         switch (autoStep) {
             case 1:
-                if(d.turnJank(-57)){
+                if(d.turnJank(52)){
                     d.resetEncoders();
                     autoStep++;
                     i.var = 2;
@@ -23,21 +23,21 @@ public class buddyright {
             break;
 
             case 2:
-               if(d.driveJank(-63, -2.3, 0.15)){
+               if(d.driveJank(60, -2.3, 0.15)){
                    d.resetEncoders();
                    autoStep++;
                }
             break;
 
             case 3:
-               if(d.turnJank(-80)){
+               if(d.turnJank(80)){
                    d.resetEncoders();
                    autoStep++;
                }
             break;
 
             case 4:
-               if(d.driveJank(-87, 3.75, 0.15)){
+               if(d.driveJank(87, 3.75, 0.15)){
                    d.resetEncoders();
                    autoStep++;
       
@@ -45,7 +45,7 @@ public class buddyright {
             break;
 
             case 5:
-               if(d.turnJank(-83)){
+               if(d.turnJank(78)){
                    d.resetEncoders();
                    s.caseNumber = 1;
                    autoStep++;
