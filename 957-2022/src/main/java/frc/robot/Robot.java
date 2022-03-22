@@ -61,26 +61,26 @@ public class Robot extends TimedRobot {
 
 
    
-    //controller
-    final int k_RevIntake = 3;      // X, 3
-    final int k_MoveCargo = 4;      // Y,4
-    final int k_CargoChange = 0;    //d pad, up and down
-    final int k_PukeController = 1; //button a, 1
-    final int k_TurretMode = 9999; //PRESS DOWN ON STICK
-    final int k_RightBumper = 9999999; //RIGHT BUMPER
-    final int k_LeftBumper = 99999; //LEFT BUMPER
+    //controller red
+    final int k_MoveCargo = 4;          // y , 4
+    final int k_CargoChange = 0;        // d pad, up and down
+    final int k_PukeController = 1;     // a, 1
+    final int k_TurretMode = 9;         // down on left stick, 9
+    final int k_RightBumper = 6;        // right bumper , 6
+    final int k_LeftBumper = 5;         // left bumper , 5
+    final int k_ReverseIntake = 3;      // x , 3
  
-    //joystick
-    final int k_Shooter = 1;        // TRIGGER
-    final int k_FarShooter = 12;    // button 12
-    final int k_CloseShooter = 11;  // button 11
-    final int k_DriveDirection = 7; // button 7
-    final int k_SpeedDial = 3;      // flip switch, axis 3
-    final int k_PukeJoystick = 9;   // button 9
-    final int k_Intake = 2;         // button 2
-    final int k_ForceShoot = 5;     // button 5
-    final int k_ReverseIntake = 99999; 
+    //joystick (drive controller)
+    final int k_Shooter = 3;            // right trigger , axis 3
+    final int k_FarShooter = 1;         // a , 1
+    final int k_CloseShooter = 5;       // left bumper , 5
+    final int k_DriveDirection = 9;    // down on left stick, 9
+    final int k_PukeJoystick = 6;       // right bumper , 6
+    final int k_Intake = 10;            // down on right stick , 10
+    final int k_ForceShoot = 2;         // left trigger , axis 2
 
+    // Switches axis for controller
+    int switchAxis = 4;
  
     Shooter m_Shooter = new Shooter();
     Turret2 m_Turret = new Turret2();
@@ -158,7 +158,6 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
 
     if (m_autoMode == "No Auto"){
-
     }else if (m_autoMode == "Auto 1"){
       l2cn.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if (m_autoMode == "Auto 2"){
@@ -181,7 +180,7 @@ public class Robot extends TimedRobot {
 
     //thc1.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake));    
-    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter), true, m_controller.getRawButton(k_PukeController)); 
+    cargoNum = m_Shooter.run(cargoNum, m_joystick.getRawAxis(k_Shooter) > .5, true, m_controller.getRawButton(k_PukeController)); 
     Passthrough.getInstance().run(cargoNum);
 
     
@@ -195,17 +194,17 @@ public class Robot extends TimedRobot {
 
     int priority = 0;
    // setting priority for different functions
-    if(m_controller.getRawButton(k_RevIntake)){
+    if(m_controller.getRawButton(k_ReverseIntake)){
       priority = 1;
     }
-    if(m_joystick.getRawButton(k_ForceShoot)){
+    if(m_joystick.getRawAxis(k_ForceShoot) > .5){
       priority = 2;
     }
 
     //sets mode of shooter to puke, near, far and controller puke
     m_Shooter.modeSetting(m_joystick.getRawButton(k_FarShooter),
       m_joystick.getRawButton(k_CloseShooter), 
-      m_joystick.getRawButton(k_PukeJoystick), 
+      m_joystick.getRawButton(k_PukeJoystick),
       m_controller.getRawButton(k_PukeController));
       
 
@@ -214,7 +213,7 @@ public class Robot extends TimedRobot {
 
       case 0: //automatic functions
        cargoNum = m_Intake.run(cargoNum, m_joystick.getRawButton(k_Intake));
-       cargoNum =  m_Shooter.run(cargoNum, m_joystick.getRawButton(k_Shooter),
+       cargoNum =  m_Shooter.run(cargoNum, m_joystick.getRawAxis(k_Shooter) > .5,
         false, m_controller.getRawButton(k_PukeController));
         Passthrough.getInstance().run(cargoNum);
 
@@ -260,34 +259,32 @@ public class Robot extends TimedRobot {
     
     //checks when priotity is switched
     lastPriority = priority;   
-      
-    speedMod = 0.75 + m_joystick.getRawAxis(3) / 4;
    
     //switches bot orientation
     switch(caseNumber){
       case 0:
-        m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1)*speedMod, -m_joystick.getRawAxis(2));
+        m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
         if(m_joystick.getRawButton(k_DriveDirection)){
           caseNumber ++;
         }
       break;
 
       case 1:
-        m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1)*speedMod, -m_joystick.getRawAxis(2));
+        m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
         if(!m_joystick.getRawButton(k_DriveDirection)){
           caseNumber ++;
         }
       break;
 
       case 2:
-      m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1)*speedMod, -m_joystick.getRawAxis(2));
+      m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
       if(m_joystick.getRawButton(k_DriveDirection)){
         caseNumber ++;
       }
       break;
 
       case 3:
-      m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1)*speedMod, -m_joystick.getRawAxis(2));
+      m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
       if(!m_joystick.getRawButton(k_DriveDirection)){
         caseNumber = 0;
       }
@@ -390,7 +387,7 @@ public class Robot extends TimedRobot {
         // m_Shooter.shooter.set(0);
       }
     
-      m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(2));
+      m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(switchAxis));
 
     m_Climbing.manualControls(buttonUp, buttonDown);
     System.out.println(m_Climbing.m_rightMotor.getEncoder().getPosition());

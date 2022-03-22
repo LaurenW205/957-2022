@@ -98,7 +98,7 @@ public class DriveTrain{
         speed = deadband(speed);
 
         outputD = outputD + (outputD - speed) * -ramp;
-        outputT = outputT + (outputT - turn) * -ramp;
+        outputT = outputT + (outputT - turn) * -ramp * 1.1;
         
         m_rightNeoMaster.set(outputD+turn);
         m_leftNeoMaster.set(outputD-turn);
