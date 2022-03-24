@@ -181,7 +181,6 @@ public class Turret2 {
         }else if(angle < -90){
             angle = -90;
         }
-        System.out.println(angle);
         if(Math.pow(x_axis, 2) + (Math.pow(y_axis, 2)) < 0.25)
             angle = 0;
         pid.setReference((manualAngle + angle) *(1/0.77922078), CANSparkMax.ControlType.kPosition);

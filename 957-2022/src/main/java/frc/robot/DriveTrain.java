@@ -175,7 +175,6 @@ public class DriveTrain{
         
         }
 
-        System.out.println(m_navx.getAngle());
         
         if (1 > Math.abs(targetAngle-m_navx.getAngle())){
 

@@ -42,7 +42,6 @@ public class ShuffleBoard {
     }
 
   public String updateAuto(){
-    System.out.println(m_chooser.getSelected()); // Testing
     return m_chooser.getSelected();
   }
     

@@ -394,7 +394,6 @@ public class Robot extends TimedRobot {
       m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(switchAxis));
 
     m_Climbing.manualControls(buttonUp, buttonDown);
-    System.out.println(m_Climbing.m_rightMotor.getEncoder().getPosition());
     
    //  m_Turret.manualOverride(-x_axis, y_axis, 0);
   }

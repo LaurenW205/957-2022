@@ -64,7 +64,6 @@ public class Intake {
         }
     
         boolean nowCycle = sensor.get();
-        System.out.println(cargoNum);
         if (nowCycle == false) {
             if (lastCycle == true && timer > 0.1){
                 Passthrough.getInstance().raiseFlag(cargoNum);
