@@ -25,6 +25,7 @@ public class ShuffleBoard {
     m_chooser.addOption("Buddy Right", "Auto 7");
     m_chooser.addOption("Buddy Left", "Auto 8");
     m_chooser.addOption("Single Cargo", "Auto 9");
+    m_chooser.addOption("Test Auto", "Auto 10");
 
     // Put chooser on dashboard
     SmartDashboard.putData(m_chooser);

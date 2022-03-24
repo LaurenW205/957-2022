@@ -143,6 +143,7 @@ public class Robot extends TimedRobot {
     br.reset();
     bl.reset();
     sc.reset();
+    ta.reset();
 
     
     // set the auto to 1

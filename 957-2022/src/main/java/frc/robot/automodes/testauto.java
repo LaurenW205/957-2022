@@ -34,7 +34,7 @@ public class testauto {
                     d.resetEncoders();
                     autoStep ++;
                 }
-
+            break;
             case 1:
                 if(timer <= 2){ // drive backward slow
                     d.arcadeDrive(-.25, 0);
@@ -47,7 +47,7 @@ public class testauto {
                     autoStep ++;
 
                 }
-
+                break;
             case 2:
                 if(timer <= 2){ // drive forward fast
                     d.arcadeDrive(.5, 0);
@@ -59,6 +59,7 @@ public class testauto {
                     d.resetEncoders();
                     autoStep ++;
                 }
+            break;
 
             case 3:
                 if(timer <= 2){ // drive backward fast
@@ -72,12 +73,14 @@ public class testauto {
                     autoStep ++;
                     
                 }
+            break;
 
             case 4:
                     i.var = 2;// intake goes down
                     timer = 0;
                     d.resetEncoders();
                     autoStep ++;
+            break;
 
             case 5:
                 if (cargoNum == 2 && timer >= 3){ // waits three seconds and checks if 2 cargo, then reverse
@@ -86,6 +89,9 @@ public class testauto {
                             i.reverse(cargoNum);
                 
                 }
+
+            break;
+
         }
     }
 }
