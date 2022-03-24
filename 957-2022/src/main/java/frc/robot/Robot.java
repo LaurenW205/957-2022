@@ -241,6 +241,7 @@ public class Robot extends TimedRobot {
       m_Intake.var = 0;
       m_Shooter.caseNumber = 0;
       Passthrough.getInstance().intakeFlag = 0;
+      m_drivetrain.setCoeffient(1);
     }
 
     //resets automatic functions when switching to priority function
@@ -249,6 +250,7 @@ public class Robot extends TimedRobot {
       m_Intake.var = 0;
       m_Shooter.caseNumber = 0;
       Passthrough.getInstance().intakeFlag = 0;
+      m_drivetrain.setCoeffient(1);
     }
 
     //stops passthrough motor when switching to automatic functions

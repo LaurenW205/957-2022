@@ -36,6 +36,8 @@ public class DriveTrain{
     double box3 = 0;
     double box4 = 0;
 
+    double coefficent = 1;
+
     private static DriveTrain m_drivetrain = null;
     private static final int k_freeCurrentLimit = 40;
     private static final int k_stallCurrentLimit = 40;
@@ -90,7 +92,7 @@ public class DriveTrain{
     double ramp = 0.2;
 
     public void arcadeDrive(double speed, double turn){
-
+        speed = speed * coefficent;
         m_rightNeoMaster.setInverted(true);
         m_rightNeoSlave.setInverted(true);
     
@@ -187,6 +189,10 @@ public class DriveTrain{
             return false;
         }
     
+    }
+
+    public void setCoeffient(double c){
+        coefficent = c;
     }
 
 }

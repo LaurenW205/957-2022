@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 public class Intake {
+    DriveTrain d = DriveTrain.getInstance();
+
     DoubleSolenoid doubleSolenoid = new DoubleSolenoid(15, PneumaticsModuleType.CTREPCM, 0, 1);
     CANSparkMax intakeMotor_1 = new CANSparkMax(7, MotorType.kBrushless);
     DigitalInput sensor = new DigitalInput(0);
@@ -35,31 +37,37 @@ public class Intake {
                 case 0:                 // Wait for button press
                     if (button)
                         var++;
+                        d.setCoeffient(1);
                 break;
 
                 case 1:
                     if (!button)        // Wait for button to be unpressed
                         var = 2;
+                        d.setCoeffient(1);
                 break;
 
                 case 2:
                     extendCyl();        // Extend cylinder
                     var = 3;
+                    d.setCoeffient(.6);
                 break;
 
                 case 3:
                     if (button)         // Wait for button press
                         var = 4;
+                        d.setCoeffient(.6);
                 break;
 
                 case 4:
                     if (!button)        // Wait for button unpress
                         var = 5;
+                        d.setCoeffient(.6);
                 break;
 
                 case 5:
                     retractCyl();       // Retract arm and return to beginning of cycle
                     var = 0;
+                    d.setCoeffient(1);
                 break;
         }
     
