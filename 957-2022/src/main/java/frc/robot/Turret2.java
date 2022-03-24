@@ -56,7 +56,7 @@ public class Turret2 {
     {
         // setting which direction to turn in
         
-        if(time == 0.5){   //if target not seen for 0.5 secs
+        if(time >= 0.5){   //if target not seen for 0.5 secs
             if(l){
             speed = -0.5; 
             }
