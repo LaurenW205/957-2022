@@ -18,6 +18,7 @@ import frc.robot.automodes.midthreecargo;
 import frc.robot.automodes.midtwocargofar;
 import frc.robot.automodes.righttwocargonear;
 import frc.robot.automodes.singlecargo;
+import frc.robot.automodes.testauto;
 
 
 /**
@@ -47,6 +48,7 @@ public class Robot extends TimedRobot {
    buddyright br = new buddyright();
    buddyleft bl =  new buddyleft();
    singlecargo sc = new singlecargo();
+   testauto ta = new testauto();
    
    int m_timer = 0;
    int m_autoStep = 0;
@@ -176,6 +178,8 @@ public class Robot extends TimedRobot {
       bl.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if(m_autoMode ==  "Auto 9"){
       sc.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if(m_autoMode ==  "Auto 10"){
+      ta.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }
 
     //thc1.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
