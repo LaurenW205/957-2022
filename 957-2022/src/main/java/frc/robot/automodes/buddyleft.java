@@ -12,7 +12,7 @@ public class buddyleft {
     }
 
     public void run(DriveTrain d, Shooter s, Intake i, Turret2 t, int cargoNum){
-        s.speed = 2250;
+        s.speed = 1500;
         switch (autoStep) {
             case 1:
                 if(d.turnJank(52)){

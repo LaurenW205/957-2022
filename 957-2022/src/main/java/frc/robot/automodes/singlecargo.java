@@ -18,18 +18,21 @@ public class singlecargo {
     public void run(DriveTrain d, Shooter s, Intake i, Turret2 t, int cargoNum){
 
         timer = timer + 0.02;
-        s.speed = 2250;
+        s.speed = 2400;
         switch (autoStep) {
             case -1:
-                if(timer > 5){
+                if(timer == 0.02){
+                    s.caseNumber = 1;
+                }
+                if(timer > 8){
                     autoStep++;
                 }
             break;
 
             case 0:
-                if(d.driveJank(0, -3, 0.15)){
-                    d.resetEncoders();
-                    autoStep++;
+                if(d.driveJank(0, -5, 0.15)){
+                   // d.resetEncoders();
+                   // autoStep++;
                 }
             break;
 
