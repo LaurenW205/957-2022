@@ -16,16 +16,18 @@ public class ShuffleBoard {
 
     // Add options
     m_chooser.setDefaultOption("Nothing", "No Auto");
-    m_chooser.addOption("Left 2 Cargo Near", "Auto 1");
-    m_chooser.addOption("Mid 2 Cargo Far", "Auto 2");
-    m_chooser.addOption("Right 2 Cargo Near", "Auto 3");
-    m_chooser.addOption("Mid 3 Cargo", "Auto 4");
-    m_chooser.addOption("Left 2 Cargo Super Near", "Auto 5");
-    m_chooser.addOption("1 Cargo Auto", "Auto 6");
+    //m_chooser.addOption("Left 2 Cargo Near", "Auto 1");
+    //m_chooser.addOption("Mid 2 Cargo Far", "Auto 2");
+    //m_chooser.addOption("Right 2 Cargo Near", "Auto 3");
+    //m_chooser.addOption("Mid 3 Cargo", "Auto 4");
+    //m_chooser.addOption("Left 2 Cargo Super Near", "Auto 5");
+    //m_chooser.addOption("1 Cargo Auto", "Auto 6");
     m_chooser.addOption("Buddy Right", "Auto 7");
     m_chooser.addOption("Buddy Left", "Auto 8");
     m_chooser.addOption("Single Cargo", "Auto 9");
     m_chooser.addOption("Test Auto", "Auto 10");
+    m_chooser.addOption("Low Buddy Right", "Auto 11");
+    m_chooser.addOption("Low Buddy left", "Auto 12");
 
     // Put chooser on dashboard
     SmartDashboard.putData(m_chooser);

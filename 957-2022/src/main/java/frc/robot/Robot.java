@@ -14,6 +14,8 @@ import frc.robot.automodes.buddyleft;
 import frc.robot.automodes.buddyright;
 import frc.robot.automodes.leftcargosupernear;
 import frc.robot.automodes.lefttwocargonear;
+import frc.robot.automodes.lowbuddyleft;
+import frc.robot.automodes.lowbuddyright;
 import frc.robot.automodes.midthreecargo;
 import frc.robot.automodes.midtwocargofar;
 import frc.robot.automodes.righttwocargonear;
@@ -39,16 +41,20 @@ public class Robot extends TimedRobot {
    Joystick m_joystick = new Joystick(0);
    Joystick m_controller = new Joystick(1);
    ShuffleBoard sb = new ShuffleBoard();
-   midtwocargofar m2cf = new midtwocargofar();
-   righttwocargonear r2cn = new righttwocargonear();
-   lefttwocargonear l2cn = new lefttwocargonear();
-   midthreecargo m3c = new midthreecargo();
-   leftcargosupernear leftsup = new leftcargosupernear();
+   //midtwocargofar m2cf = new midtwocargofar();
+   //righttwocargonear r2cn = new righttwocargonear();
+   //lefttwocargonear l2cn = new lefttwocargonear();
+   //midthreecargo m3c = new midthreecargo();
+   //leftcargosupernear leftsup = new leftcargosupernear();
    NothingAuto na = new NothingAuto();
    buddyright br = new buddyright();
    buddyleft bl =  new buddyleft();
    singlecargo sc = new singlecargo();
    testauto ta = new testauto();
+   lowbuddyleft lbl = new lowbuddyleft();
+   lowbuddyright lbr = new lowbuddyright();
+
+   //:) sus 
    
    int m_timer = 0;
    int m_autoStep = 0;
@@ -57,6 +63,7 @@ public class Robot extends TimedRobot {
    int oldPOV = 0;
    int manualStep = 0;
    int caseNumber = 0;
+   int switchSpeed = 0;
    double speedMod = 0;
    int lastPriority = 0;
    int turretSwitch = 0;
@@ -76,10 +83,11 @@ public class Robot extends TimedRobot {
     final int k_Shooter = 3;            // right trigger , axis 3
     final int k_FarShooter = 1;         // a , 1
     final int k_CloseShooter = 5;       // left bumper , 5
-    final int k_DriveDirection = 9;    // down on left stick, 9
+    final int k_DriveDirection = 9;     // down on left stick, 9
     final int k_PukeJoystick = 6;       // right bumper , 6
     final int k_Intake = 10;            // down on right stick , 10
     final int k_ForceShoot = 2;         // left trigger , axis 2
+    final int k_switchSpeed = 99999;    
 
     // Switches axis for controller
     int switchAxis = 4;
@@ -134,16 +142,18 @@ public class Robot extends TimedRobot {
     m_Shooter.speed = 2650;
     m_autoMode = sb.updateAuto();
 
-    l2cn.reset();
-    m2cf.reset();
-    r2cn.reset();
-    m3c.reset();
-    leftsup.reset();
+    //l2cn.reset();
+    //m2cf.reset();
+    //r2cn.reset();
+    //m3c.reset();
+    //leftsup.reset();
     na.reset();
     br.reset();
     bl.reset();
     sc.reset();
     ta.reset();
+    lbl.reset();
+    lbr.reset();
 
     
     // set the auto to 1
@@ -162,15 +172,15 @@ public class Robot extends TimedRobot {
 
     if (m_autoMode == "No Auto"){
     }else if (m_autoMode == "Auto 1"){
-      l2cn.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+      //l2cn.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if (m_autoMode == "Auto 2"){
-      m2cf.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+      //m2cf.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if (m_autoMode == "Auto 3"){
-      r2cn.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+      //r2cn.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if (m_autoMode == "Auto 4"){
-      m3c.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+      //m3c.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if(m_autoMode == "Auto 5"){
-      leftsup.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+      //leftsup.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if(m_autoMode == "Auto 6"){
       na.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if(m_autoMode == "Auto 7"){
@@ -181,6 +191,10 @@ public class Robot extends TimedRobot {
       sc.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if(m_autoMode ==  "Auto 10"){
       ta.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if(m_autoMode ==  "Auto 11"){
+      lbr.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if(m_autoMode ==  "Auto 12"){
+      lbl.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }
 
     //thc1.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
@@ -284,19 +298,53 @@ public class Robot extends TimedRobot {
       break;
 
       case 2:
-      m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
-      if(m_joystick.getRawButton(k_DriveDirection)){
-        caseNumber ++;
-      }
+        m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
+        if(m_joystick.getRawButton(k_DriveDirection)){
+          caseNumber ++;
+        }
       break;
 
       case 3:
-      m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
-      if(!m_joystick.getRawButton(k_DriveDirection)){
-        caseNumber = 0;
-      }
+        m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
+        if(!m_joystick.getRawButton(k_DriveDirection)){
+          caseNumber = 0;
+        }
       break;
     }
+
+    //switches speed of bot
+      switch(switchSpeed){
+    
+        //add shuffleboard window w/ slow fast display
+
+        case 0: //fast speed
+          m_drivetrain.setCoeffient(1);
+          if(m_joystick.getRawButton(k_switchSpeed)){
+            switchSpeed++;
+          }
+        break;
+
+        case 1: //fast speed
+          m_drivetrain.setCoeffient(1);
+          if(!m_joystick.getRawButton(k_switchSpeed)){
+            switchSpeed++;
+          }
+        break;
+
+        case 2: //slow speed
+          m_drivetrain.setCoeffient(.7);
+          if(m_joystick.getRawButton(k_switchSpeed)){
+            switchSpeed++;
+          }
+        break;
+
+        case 3: //slow speed
+          m_drivetrain.setCoeffient(.7);
+          if(m_joystick.getRawButton(k_switchSpeed)){
+            switchSpeed = 0;
+          }
+        break;
+      }
 
     double buttonUp = m_controller.getRawAxis(2); //left trigger
     double buttonDown = m_controller.getRawAxis(3); //right trigger
