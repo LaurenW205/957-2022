@@ -37,6 +37,7 @@ public class DriveTrain{
     double box4 = 0;
 
     double coefficent = 1;
+    double prevCoeffient = 1;
 
     private static DriveTrain m_drivetrain = null;
     private static final int k_freeCurrentLimit = 40;
@@ -191,8 +192,13 @@ public class DriveTrain{
     
     }
 
-    public void setCoeffient(double c){
+    public void setCoefficient(double c){
         coefficent = c;
+        if (coefficent == .6){
+            SmartDashboard.putBoolean("Fast?", false);
+        }else{
+            SmartDashboard.putBoolean("Fast?", true);
+        }
     }
 
 }

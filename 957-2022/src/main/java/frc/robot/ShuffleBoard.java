@@ -34,6 +34,7 @@ public class ShuffleBoard {
 
     SmartDashboard.putString("Ally 1", "0");
     SmartDashboard.putString("Ally 2", "0");
+
   }
 
   public void updateSmartboard(int cargo, DriveTrain d) 

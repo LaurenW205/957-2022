@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.automodes.NothingAuto;
 import frc.robot.automodes.buddyleft;
 import frc.robot.automodes.buddyright;
@@ -67,8 +68,6 @@ public class Robot extends TimedRobot {
    double speedMod = 0;
    int lastPriority = 0;
    int turretSwitch = 0;
-
-
    
     //controller red
     final int k_MoveCargo = 4;          // y , 4
@@ -255,7 +254,7 @@ public class Robot extends TimedRobot {
       m_Intake.var = 0;
       m_Shooter.caseNumber = 0;
       Passthrough.getInstance().intakeFlag = 0;
-      m_drivetrain.setCoeffient(1);
+      m_drivetrain.setCoefficient(1);
     }
 
     //resets automatic functions when switching to priority function
@@ -264,7 +263,7 @@ public class Robot extends TimedRobot {
       m_Intake.var = 0;
       m_Shooter.caseNumber = 0;
       Passthrough.getInstance().intakeFlag = 0;
-      m_drivetrain.setCoeffient(1);
+      m_drivetrain.setCoefficient(1);
     }
 
     //stops passthrough motor when switching to automatic functions
@@ -318,28 +317,28 @@ public class Robot extends TimedRobot {
         //add shuffleboard window w/ slow fast display
 
         case 0: //fast speed
-          m_drivetrain.setCoeffient(1);
+          m_drivetrain.setCoefficient(1);
           if(m_joystick.getRawButton(k_switchSpeed)){
             switchSpeed++;
           }
         break;
 
         case 1: //fast speed
-          m_drivetrain.setCoeffient(1);
+          m_drivetrain.setCoefficient(1);
           if(!m_joystick.getRawButton(k_switchSpeed)){
             switchSpeed++;
           }
         break;
 
         case 2: //slow speed
-          m_drivetrain.setCoeffient(.7);
+          m_drivetrain.setCoefficient(.6);
           if(m_joystick.getRawButton(k_switchSpeed)){
             switchSpeed++;
           }
         break;
 
         case 3: //slow speed
-          m_drivetrain.setCoeffient(.7);
+          m_drivetrain.setCoefficient(.6);
           if(m_joystick.getRawButton(k_switchSpeed)){
             switchSpeed = 0;
           }
