@@ -83,6 +83,7 @@ public class Robot extends TimedRobot {
     final int k_ReverseIntake = 3;      // x , 3
     //left trigger up climb
     //right trigger down climb
+    final int k_SendAlliances = 8; //start
  
     //joystick (drive controller)
     final int k_Shooter = 3;            // right trigger , axis 3
@@ -104,14 +105,14 @@ public class Robot extends TimedRobot {
     Turret2 m_Turret = new Turret2();
     Intake m_Intake = new Intake();
     Climbing m_Climbing = new Climbing(5);
-    //Bling m_Bling = new Bling();
+    Bling m_Bling = new Bling();
 
   @Override
   public void robotInit() {
     //CameraServer.startAutomaticCapture();
     //CameraServer.startAutomaticCapture();
 
-    //m_Bling.connect();
+    m_Bling.connect();
 
     pid.setOutputLimits(0.4);
 
@@ -147,6 +148,13 @@ public class Robot extends TimedRobot {
 
     //m_Bling.tick("955", "997");
     //m_Bling.tick(ally_1, ally_2);
+
+    if(m_controller.getRawButton(k_SendAlliances)){
+      m_Bling.sendAlliance(ally_1, ally_2);
+    }
+
+    m_Bling.tick(ally_2, ally_2);
+
     
   }
 
