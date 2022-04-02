@@ -9,7 +9,6 @@ import frc.robot.Turret2;
 
 public class buddyleft {
 
-    ShuffleBoard sb = new ShuffleBoard();
     int autoStep = 1;
     double angleChange = 76;
 
@@ -20,10 +19,6 @@ public class buddyleft {
     public double distanceChange = 3.5; // subect to change
 
     public void run(DriveTrain d, Shooter s, Intake i, Turret2 t, int cargoNum){
-    
-        if(sb.sbLeftAngle != 0){
-            angleChange = sb.sbLeftAngle;;
-        }
 
         s.speed = 2250; // shooter speed set to near shooter
         switch (autoStep) {

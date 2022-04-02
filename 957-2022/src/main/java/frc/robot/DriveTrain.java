@@ -97,7 +97,7 @@ public class DriveTrain{
         m_rightNeoMaster.setInverted(true);
         m_rightNeoSlave.setInverted(true);
     
-        turn = deadband(Math.sqrt(turn)/2);
+        turn = deadband(turn/2);
         speed = deadband(speed);
 
         outputD = outputD + (outputD - speed) * -ramp;

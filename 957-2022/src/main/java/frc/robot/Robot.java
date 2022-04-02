@@ -114,7 +114,6 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     sb.updateSmartboard(cargoNum, m_drivetrain);
     sb.updateAuto();
-    sb.leftDrive();
     String ally_1 = sb.getAlly1();
     String ally_2 = sb.getAlly2();
 

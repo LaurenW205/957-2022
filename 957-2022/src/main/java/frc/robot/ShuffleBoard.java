@@ -43,12 +43,6 @@ public class ShuffleBoard {
 
     
 
-    SmartDashboard.putNumber("Left Turn", sbLeftAngle);
-
-    SmartDashboard.putString("Left Drive", "0");
-    SmartDashboard.putString("Right Drive", "0");
-    SmartDashboard.putString("Right Turn", "0");
-    
 
   }
 
@@ -81,10 +75,4 @@ public class ShuffleBoard {
         return SmartDashboard.putBoolean("Slow?", true);
     }
   }
-
-
-  public void leftDrive(){
-    SmartDashboard.getNumber("Left Turn", sbLeftAngle);
-  }
-  
 }
