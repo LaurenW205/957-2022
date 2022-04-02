@@ -15,6 +15,7 @@ public class Intake {
     CANSparkMax intakeMotor_1 = new CANSparkMax(7, MotorType.kBrushless);
     DigitalInput sensor = new DigitalInput(0);
     double timer = 0;
+    double previousSpeed = 1;
 
     public int var = 5;
     boolean lastCycle = false;
@@ -32,6 +33,7 @@ public class Intake {
     public int run(int cargoNum, boolean button){
 
         Passthrough.getInstance().intakeSensor = sensor.get();
+        previousSpeed = d.pCoeffient;
 
             switch (var) {
                 case 0:                 // Wait for button press
@@ -67,7 +69,7 @@ public class Intake {
                 case 5:
                     retractCyl();       // Retract arm and return to beginning of cycle
                     var = 0;
-                    d.setCoefficient(1);
+                    d.setCoefficient(previousSpeed); //sets speed mode to previous mode before intake activated
                 break;
         }
     

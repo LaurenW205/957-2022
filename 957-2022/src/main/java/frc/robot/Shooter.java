@@ -27,11 +27,11 @@ public class Shooter {
 
     public Shooter(){
     //PID constants for PID shooter
-        kP = 1.75e-3; //1.3
+        kP = 1.25e-3; //1.3
         kI = 0.00000025;
         kD = 0; 
         kIz = 0; 
-        kFF = 0; 
+        kFF = 0.0000275; 
         kMaxOutput = 1; 
         kMinOutput = -1;
         maxRPM = 5700;

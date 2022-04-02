@@ -3,12 +3,16 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.automodes.buddyleft;
+import frc.robot.automodes.buddyright;
 
 public class ShuffleBoard {
   boolean autoModeSet = false;
   SendableChooser<String> m_chooser = new SendableChooser<>();
+  buddyleft bl = new buddyleft();
   
-
+  public double sbLeftAngle = 0;
+  
   // Run when shuffleboard is first initialized
   public ShuffleBoard(){
 
@@ -35,6 +39,17 @@ public class ShuffleBoard {
     SmartDashboard.putString("Ally 1", "0");
     SmartDashboard.putString("Ally 2", "0");
 
+    SmartDashboard.putBoolean("Slow?", true);
+
+    
+
+    SmartDashboard.putNumber("Left Turn", sbLeftAngle);
+
+    SmartDashboard.putString("Left Drive", "0");
+    SmartDashboard.putString("Right Drive", "0");
+    SmartDashboard.putString("Right Turn", "0");
+    
+
   }
 
   public void updateSmartboard(int cargo, DriveTrain d) 
@@ -58,4 +73,18 @@ public class ShuffleBoard {
     {
       return SmartDashboard.getString("Ally 2", "???");
     }
+
+  public Boolean fastOrSlow(){
+      if (DriveTrain.getInstance().coefficent == 1){
+        return SmartDashboard.putBoolean("Slow?", false);
+      }else{
+        return SmartDashboard.putBoolean("Slow?", true);
+    }
+  }
+
+
+  public void leftDrive(){
+    SmartDashboard.getNumber("Left Turn", sbLeftAngle);
+  }
+  
 }

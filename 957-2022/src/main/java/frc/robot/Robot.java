@@ -70,13 +70,15 @@ public class Robot extends TimedRobot {
    int turretSwitch = 0;
    
     //controller red
-    final int k_MoveCargo = 4;          // y , 4
+    //final int k_MoveCargo = 4;        // y , 4
     final int k_CargoChange = 0;        // d pad, up and down
     final int k_PukeController = 1;     // a, 1
     final int k_TurretMode = 9;         // down on left stick, 9
-    final int k_RightBumper = 6;        // right bumper , 6
-    final int k_LeftBumper = 5;         // left bumper , 5
+    final int k_LeftBumper = 6;        // axis 2, bumper left
+    final int k_RightBumper = 5;       // axis 3, bumper right
     final int k_ReverseIntake = 3;      // x , 3
+    //left trigger up climb
+    //right trigger down climb
  
     //joystick (drive controller)
     final int k_Shooter = 3;            // right trigger , axis 3
@@ -86,8 +88,10 @@ public class Robot extends TimedRobot {
     final int k_PukeJoystick = 6;       // right bumper , 6
     final int k_Intake = 10;            // down on right stick , 10
     final int k_ForceShoot = 2;         // left trigger , axis 2
-    final int k_switchSpeed = 99999;    
+    //switch drivemode by pressing anywhere on D pad
 
+
+    
     // Switches axis for controller
     int switchAxis = 4;
  
@@ -110,8 +114,10 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     sb.updateSmartboard(cargoNum, m_drivetrain);
     sb.updateAuto();
+    sb.leftDrive();
     String ally_1 = sb.getAlly1();
     String ally_2 = sb.getAlly2();
+
 
     if (m_controller.getPOV()==180 && oldPOV != 180){
       cargoNum--;
@@ -139,7 +145,6 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
 
     m_Shooter.speed = 2650;
-    m_autoMode = sb.updateAuto();
 
     //l2cn.reset();
     //m2cf.reset();
@@ -280,6 +285,8 @@ public class Robot extends TimedRobot {
     //checks when priotity is switched
     lastPriority = priority;   
    
+
+
     //switches bot orientation
     switch(caseNumber){
       case 0:
@@ -311,39 +318,47 @@ public class Robot extends TimedRobot {
       break;
     }
 
+
+
     //switches speed of bot
       switch(switchSpeed){
     
-        //add shuffleboard window w/ slow fast display
-
         case 0: //fast speed
           m_drivetrain.setCoefficient(1);
-          if(m_joystick.getRawButton(k_switchSpeed)){
+          m_drivetrain.prevCoeffient(1);
+          if(m_joystick.getPOV() > -1){
             switchSpeed++;
           }
         break;
 
         case 1: //fast speed
           m_drivetrain.setCoefficient(1);
-          if(!m_joystick.getRawButton(k_switchSpeed)){
+          m_drivetrain.prevCoeffient(1);
+          if(m_joystick.getPOV() == -1){
             switchSpeed++;
           }
         break;
 
         case 2: //slow speed
           m_drivetrain.setCoefficient(.6);
-          if(m_joystick.getRawButton(k_switchSpeed)){
+          m_drivetrain.prevCoeffient(.6);
+          if(m_joystick.getPOV() > -1){
             switchSpeed++;
           }
         break;
 
         case 3: //slow speed
           m_drivetrain.setCoefficient(.6);
-          if(m_joystick.getRawButton(k_switchSpeed)){
+          m_drivetrain.prevCoeffient(.6);
+          if(m_joystick.getPOV() == -1){
             switchSpeed = 0;
           }
         break;
       }
+
+        sb.fastOrSlow();
+
+
 
     double buttonUp = m_controller.getRawAxis(2); //left trigger
     double buttonDown = m_controller.getRawAxis(3); //right trigger
@@ -357,7 +372,7 @@ public class Robot extends TimedRobot {
       break;
 
       case 1: //automatic
-        m_Turret.run(m_controller.getRawButton(k_RightBumper),m_controller.getRawButton(k_LeftBumper));
+        m_Turret.run(m_controller.getRawButton(k_RightBumper) ,m_controller.getRawButton(k_LeftBumper));
         if(!m_controller.getRawButton(k_TurretMode))
           turretSwitch++;
       break;

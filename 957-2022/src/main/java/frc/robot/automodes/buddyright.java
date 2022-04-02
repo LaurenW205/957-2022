@@ -43,6 +43,7 @@ public class buddyright {
             case 4: //drives to hub
                if(d.driveJank(angleChange, distanceChange, 0.15)){
                    d.resetEncoders();
+                   s.caseNumber = 1;
                    autoStep++;
       
                }
