@@ -7,6 +7,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter {
@@ -25,6 +27,7 @@ public class Shooter {
     double shooterTimer = 0;
     public double speed = 2250;
     double cutoffSpeed = 0;
+
 
     public Shooter(){
     //PID constants for PID shooter
@@ -56,7 +59,7 @@ public class Shooter {
                 speed = 3350;
             }
         if(slowButton){
-                speed = 2250;
+                speed = 2550;
             }
         if(puke2 || puke){
                 speed = 1500;
