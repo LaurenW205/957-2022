@@ -11,10 +11,14 @@ public class buddyright {
         autoStep = 1;
     }
 
+    // change distance and angle
+    double angleChange = -87; //change in testing
+    double distanceChange = 3.5;
+
     public void run(DriveTrain d, Shooter s, Intake i, Turret2 t, int cargoNum){
         s.speed = 2250;
         switch (autoStep) {
-            case 1:
+            case 1: //turns to cargo
                 if(d.turnJank(-57)){
                     d.resetEncoders();
                     autoStep++;
@@ -22,37 +26,30 @@ public class buddyright {
                 }
             break;
 
-            case 2:
+            case 2: //drives to cargo; intakes
                if(d.driveJank(-63, -2.3, 0.15)){
                    d.resetEncoders();
                    autoStep++;
                }
             break;
 
-            case 3:
-               if(d.turnJank(-80)){
+            case 3: //turns to hub
+               if(d.turnJank(angleChange - 5)){
                    d.resetEncoders();
                    autoStep++;
                }
             break;
 
-            case 4:
-               if(d.driveJank(-87, 3.75, 0.15)){
+            case 4: //drives to hub
+               if(d.driveJank(angleChange, distanceChange, 0.15)){
                    d.resetEncoders();
+                   s.caseNumber = 1;
                    autoStep++;
       
                }
             break;
 
-            case 5:
-               if(d.turnJank(-83)){
-                   d.resetEncoders();
-                   s.caseNumber = 1;
-                   autoStep++;
-               }
-            break;
-
-            case 6:
+            case 5: //shoots
                if(s.caseNumber != 2){
                    autoStep = 7;
                    d.resetEncoders();

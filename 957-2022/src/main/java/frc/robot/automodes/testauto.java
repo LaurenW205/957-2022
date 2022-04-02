@@ -26,8 +26,6 @@ public class testauto {
             case 0: // drive forward slow
                 if(timer <= 2){
                     d.arcadeDrive(.25, 0);
-                
-                    
                 }else{
                     d.arcadeDrive(0, 0);
                     timer = 0;
@@ -35,6 +33,7 @@ public class testauto {
                     autoStep ++;
                 }
             break;
+
             case 1:
                 if(timer <= 2){ // drive backward slow
                     d.arcadeDrive(-.25, 0);
@@ -47,7 +46,8 @@ public class testauto {
                     autoStep ++;
 
                 }
-                break;
+            break;
+
             case 2:
                 if(timer <= 2){ // drive forward fast
                     d.arcadeDrive(.5, 0);

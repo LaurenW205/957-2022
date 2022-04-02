@@ -11,11 +11,14 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.automodes.NothingAuto;
 import frc.robot.automodes.buddyleft;
 import frc.robot.automodes.buddyright;
 import frc.robot.automodes.leftcargosupernear;
 import frc.robot.automodes.lefttwocargonear;
+import frc.robot.automodes.lowbuddyleft;
+import frc.robot.automodes.lowbuddyright;
 import frc.robot.automodes.midthreecargo;
 import frc.robot.automodes.midtwocargofar;
 import frc.robot.automodes.righttwocargonear;
@@ -41,11 +44,11 @@ public class Robot extends TimedRobot {
    Joystick m_joystick = new Joystick(0);
    Joystick m_controller = new Joystick(1);
    ShuffleBoard sb = new ShuffleBoard();
-   midtwocargofar m2cf = new midtwocargofar();
-   righttwocargonear r2cn = new righttwocargonear();
-   lefttwocargonear l2cn = new lefttwocargonear();
-   midthreecargo m3c = new midthreecargo();
-   leftcargosupernear leftsup = new leftcargosupernear();
+   //midtwocargofar m2cf = new midtwocargofar();
+   //righttwocargonear r2cn = new righttwocargonear();
+   //lefttwocargonear l2cn = new lefttwocargonear();
+   //midthreecargo m3c = new midthreecargo();
+   //leftcargosupernear leftsup = new leftcargosupernear();
    NothingAuto na = new NothingAuto();
    buddyright br = new buddyright();
    buddyleft bl =  new buddyleft();
@@ -53,6 +56,10 @@ public class Robot extends TimedRobot {
    testauto ta = new testauto();
    Relay relay = new Relay(3);
    MiniPID pid = new MiniPID(.125/7, 0.005, 0);
+   lowbuddyleft lbl = new lowbuddyleft();
+   lowbuddyright lbr = new lowbuddyright();
+
+   //:) sus 
    
    int m_timer = 0;
    int m_autoStep = 0;
@@ -61,31 +68,35 @@ public class Robot extends TimedRobot {
    int oldPOV = 0;
    int manualStep = 0;
    int caseNumber = 0;
+   int switchSpeed = 0;
    double speedMod = 0;
    int lastPriority = 0;
    int turretSwitch = 0;
-
-
    
     //controller red
-    final int k_MoveCargo = 4;          // y , 4
+    //final int k_MoveCargo = 4;        // y , 4
     final int k_CargoChange = 0;        // d pad, up and down
     final int k_PukeController = 1;     // a, 1
     final int k_TurretMode = 9;         // down on left stick, 9
-    final int k_RightBumper = 6;        // right bumper , 6
-    final int k_LeftBumper = 5;         // left bumper , 5
+    final int k_LeftBumper = 6;        // axis 2, bumper left
+    final int k_RightBumper = 5;       // axis 3, bumper right
     final int k_ReverseIntake = 3;      // x , 3
+    //left trigger up climb
+    //right trigger down climb
  
     //joystick (drive controller)
     final int k_Shooter = 3;            // right trigger , axis 3
     final int k_FarShooter = 1;         // a , 1
     final int k_CloseShooter = 5;       // left bumper , 5
-    final int k_DriveDirection = 9;    // down on left stick, 9
+    final int k_DriveDirection = 9;     // down on left stick, 9
     final int k_PukeJoystick = 6;       // right bumper , 6
     final int k_Intake = 10;            // down on right stick , 10
     final int k_ForceShoot = 2;         // left trigger , axis 2
     final int k_Vision = 4;             // y, 4
+    //switch drivemode by pressing anywhere on D pad
 
+
+    
     // Switches axis for controller
     int switchAxis = 4;
  
@@ -112,8 +123,10 @@ public class Robot extends TimedRobot {
    System.out.println(sb.getTargetX());
     sb.updateSmartboard(cargoNum, m_drivetrain);
     sb.updateAuto();
+    sb.leftDrive();
     String ally_1 = sb.getAlly1();
     String ally_2 = sb.getAlly2();
+
 
     if (m_controller.getPOV()==180 && oldPOV != 180){
       cargoNum--;
@@ -141,18 +154,19 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
 
     m_Shooter.speed = 2650;
-    m_autoMode = sb.updateAuto();
 
-    l2cn.reset();
-    m2cf.reset();
-    r2cn.reset();
-    m3c.reset();
-    leftsup.reset();
+    //l2cn.reset();
+    //m2cf.reset();
+    //r2cn.reset();
+    //m3c.reset();
+    //leftsup.reset();
     na.reset();
     br.reset();
     bl.reset();
     sc.reset();
     ta.reset();
+    lbl.reset();
+    lbr.reset();
 
     
     // set the auto to 1
@@ -171,15 +185,15 @@ public class Robot extends TimedRobot {
 
     if (m_autoMode == "No Auto"){
     }else if (m_autoMode == "Auto 1"){
-      l2cn.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+      //l2cn.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if (m_autoMode == "Auto 2"){
-      m2cf.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+      //m2cf.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if (m_autoMode == "Auto 3"){
-      r2cn.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+      //r2cn.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if (m_autoMode == "Auto 4"){
-      m3c.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+      //m3c.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if(m_autoMode == "Auto 5"){
-      leftsup.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+      //leftsup.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if(m_autoMode == "Auto 6"){
       na.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if(m_autoMode == "Auto 7"){
@@ -190,6 +204,10 @@ public class Robot extends TimedRobot {
       sc.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if(m_autoMode ==  "Auto 10"){
       ta.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if(m_autoMode ==  "Auto 11"){
+      lbr.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if(m_autoMode ==  "Auto 12"){
+      lbl.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }
 
     //thc1.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
@@ -252,7 +270,7 @@ public class Robot extends TimedRobot {
       m_Intake.var = 0;
       m_Shooter.caseNumber = 0;
       Passthrough.getInstance().intakeFlag = 0;
-      m_drivetrain.setCoeffient(1);
+      m_drivetrain.setCoefficient(1);
     }
 
     //resets automatic functions when switching to priority function
@@ -261,7 +279,7 @@ public class Robot extends TimedRobot {
       m_Intake.var = 0;
       m_Shooter.caseNumber = 0;
       Passthrough.getInstance().intakeFlag = 0;
-      m_drivetrain.setCoeffient(1);
+      m_drivetrain.setCoefficient(1);
     }
 
     //stops passthrough motor when switching to automatic functions
@@ -278,6 +296,8 @@ public class Robot extends TimedRobot {
     //checks when priotity is switched
     lastPriority = priority;   
    
+
+
     //switches bot orientation
     if (m_controller.getRawButton(k_Vision)){
       double target = sb.getTargetX();
@@ -334,7 +354,7 @@ public class Robot extends TimedRobot {
       break;
 
       case 1: //automatic
-        m_Turret.run(m_controller.getRawButton(k_RightBumper),m_controller.getRawButton(k_LeftBumper));
+        m_Turret.run(m_controller.getRawButton(k_RightBumper) ,m_controller.getRawButton(k_LeftBumper));
         if(!m_controller.getRawButton(k_TurretMode))
           turretSwitch++;
       break;

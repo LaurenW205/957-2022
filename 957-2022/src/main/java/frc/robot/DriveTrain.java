@@ -37,6 +37,7 @@ public class DriveTrain{
     double box4 = 0;
 
     double coefficent = 1;
+    double pCoeffient = 1;
 
     private static DriveTrain m_drivetrain = null;
     private static final int k_freeCurrentLimit = 40;
@@ -96,7 +97,7 @@ public class DriveTrain{
         m_rightNeoMaster.setInverted(true);
         m_rightNeoSlave.setInverted(true);
     
-        turn = deadband(turn/2);
+        turn = deadband(Math.sqrt(turn)/2);
         speed = deadband(speed);
 
         outputD = outputD + (outputD - speed) * -ramp;
@@ -191,8 +192,11 @@ public class DriveTrain{
     
     }
 
-    public void setCoeffient(double c){
+    public void setCoefficient(double c){ //speed modifier
         coefficent = c;
     }
 
+    public void prevCoeffient(double prevC){ //stores previous speed
+        prevC = pCoeffient;
+    }
 }
