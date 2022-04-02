@@ -1,13 +1,12 @@
 package frc.robot.automodes;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.DriveTrain;
 import frc.robot.Intake;
 import frc.robot.Shooter;
-import frc.robot.ShuffleBoard;
 import frc.robot.Turret2;
 
-public class buddyleft {
+public class buddyleftfar {
+    
 
     int autoStep = 1;
     double angleChange = 76;
@@ -16,11 +15,11 @@ public class buddyleft {
         autoStep = 1;
     }
     
-    public double distanceChange = 3.3; // subect to change
+    public double distanceChange = 1.3; // subect to change
 
     public void run(DriveTrain d, Shooter s, Intake i, Turret2 t, int cargoNum){
 
-        s.speed = 2250; // shooter speed set to near shooter
+        s.speed = 2700; // shooter speed set to near shooter
         switch (autoStep) {
             case 1:  // turns to cargo
                 if(d.turnJank(52)){  

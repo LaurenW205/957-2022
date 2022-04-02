@@ -8,57 +8,36 @@ import frc.robot.Turret2;
 public class singlecargo {
     
     double timer = 0;
-    int autoStep = -1;
+    int autoStep = 0;
 
     public void reset(){
         timer = 0;
-        autoStep = -1;
+        autoStep = 0;
     }
 
     public void run(DriveTrain d, Shooter s, Intake i, Turret2 t, int cargoNum){
 
         timer = timer + 0.02;
-        s.speed = 2400;
+        s.speed = 2700;
         switch (autoStep) {
-            case -1:
-                if(timer == 0.02){
-                    s.caseNumber = 1;
-                }
-                if(timer > 8){
-                    autoStep++;
-                }
-            break;
 
             case 0:
                 if(d.driveJank(0, -5, 0.15)){
-                   // d.resetEncoders();
-                   // autoStep++;
+                    d.resetEncoders();
+                    autoStep++;
                 }
             break;
 
             case 1:
-                if(d.turnJank(-7)){
+                if(d.turnJank(7)){
                     d.resetEncoders();
                     autoStep++;
                 }
             break;
+
 
             case 2:
-            if(d.driveJank(-11, 4, 0.15)){
-                d.resetEncoders();
-                autoStep++;
-            }
-            break;
-
-            case 3:
-                if(d.turnJank(10)){
-                    d.resetEncoders();
-                    autoStep++;
-                }
-            break;
-
-            case 4:
-                if(d.driveJank(15, 0.6, 0.15)){
+                if(d.driveJank(4, 4.5, 0.15)){
                     d.resetEncoders();
                     autoStep++;
                     s.caseNumber = 1;
@@ -66,7 +45,7 @@ public class singlecargo {
 
             break;
 
-            case 5:
+            case 3:
                 if(s.caseNumber != 2){
                     autoStep = 7;
                     d.resetEncoders();

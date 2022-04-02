@@ -14,7 +14,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.automodes.NothingAuto;
 import frc.robot.automodes.buddyleft;
+import frc.robot.automodes.buddyleftfar;
 import frc.robot.automodes.buddyright;
+import frc.robot.automodes.buddyrightfar;
+import frc.robot.automodes.buddyleftfar;
 import frc.robot.automodes.leftcargosupernear;
 import frc.robot.automodes.lefttwocargonear;
 import frc.robot.automodes.lowbuddyleft;
@@ -58,6 +61,8 @@ public class Robot extends TimedRobot {
    MiniPID pid = new MiniPID(.125/7, 0.005, 0);
    lowbuddyleft lbl = new lowbuddyleft();
    lowbuddyright lbr = new lowbuddyright();
+   buddyleftfar blf = new buddyleftfar();
+   buddyrightfar brf = new buddyrightfar();
 
    //:) sus 
    
@@ -94,6 +99,7 @@ public class Robot extends TimedRobot {
     final int k_Intake = 10;            // down on right stick , 10
     final int k_ForceShoot = 2;         // left trigger , axis 2
     final int k_Vision = 4;             // y, 4
+    final int k_LaunchShoot = 8;        //right face button
     //switch drivemode by pressing anywhere on D pad
 
 
@@ -106,6 +112,7 @@ public class Robot extends TimedRobot {
     Intake m_Intake = new Intake();
     Climbing m_Climbing = new Climbing(5);
     Bling m_Bling = new Bling();
+    double z = 0;
 
   @Override
   public void robotInit() {
@@ -121,7 +128,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-   System.out.println(sb.getTargetX());
     sb.updateSmartboard(cargoNum, m_drivetrain);
     sb.updateAuto();
     String ally_1 = sb.getAlly1();
@@ -161,7 +167,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
 
     m_Shooter.speed = 2650;
-
+    m_autoMode = sb.updateAuto();
+    
     //l2cn.reset();
     //m2cf.reset();
     //r2cn.reset();
@@ -174,6 +181,8 @@ public class Robot extends TimedRobot {
     ta.reset();
     lbl.reset();
     lbr.reset();
+    blf.reset();
+    brf.reset();
 
     
     // set the auto to 1
@@ -215,7 +224,12 @@ public class Robot extends TimedRobot {
       lbr.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }else if(m_autoMode ==  "Auto 12"){
       lbl.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if(m_autoMode == "Auto 13"){
+      blf.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
+    }else if(m_autoMode == "Auto 14"){
+      brf.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     }
+
 
     //thc1.run(m_drivetrain, m_Shooter, m_Intake, m_Turret, cargoNum);
     cargoNum = m_Intake.run(cargoNum, m_controller.getRawButton(k_Intake));    
@@ -246,7 +260,8 @@ public class Robot extends TimedRobot {
     m_Shooter.modeSetting(m_joystick.getRawButton(k_FarShooter),
       m_joystick.getRawButton(k_CloseShooter), 
       m_joystick.getRawButton(k_PukeJoystick),
-      m_controller.getRawButton(k_PukeController));
+      m_controller.getRawButton(k_PukeController),
+      m_joystick.getRawButton(k_LaunchShoot));
       
 
     //case statement for priority and choosing which systems to run
@@ -307,10 +322,14 @@ public class Robot extends TimedRobot {
 
     //switches bot orientation
     if (m_controller.getRawButton(k_Vision)){
-      double target = sb.getTargetX();
-      if (target == -9000)
-        target = 160;
-      double speed = pid.getOutput(target*0.45, 160*.45);
+      double x = sb.getTargetX();
+      if (x == -9000){
+        z = 0;
+      } else {
+        x = x-160;
+        z = x + (0 - x) * 0.4;
+      }
+      double speed = pid.getOutput(x*0.35, z *.35);
       m_drivetrain.arcadeDrive(0, speed);
 
     }

@@ -34,6 +34,8 @@ public class ShuffleBoard {
     m_chooser.addOption("Test Auto", "Auto 10");
     m_chooser.addOption("Low Buddy Right", "Auto 11");
     m_chooser.addOption("Low Buddy left", "Auto 12");
+    m_chooser.addOption("Buddy Left Far", "Auto 13");
+    m_chooser.addOption("Buddy Right Far", "Auto 14");
 
     // Put chooser on dashboard
     SmartDashboard.putData(m_chooser);

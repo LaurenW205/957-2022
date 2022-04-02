@@ -37,6 +37,7 @@ public class Bling {
         arduino1.setTimeout(1);
         a1 = true;
         System.out.println("Connected on kUSB");
+        arduino1.writeString("2,0,0");
       }
     }catch(Exception e){
       System.out.println("Failed to connect on kUSB, trying kUSB 1");

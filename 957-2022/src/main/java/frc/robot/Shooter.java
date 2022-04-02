@@ -53,10 +53,10 @@ public class Shooter {
     }
 
     //shooter modes
-    public void modeSetting(boolean fastButton, boolean slowButton, boolean puke, boolean puke2){
+    public void modeSetting(boolean fastButton, boolean slowButton, boolean puke, boolean puke2, boolean launch){
         
          if(fastButton){
-                speed = 3350;
+                speed = 2700;
             }
         if(slowButton){
                 speed = 2550;
@@ -64,6 +64,9 @@ public class Shooter {
         if(puke2 || puke){
                 speed = 1500;
             }
+        if(launch){
+                speed = 3200;
+        }
     }
            
     //automatic 

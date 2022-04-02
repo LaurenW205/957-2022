@@ -12,8 +12,8 @@ public class buddyright {
     }
 
     // change distance and angle
-    double angleChange = -87; //change in testing
-    double distanceChange = 3.5;
+    double angleChange = -75; //change in testing
+    double distanceChange = 3.4;
 
     public void run(DriveTrain d, Shooter s, Intake i, Turret2 t, int cargoNum){
         s.speed = 2250;
