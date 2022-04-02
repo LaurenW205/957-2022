@@ -8,6 +8,8 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.automodes.NothingAuto;
 import frc.robot.automodes.buddyleft;
@@ -49,6 +51,8 @@ public class Robot extends TimedRobot {
    buddyleft bl =  new buddyleft();
    singlecargo sc = new singlecargo();
    testauto ta = new testauto();
+   Relay relay = new Relay(3);
+   MiniPID pid = new MiniPID(.125/7, 0.005, 0);
    
    int m_timer = 0;
    int m_autoStep = 0;
@@ -80,6 +84,7 @@ public class Robot extends TimedRobot {
     final int k_PukeJoystick = 6;       // right bumper , 6
     final int k_Intake = 10;            // down on right stick , 10
     final int k_ForceShoot = 2;         // left trigger , axis 2
+    final int k_Vision = 4;             // y, 4
 
     // Switches axis for controller
     int switchAxis = 4;
@@ -97,10 +102,14 @@ public class Robot extends TimedRobot {
 
     //m_Bling.connect();
 
+    pid.setOutputLimits(0.4);
+
+
   }
 
   @Override
   public void robotPeriodic() {
+   System.out.println(sb.getTargetX());
     sb.updateSmartboard(cargoNum, m_drivetrain);
     sb.updateAuto();
     String ally_1 = sb.getAlly1();
@@ -192,11 +201,13 @@ public class Robot extends TimedRobot {
   }
     
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+  }
 
   @Override
   public void teleopPeriodic() {
 
+    relay.set(Value.kForward);
     int priority = 0;
    // setting priority for different functions
     if(m_controller.getRawButton(k_ReverseIntake)){
@@ -268,35 +279,48 @@ public class Robot extends TimedRobot {
     lastPriority = priority;   
    
     //switches bot orientation
-    switch(caseNumber){
-      case 0:
-        m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
+    if (m_controller.getRawButton(k_Vision)){
+      double target = sb.getTargetX();
+      if (target == -9000)
+        target = 160;
+      double speed = pid.getOutput(target*0.45, 160*.45);
+      m_drivetrain.arcadeDrive(0, speed);
+
+    }
+    else {
+      pid.reset();
+      switch(caseNumber){
+        case 0:
+          m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
+          if(m_joystick.getRawButton(k_DriveDirection)){
+            caseNumber ++;
+          }
+        break;
+  
+        case 1:
+          m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
+          if(!m_joystick.getRawButton(k_DriveDirection)){
+            caseNumber ++;
+          }
+        break;
+  
+        case 2:
+        m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
         if(m_joystick.getRawButton(k_DriveDirection)){
           caseNumber ++;
         }
-      break;
-
-      case 1:
-        m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
+        break;
+  
+        case 3:
+        m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
         if(!m_joystick.getRawButton(k_DriveDirection)){
-          caseNumber ++;
+          caseNumber = 0;
         }
-      break;
-
-      case 2:
-      m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
-      if(m_joystick.getRawButton(k_DriveDirection)){
-        caseNumber ++;
+        break;
       }
-      break;
-
-      case 3:
-      m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(switchAxis));
-      if(!m_joystick.getRawButton(k_DriveDirection)){
-        caseNumber = 0;
-      }
-      break;
     }
+
+   
 
     double buttonUp = m_controller.getRawAxis(2); //left trigger
     double buttonDown = m_controller.getRawAxis(3); //right trigger
@@ -337,67 +361,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {}
-
   @Override
-  public void testPeriodic() {
-
-    double buttonUp = m_controller.getRawAxis(2); //left trigger
-    double buttonDown = m_controller.getRawAxis(3); //right trigger
- 
-    boolean intakeForward = m_controller.getRawButton(5); //left button
-    boolean intakeBackward = m_controller.getRawButton(6); //right button
-
-    boolean intakeCylExtend = m_controller.getRawButton(7); // face buttons left
-    boolean intakeCylRetract = m_controller.getRawButton(8); // right
-    
-    boolean ptForward = m_controller.getRawButton(3); //x
-    boolean ptBackward = m_controller.getRawButton(4); //y
-    
-    boolean shooterForward = m_controller.getRawButton(1); //a
-    boolean shooterBackward =  m_controller.getRawButton(2); //b
-
-    double x_axis = m_controller.getRawAxis(0); //left stick
-    double y_axis = -m_controller.getRawAxis(1);
-    
-
-    if(intakeForward){
-       m_Intake.intakeMotor_1.set(0.1);
-      }else if(intakeBackward){
-        m_Intake.intakeMotor_1.set(-0.1);
-      }else{
-        m_Intake.intakeMotor_1.set(0);
-      }
+  public void testPeriodic() { 
+    relay.set(Value.kForward);
 
 
-    if(intakeCylExtend){
-      m_Intake.extendCyl();
-    }
-    if(intakeCylRetract){
-      m_Intake.retractCyl();
-    }
-
-
-    if(ptForward){
-       Passthrough.getInstance().pusher.set(0.1);
-      }else if(ptBackward){
-        Passthrough.getInstance().pusher.set(-0.1);
-      }else{
-        Passthrough.getInstance().pusher.set(0);
-      }
-    
-
-    if(shooterForward){
-        // m_Shooter.shooter.set(0.1);
-      }else if(shooterBackward){
-        // m_Shooter.shooter.set(-0.1);
-      }else{
-        // m_Shooter.shooter.set(0);
-      }
-    
-      m_drivetrain.arcadeDrive(m_joystick.getRawAxis(1), m_joystick.getRawAxis(switchAxis));
-
-    m_Climbing.manualControls(buttonUp, buttonDown);
-    
-   //  m_Turret.manualOverride(-x_axis, y_axis, 0);
   }
 }

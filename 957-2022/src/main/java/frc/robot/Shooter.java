@@ -7,6 +7,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter {
@@ -25,13 +27,14 @@ public class Shooter {
     public double speed = 2250;
     double cutoffSpeed = 0;
 
+
     public Shooter(){
     //PID constants for PID shooter
-        kP = 1.75e-3; //1.3
+        kP = 1.55e-3; //1.3
         kI = 0.00000025;
         kD = 0; 
         kIz = 0; 
-        kFF = 0.000015; 
+        kFF = 0.00002; 
         kMaxOutput = 1; 
         kMinOutput = -1;
         maxRPM = 5700;
@@ -43,6 +46,7 @@ public class Shooter {
         p.setIZone(kIz);
         p.setFF(kFF);
         p.setOutputRange(kMinOutput, kMaxOutput);
+
     }
 
     //shooter modes
@@ -52,7 +56,7 @@ public class Shooter {
                 speed = 2650;
             }
         if(slowButton){
-                speed = 2250;
+                speed = 2550;
             }
         if(puke2 || puke){
                 speed = 1500;
@@ -88,7 +92,7 @@ public class Shooter {
 
             p.setReference(-speed, ControlType.kVelocity);
 
-            if(Math.abs(shooter.getEncoder().getVelocity()+ speed)< 125){
+            if(Math.abs(shooter.getEncoder().getVelocity()+ speed)< 40){
 
                 if(inAutonomous){
                     Passthrough.getInstance().pusher.set(.15);

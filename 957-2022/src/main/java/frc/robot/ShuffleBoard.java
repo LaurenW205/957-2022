@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -55,4 +57,15 @@ public class ShuffleBoard {
     {
       return SmartDashboard.getString("Ally 2", "???");
     }
+  
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable table = inst.getTable("datatable");
+    NetworkTableEntry txEntry = table.getEntry("tx");
+
+  public double getTargetX(){
+    double TargetX = txEntry.getDouble(160);
+    if (TargetX == -9000)
+      TargetX = 160;
+    return TargetX;
+  }
 }
