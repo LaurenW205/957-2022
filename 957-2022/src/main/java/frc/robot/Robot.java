@@ -100,7 +100,6 @@ public class Robot extends TimedRobot {
     final int k_ForceShoot = 2;         // left trigger , axis 2
     final int k_Vision = 4;             // y, 4
     final int k_LaunchShoot = 8;        //right face button
-    //switch drivemode by pressing anywhere on D pad
 
 
     

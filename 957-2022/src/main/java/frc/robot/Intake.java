@@ -69,7 +69,7 @@ public class Intake {
                 case 5:
                     retractCyl();       // Retract arm and return to beginning of cycle
                     var = 0;
-                    d.setCoefficient(previousSpeed); //sets speed mode to previous mode before intake activated
+                    d.setCoefficient(1); //sets speed mode to previous mode before intake activated
                 break;
         }
     

@@ -82,12 +82,4 @@ public class ShuffleBoard {
       TargetX = 160;
     return TargetX;
   }
-
-  public Boolean fastOrSlow(){
-      if (DriveTrain.getInstance().coefficent == 1){
-        return SmartDashboard.putBoolean("Slow?", false);
-      }else{
-        return SmartDashboard.putBoolean("Slow?", true);
-    }
-  }
 }
