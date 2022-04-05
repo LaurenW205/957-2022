@@ -30,6 +30,7 @@ public class Shooter {
 
 
     public Shooter(){
+        SmartDashboard.putNumber("shooter", 1);
     //PID constants for PID shooter
         kP = 0.0016; //1.3
         kI = 0;
@@ -74,7 +75,7 @@ public class Shooter {
         SmartDashboard.putNumber("Process",encoder.getVelocity());
         timer = timer + 0.02;
         shooterTimer = shooterTimer + 0.02;
-        if(Math.abs(shooter.getEncoder().getVelocity()+ speed)> 50){
+        if(Math.abs(shooter.getEncoder().getVelocity()+ speed* SmartDashboard.getNumber("shooter", 1))  > 50){
             shooterTimer = 0;
         }
 
@@ -100,7 +101,7 @@ public class Shooter {
     
             oldSensor = breakBeamSensor.get();
 
-            p.setReference(-speed * 1.12, ControlType.kVelocity);
+            p.setReference(-speed * 1.12 * SmartDashboard.getNumber("shooter", 1), ControlType.kVelocity);
 
             if(shooterTimer > .5){
 
